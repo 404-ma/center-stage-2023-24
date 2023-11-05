@@ -26,10 +26,46 @@ public class twoCamera extends LinearOpMode {
 
 
         if (isStopRequested()) return;
+        waitForStart();
         while (opModeIsActive()) {
 
 
+            double distRCM = distanceR.getDistance(DistanceUnit.CM);
+            double distLCM = distanceL.getDistance(DistanceUnit.CM);
+            double avgdist = (distRCM+distLCM)/2;
+            double kp = 0.05;
 
+
+            double leftError = (distLCM - avgdist);
+            double rightError = (distRCM - avgdist);
+
+            double leftMotorSpeed = -(leftError * kp);
+            double rightMotorSpeed = -(rightError * kp);
+
+            if (rightError > 0.2){
+                frontLeft.setPower(leftMotorSpeed);
+                backLeft.setPower(leftMotorSpeed);
+            } else {
+                frontLeft.setPower(0);
+                backLeft.setPower(0);
+            }
+
+            if (leftError > 0.2){
+                frontRight.setPower(rightMotorSpeed);
+                backRight.setPower(rightMotorSpeed);
+            } else {
+                frontRight.setPower(0);
+                backRight.setPower(0);
+            }
+
+
+
+
+
+            telemetry.addData("Right Sensor Distance", distanceR.getDistance(DistanceUnit.CM));
+            telemetry.addData("Left Sensor Distance", distanceL.getDistance(DistanceUnit.CM));
+            telemetry.addData("Average Distance", avgdist);
+            telemetry.update();
         }
 
     }
