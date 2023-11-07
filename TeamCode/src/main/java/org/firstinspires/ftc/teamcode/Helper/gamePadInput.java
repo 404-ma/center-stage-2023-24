@@ -121,10 +121,9 @@ public class gamePadInput {
     // -------------------------------------------------------------
 
     // Class Constructor
-    public gamePadInput(Gamepad inputGPad) {
-        this.inputGPad = inputGPad;
+    public gamePadInput(@NonNull Gamepad gp) {
+        this.inputGPad = gp;
     }
-
 
     // Telemetry Data Getters
     public int getTelemetry_WaitLoopCount() { return(tlm_WaitLoopCount); }
