@@ -133,7 +133,7 @@ public class DrivetrainV2 {
     }
 
 
-    public void setBrakeStatus(boolean braking) throws InterruptedException {
+    public void setBrakeStatus(boolean braking)  {
         brakingOn = braking;
 
 
@@ -171,10 +171,14 @@ public class DrivetrainV2 {
                 timerExpired = (System.currentTimeMillis() >= (brakeStart + BRAKING_MAXIMUM_TIME));
 
 
-                if (!allStop && !timerExpired)
-                    sleep(BRAKING_INTERVAL);
+                if (!allStop && !timerExpired) {
+                    try {
+                        sleep(BRAKING_INTERVAL);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             }
-
 
             if (timerExpired) ++telemetryBrakeTimeoutCount;
         }
