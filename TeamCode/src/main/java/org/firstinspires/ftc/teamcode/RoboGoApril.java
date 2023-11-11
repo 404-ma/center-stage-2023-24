@@ -34,7 +34,7 @@ public class RoboGoApril extends LinearOpMode
     //  Drive = Error * Gain    Make these values smaller for smoother control, or larger for a more aggressive response.
     private static final double SPEED_GAIN  =  0.02  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
     private static  final double STRAFE_GAIN =  0.015 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
-    private static final double TURN_GAIN   =  0.01  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
+    private static final double TURN_GAIN   =  0.01  ;   //  Turn Control "Gain".  eg: Ramp up     to 25% power at a 25 degree error. (0.25 / 25.0)
 
     private static final double MAX_AUTO_SPEED = 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
     private static final double MAX_AUTO_STRAFE= 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
@@ -73,13 +73,15 @@ public class RoboGoApril extends LinearOpMode
         telemetry.update();
         waitForStart();
 
-        GameplayInputType iN = game1.WaitForGamepadInput(100);
+
 
 
         while (opModeIsActive())
         {
             targetFound = false;
             desiredTag  = null;
+
+            GameplayInputType iN = game1.WaitForGamepadInput(100);
 
             // Step through the list of detected tags and look for a matching tag
             List<AprilTagDetection> currentDetections = aprilTag.getDetections();
@@ -104,44 +106,62 @@ public class RoboGoApril extends LinearOpMode
 
             // Tell the driver what we see, and what to do.
             if (targetFound) {
-                telemetry.addData("\n>","HOLD Left-Bumper to Drive to Target\n");
+                telemetry.addData("\n>","HOLD Left-Bumper to Drive to hi\n");
                 telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
                 telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
-                telemetry.addData("Bearing","%3.0f degrees", desiredTag.ftcPose.bearing);
+                telemetry.addData("BearingDDDD","%3.0f degrees", desiredTag.ftcPose.bearing);
                 telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
             } else {
                 telemetry.addData("\n>","Drive using joysticks to find valid target\n");
             }
 
-
+            telemetry.addData("Test: ",GameplayInputType.RIGHT_TRIGGER_ON);
+            telemetry.addData("Test1: ",iN);
 
             // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
-            if (iN == GameplayInputType.LEFT_TRIGGER_ON && targetFound) {
+            int bNum = 0;
+            Boolean autoPilot = false;
 
-                // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
-                double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
-                double  headingError    = desiredTag.ftcPose.bearing;
-                double  yawError        = desiredTag.ftcPose.yaw;
+            if(iN == GameplayInputType.BUTTON_B){
+                bNum++;
+            }
 
-                // Use the speed and turn "gains" to calculate how we want the robot to move.
-                drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-                turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
-                strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+            if(bNum % 2 == 1){
+                autoPilot = true;
+            }
+            else if(bNum % 2 == 0){
+                autoPilot = false;
+            }
 
-                telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
-            } else {
+             if (autoPilot == true && targetFound ) {
+
+                    telemetry.addData("\n>", "It Works YAy", "\n");
+                    // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
+                    double rangeError = (DESIRED_DISTANCE - desiredTag.ftcPose.range);
+                    double headingError = desiredTag.ftcPose.bearing;
+                    double yawError = desiredTag.ftcPose.yaw;
+
+
+                    // Use the speed and turn "gains" to calculate how we want the robot to move.
+                    drive = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+                    turn = Range.clip(-headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
+                    strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+
+                    telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+                }
+             else {
 
                 // drive using manual POV Joystick mode.  Slow things down to make the robot more controlable.
 
-                drive  = -gamepad1.left_stick_y  / 2.0;  // Reduce drive rate to 50%.
+                drive  =  gamepad1.left_stick_y  / 2.0;  // Reduce drive rate to 50%.
                 strafe = -gamepad1.left_stick_x  / 2.0;  // Reduce strafe rate to 50%.
                 turn   =  gamepad1.right_stick_x / 3.0;  // Reduce turn rate to 33%.
-                telemetry.addData("Manual","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+                telemetry.addData("Subi is Amazing","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
             }
             telemetry.update();
 
             // Apply desired axes motions to the drivetrain.
-            game2.SetDriveVector(drive,strafe,turn);
+          game2.SetDriveVector(drive,strafe,turn);
         }
     }
 
@@ -159,6 +179,8 @@ public class RoboGoApril extends LinearOpMode
     /**
      * Initialize the AprilTag processor.
      */
+
+
     private void initAprilTag() {
         // Create the AprilTag processor by using a builder.
         aprilTag = new AprilTagProcessor.Builder().build();
