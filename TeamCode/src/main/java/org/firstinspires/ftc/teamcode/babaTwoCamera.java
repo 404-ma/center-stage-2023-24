@@ -38,15 +38,15 @@ public class babaTwoCamera extends LinearOpMode {
                 double distRCM = distanceR.getDistance(DistanceUnit.CM);
                 double distLCM = distanceL.getDistance(DistanceUnit.CM);
                 double kp = 0.0625;
-                double kd = 0.0;
+                double kd = 0.1;
                 //-0.2;
-                double ki = 0;
+                double ki = 0.01;
                 //-.00001;
                 double kpD = 0.0625;
 
-                double kdD =0;
+                double kdD =0.1;
                 //  -0.2;
-                double kiD = 0;
+                double kiD = 0.01;
                 //.00001
 
                 double targetDist = 10;
@@ -57,23 +57,21 @@ public class babaTwoCamera extends LinearOpMode {
 
                 double newError2 = (reading - targetDist);
                 double kalError = (newError2+initError)/2;
-                double diffError2 = -newError2 + initError;
+                double diffError2 = newError2 - initError;
                 errorSum = newError2 + errorSum;
                 initError = newError2;
-                if (errorSum > 60){
-                    errorSum = 60;
+                if (errorSum > 30){
+                    errorSum = 30;
                 }
-                if (errorSum < -60){
-                    errorSum = -60;
+                if (errorSum < -30){
+                    errorSum = -30;
                 }
-                double error2Speed = 0;
-                if (newError2 > 0.5 || newError2 < -0.5);
-                error2Speed = (newError2 * kpD)+(diffError2*kdD)+(errorSum*kiD);
+                double error2Speed = (newError2 * kpD) + (diffError2 * kdD) + (errorSum * kiD);
 
                 double error = (distLCM - distRCM); //if negative right distance is greater than left
                 double newError = error;
                 double kalErrorR = (newError+initErrorR)/2;
-                double diffErrorR = -newError + initErrorR;
+                double diffErrorR = newError - initErrorR;
                 errorSumR = newError + errorSumR;
                 initErrorR = newError;
                 if (errorSumR > 60){
@@ -82,10 +80,7 @@ public class babaTwoCamera extends LinearOpMode {
                 if (errorSumR < -60){
                     errorSumR = -60;
                 }
-                double rotationalSpeed = 0;
-                if (error > 0.5 || error < -0.5) {
-                    rotationalSpeed = (newError * kp) + (diffErrorR * kd) + (errorSumR * ki);
-                }
+                double rotationalSpeed = (newError * kp) + (diffErrorR * kd) + (errorSumR * ki);
 
 
                 frontLeft.setPower(-rotationalSpeed + error2Speed);
@@ -105,7 +100,7 @@ public class babaTwoCamera extends LinearOpMode {
                 telemetry.addData("Left Sensor Distance", distanceL.getDistance(DistanceUnit.CM));
                 telemetry.addData("Error", error);
                 telemetry.addData("rotational Speed", rotationalSpeed);
-                telemetry.addData("proportional", kalError);
+                telemetry.addData("proportional", newError2);
                 telemetry.addData("derivate", diffError2);
                 telemetry.addData("integral", errorSum);
                 telemetry.update();
