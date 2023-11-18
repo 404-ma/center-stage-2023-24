@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
 @Autonomous(name="TrialAuto")
 public class TrialAuto extends LinearOpMode {
 
@@ -50,7 +49,7 @@ public class TrialAuto extends LinearOpMode {
             telemetry.addData("error",error);
             telemetry.update();
 
-            if(gamepad1.a) {
+
                 if (error > target) {
                     frontLeft.setPower(error/10);
                     backLeft.setPower(error/10);
@@ -63,7 +62,6 @@ public class TrialAuto extends LinearOpMode {
                     frontRight.setPower(error/10);
                     backRight.setPower(error/10);
                 }
-            }
             frontLeft.setPower(0);
             backLeft.setPower(0);
             frontRight.setPower(0);

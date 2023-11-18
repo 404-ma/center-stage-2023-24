@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 public class RoboGoApril extends LinearOpMode
 {
     // Adjust these numbers to suit your robot.
-    private static final double DESIRED_DISTANCE = 12.0; //  this is how close the camera should get to the target (inches)
+    private static final double DESIRED_DISTANCE = 12; //  this is how close the camera should get to the target (inches)
 
     //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
     //  applied to the drive motors to correct the error.
@@ -73,7 +73,8 @@ public class RoboGoApril extends LinearOpMode
         telemetry.update();
         waitForStart();
 
-
+        int bNum = 0;
+        boolean autoPilot = false;
 
 
         while (opModeIsActive())
@@ -106,7 +107,7 @@ public class RoboGoApril extends LinearOpMode
 
             // Tell the driver what we see, and what to do.
             if (targetFound) {
-                telemetry.addData("\n>","HOLD Left-Bumper to Drive to hi\n");
+                telemetry.addData("\n>","Press B button to turn on\n");
                 telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
                 telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
                 telemetry.addData("BearingDDDD","%3.0f degrees", desiredTag.ftcPose.bearing);
@@ -119,8 +120,7 @@ public class RoboGoApril extends LinearOpMode
             telemetry.addData("Test1: ",iN);
 
             // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
-            int bNum = 0;
-            Boolean autoPilot = false;
+
 
             if(iN == GameplayInputType.BUTTON_B){
                 bNum++;
@@ -133,9 +133,7 @@ public class RoboGoApril extends LinearOpMode
                 autoPilot = false;
             }
 
-             if (autoPilot == true && targetFound ) {
-
-                    telemetry.addData("\n>", "It Works YAy", "\n");
+             if ( autoPilot && targetFound ) {
                     // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
                     double rangeError = (DESIRED_DISTANCE - desiredTag.ftcPose.range);
                     double headingError = desiredTag.ftcPose.bearing;
@@ -156,7 +154,7 @@ public class RoboGoApril extends LinearOpMode
                 drive  =  gamepad1.left_stick_y  / 2.0;  // Reduce drive rate to 50%.
                 strafe = -gamepad1.left_stick_x  / 2.0;  // Reduce strafe rate to 50%.
                 turn   =  gamepad1.right_stick_x / 3.0;  // Reduce turn rate to 33%.
-                telemetry.addData("Subi is Amazing","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+                telemetry.addData("Manual","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
             }
             telemetry.update();
 
