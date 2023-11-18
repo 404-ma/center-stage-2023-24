@@ -20,7 +20,8 @@ public class eversonxc extends LinearOpMode {
         waitForStart();
         if (isStopRequested()) return;
         telemetry.clear();
-
+        
+        //It seems that only bump0 on the hardware map can output data
         DigitalChannel x0 = hardwareMap.get(DigitalChannel.class, "bump0");
         DigitalChannel x1 = hardwareMap.get(DigitalChannel.class, "bump1");
 
