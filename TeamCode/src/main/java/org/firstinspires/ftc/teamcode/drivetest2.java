@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helper.DrivetrainV2;
 import org.firstinspires.ftc.teamcode.Helper.gamePadInput;
@@ -21,6 +24,9 @@ public class drivetest2 extends LinearOpMode {
         telemetry.addLine();
         telemetry.addData(">", "Press Start to Launch");
         telemetry.update();
+        DcMotor viperMotor = hardwareMap.dcMotor.get("viperMotor");
+        CRServo conveyor = hardwareMap.crservo.get("conveyor");
+        int power = 1;
 
         waitForStart();
         if (isStopRequested()) return;
@@ -36,11 +42,25 @@ public class drivetest2 extends LinearOpMode {
             gamePadInput.GameplayInputType inpType = gpIn.WaitForGamepadInput(500);
             switch (inpType) {
                 case LEFT_TRIGGER_ON:
-                    drvTrain.setBrakeStatus(true);
-                case LEFT_TRIGGER_OFF:
-                    // Brake (ON/OFF)
-                    drvTrain.setBrakeStatus( false);
+                    viperMotor.setPower(-0.5);
                     break;
+                case LEFT_TRIGGER_OFF:
+                    viperMotor.setPower(0);
+                    break;
+                case RIGHT_TRIGGER_ON:
+                    viperMotor.setPower(0.5);
+                    break;
+                case RIGHT_TRIGGER_OFF:
+                    viperMotor.setPower(0);
+                    break;
+                case BUTTON_A:
+                    conveyor.setPower(power);
+                    break;
+                case NONE:
+                    conveyor.setPower(0);
+                    break;
+                case BUTTON_B:
+                    power = -power;
                 case JOYSTICK:
                     // Set Drivetrain Power
                     drvTrain.setDriveVectorFromJoystick(  gamepad1.left_stick_x,
