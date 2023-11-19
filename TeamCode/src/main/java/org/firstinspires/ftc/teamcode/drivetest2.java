@@ -37,6 +37,7 @@ public class drivetest2 extends LinearOpMode {
             switch (inpType) {
                 case LEFT_TRIGGER_ON:
                     drvTrain.setBrakeStatus(true);
+                    break;
                 case LEFT_TRIGGER_OFF:
                     // Brake (ON/OFF)
                     drvTrain.setBrakeStatus( false);
