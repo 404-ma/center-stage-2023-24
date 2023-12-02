@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.Helper.gamePadInput.GameplayInputType;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-import org.firstinspires.ftc.teamcode.Helper.Drivetrain;
+import org.firstinspires.ftc.teamcode.Helper.DrivetrainV2;
 
 
 
@@ -50,13 +50,13 @@ public class RoboGoApril extends LinearOpMode
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
     private gamePadInput game1;
-    private Drivetrain game2;
+    private DrivetrainV2 game2;
 
     @Override public void runOpMode()
     {
 
         game1 = new gamePadInput(gamepad1);
-        game2 = new Drivetrain(hardwareMap);
+        game2 = new DrivetrainV2(hardwareMap);
 
         boolean targetFound     = false;    // Set to true when an AprilTag target is detected
         double  drive           = 0;        // Desired forward power/speed (-1 to +1)
@@ -159,7 +159,7 @@ public class RoboGoApril extends LinearOpMode
             telemetry.update();
 
             // Apply desired axes motions to the drivetrain.
-          game2.SetDriveVector(drive,strafe,turn);
+          game2.setDriveVector(drive,strafe,turn);
         }
     }
 
