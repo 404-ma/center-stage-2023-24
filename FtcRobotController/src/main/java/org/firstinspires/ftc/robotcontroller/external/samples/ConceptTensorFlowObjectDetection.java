@@ -39,6 +39,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
 import java.util.List;
+//im sowwy
 
 /*
  * This OpMode illustrates the basics of TensorFlow Object Detection,
