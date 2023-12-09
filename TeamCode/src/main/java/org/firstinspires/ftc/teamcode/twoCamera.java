@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -18,6 +19,7 @@ public class twoCamera extends LinearOpMode {
         DcMotor backRight = hardwareMap.dcMotor.get("backRight");
         DistanceSensor distanceR = hardwareMap.get(DistanceSensor.class, "distanceR");
         DistanceSensor distanceL = hardwareMap.get(DistanceSensor.class, "distanceL");
+
 
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
