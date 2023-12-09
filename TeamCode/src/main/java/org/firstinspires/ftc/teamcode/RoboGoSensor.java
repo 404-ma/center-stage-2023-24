@@ -5,29 +5,36 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Helper.gamePadInput;
 import org.firstinspires.ftc.teamcode.Helper.gamePadInput.GameplayInputType;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.teamcode.Helper.DrivetrainV2;
+import org.firstinspires.ftc.teamcode.TestAprilTags;
+//import org.firstinspires.ftc.robotcore.TestAprilTags.initAprilTags;
+
 
 
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@TeleOp(name="Omni Drive To AprilTag") //this is the file name in hub
+@TeleOp(name="Abika and Subo are amazing") //this is the file name in hub
 
-public class RoboGoApril extends LinearOpMode
+public class RoboGoSensor extends LinearOpMode
 {
     // Adjust these numbers to suit your robot.
     private static final double DESIRED_DISTANCE = 12; //  this is how close the camera should get to the target (inches)
+
+    private static final double FINAL_DISTANCE = 10; //this is how close the sensors should get to the target (cm)
 
     //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
     //  applied to the drive motors to correct the error.
@@ -45,12 +52,13 @@ public class RoboGoApril extends LinearOpMode
     //private DcMotor leftBackDrive    = null;  //  Used to control the left back drive wheel
     //private DcMotor rightBackDrive   = null;  //  Used to control the right back drive wheel
 
-    private static final int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
+    private static final int DESIRED_TAG_ID = 2;     // Choose the tag you want to approach or set to -1 for ANY tag.
     private VisionPortal visionPortal;               // Used to manage the video source.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
     private gamePadInput game1;
     private DrivetrainV2 game2;
+    private TestAprilTags see = new TestAprilTags();
 
     @Override public void runOpMode()
     {
@@ -58,13 +66,18 @@ public class RoboGoApril extends LinearOpMode
         game1 = new gamePadInput(gamepad1);
         game2 = new DrivetrainV2(hardwareMap);
 
+        DistanceSensor distanceR = hardwareMap.get(DistanceSensor.class, "distanceR");
+        DistanceSensor distanceL = hardwareMap.get(DistanceSensor.class, "distanceL");
+
+
         boolean targetFound     = false;    // Set to true when an AprilTag target is detected
         double  drive           = 0;        // Desired forward power/speed (-1 to +1)
         double  strafe          = 0;        // Desired strafe power/speed (-1 to +1)
         double  turn            = 0;        // Desired turning power/speed (-1 to +1)
 
         // Initialize the Apriltag Detection process
-        initAprilTag();
+
+        see.initAprilTag();
         setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
 
         // Wait for driver to press start
@@ -112,11 +125,14 @@ public class RoboGoApril extends LinearOpMode
                 telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
                 telemetry.addData("BearingDDDD","%3.0f degrees", desiredTag.ftcPose.bearing);
                 telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
+                telemetry.addData("Right Sensor Distance", distanceR.getDistance(DistanceUnit.CM));
+                telemetry.addData("Left Sensor Distance", distanceL.getDistance(DistanceUnit.CM));
+
             } else {
                 telemetry.addData("\n>","Drive using joysticks to find valid target\n");
             }
 
-            telemetry.addData("Test: ",GameplayInputType.RIGHT_TRIGGER_ON);
+            //telemetry.addData("Test: ",GameplayInputType.RIGHT_TRIGGER_ON);
             telemetry.addData("Test1: ",iN);
 
             // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
@@ -133,35 +149,63 @@ public class RoboGoApril extends LinearOpMode
                 autoPilot = false;
             }
 
-             if ( autoPilot && targetFound ) {
-                    // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
-                    double rangeError = (DESIRED_DISTANCE - desiredTag.ftcPose.range);
-                    double headingError = desiredTag.ftcPose.bearing;
-                    double yawError = desiredTag.ftcPose.yaw;
-
-
-                    // Use the speed and turn "gains" to calculate how we want the robot to move.
-                    drive = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-                    turn = Range.clip(-headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
-                    strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
-
-                    telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
-                }
-             else {
-
+            if (iN == GameplayInputType.JOYSTICK) {
                 // drive using manual POV Joystick mode.  Slow things down to make the robot more controlable.
-
                 drive  =  gamepad1.left_stick_y  / 2.0;  // Reduce drive rate to 50%.
                 strafe = -gamepad1.left_stick_x  / 2.0;  // Reduce strafe rate to 50%.
                 turn   =  gamepad1.right_stick_x / 3.0;  // Reduce turn rate to 33%.
                 telemetry.addData("Manual","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+
+                //game2.SetDriveVector(drive,strafe,turn);
+            }
+
+            else if(autoPilot & targetFound){
+                // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
+                double rangeError = ( DESIRED_DISTANCE -  desiredTag.ftcPose.range);
+                double headingError = desiredTag.ftcPose.bearing;
+                double yawError = desiredTag.ftcPose.yaw;
+
+
+                // Use the speed and turn "gains" to calculate how we want the robot to move.
+                drive = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+                turn = Range.clip(-headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
+                strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+
+                telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+            }
+            else{
+                drive = 0;
+                strafe = 0;
+                turn = 0;
+                telemetry.addData("Stationary", "Drive %0f, Strafe %0f, Turn %0f ", drive, strafe, turn);
+            }
+
+            double sensorEr = (distanceR.getDistance(DistanceUnit.CM) + distanceR.getDistance(DistanceUnit.CM) )/2;
+
+
+            if(desiredTag.ftcPose.range == 12 && targetFound){
+
+                double rangeESen = (FINAL_DISTANCE - sensorEr);
+                double headingError = desiredTag.ftcPose.bearing;
+                double yawError = desiredTag.ftcPose.yaw;
+
+
+                drive = Range.clip(rangeESen* SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+                turn = Range.clip(-headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
+                strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+
+                telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
             }
             telemetry.update();
+            game2.setDriveVector(drive,strafe,turn);
 
             // Apply desired axes motions to the drivetrain.
-          game2.setDriveVector(drive,strafe,turn);
+
         }
     }
+
+
+
 
     /**
      * Move robot according to desired axes motions
@@ -177,27 +221,6 @@ public class RoboGoApril extends LinearOpMode
     /**
      * Initialize the AprilTag processor.
      */
-
-
-    private void initAprilTag() {
-        // Create the AprilTag processor by using a builder.
-        aprilTag = new AprilTagProcessor.Builder().build();
-
-        // Adjust Image Decimation to trade-off detection-range for detection-rate.
-        // eg: Some typical detection data using a Logitech C920 WebCam
-        // Decimation = 1 ..  Detect 2" Tag from 10 feet away at 10 Frames per second
-        // Decimation = 2 ..  Detect 2" Tag from 6  feet away at 22 Frames per second
-        // Decimation = 3 ..  Detect 2" Tag from 4  feet away at 30 Frames Per Second
-        // Decimation = 3 ..  Detect 5" Tag from 10 feet away at 30 Frames Per Second
-        // Note: Decimation can be changed on-the-fly to adapt during a match.
-        aprilTag.setDecimation(2);
-
-        // Create the vision portal by using a builder.
-        visionPortal = new VisionPortal.Builder()
-                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
-                .addProcessor(aprilTag)
-                .build();
-}
 
     /*
      Manually set the camera gain and exposure.

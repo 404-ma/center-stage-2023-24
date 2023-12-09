@@ -11,14 +11,16 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 @TeleOp
 public class twoCamera extends LinearOpMode {
+    public static DistanceSensor distanceR;
+    public static DistanceSensor distanceL;
     @Override
     public void runOpMode() {
         DcMotor frontLeft = hardwareMap.dcMotor.get("frontLeft");
         DcMotor backLeft = hardwareMap.dcMotor.get("backLeft");
         DcMotor frontRight = hardwareMap.dcMotor.get("frontRight");
         DcMotor backRight = hardwareMap.dcMotor.get("backRight");
-        DistanceSensor distanceR = hardwareMap.get(DistanceSensor.class, "distanceR");
-        DistanceSensor distanceL = hardwareMap.get(DistanceSensor.class, "distanceL");
+        distanceR = hardwareMap.get(DistanceSensor.class, "distanceR");
+        distanceL = hardwareMap.get(DistanceSensor.class, "distanceL");
 
 
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
