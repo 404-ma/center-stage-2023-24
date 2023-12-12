@@ -91,7 +91,7 @@ public class TestTensorFlowObjectDetection extends LinearOpMode {
                 // choose one of the following:
                 //   Use setModelAssetName() if the custom TF Model is built in as an asset (AS only).
                 //   Use setModelFileName() if you have downloaded a custom team model to the Robot Controller.
-                .setModelAssetName(TFOD_MODEL_ASSET)
+                //.setModelAssetName(TFOD_MODEL_ASSET)
                 //.setModelFileName(TFOD_MODEL_FILE)
 
                 // The following default settings are available to un-comment and edit as needed to
@@ -106,7 +106,8 @@ public class TestTensorFlowObjectDetection extends LinearOpMode {
 
         // Create the vision portal by using a builder.
         VisionPortal.Builder builder = new VisionPortal.Builder();
-        builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 2"));
+
+        builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam Back"));
 
         // Choose a camera resolution. Not all cameras support all resolutions.
         //builder.setCameraResolution(new Size(640, 480));

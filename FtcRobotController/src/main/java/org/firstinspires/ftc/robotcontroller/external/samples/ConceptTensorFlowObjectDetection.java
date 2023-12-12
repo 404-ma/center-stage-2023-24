@@ -39,8 +39,6 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
 import java.util.List;
-//im sowwy
-//plsplspls
 
 /*
  * This OpMode illustrates the basics of TensorFlow Object Detection,
@@ -50,7 +48,6 @@ import java.util.List;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
 @TeleOp(name = "Concept: TensorFlow Object Detection", group = "Concept")
-@Disabled
 public class ConceptTensorFlowObjectDetection extends LinearOpMode {
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
@@ -58,10 +55,12 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
     // TFOD_MODEL_ASSET points to a model file stored in the project Asset location,
     // this is only used for Android Studio when using models in Assets.
     private static final String TFOD_MODEL_ASSET = "model_20231209_01628.tflite";
+
     // TFOD_MODEL_FILE points to a model file stored onboard the Robot Controller's storage,
     // this is used when uploading models directly to the RC using the model upload interface.
     //ONBOT ONLYY
     //private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/myCustomModel.tflite";
+
     // Define the labels recognized in the model for TFOD (must be in training order!)
     private static final String[] LABELS = {
        "Pixel",
@@ -126,7 +125,7 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
             // choose one of the following:
             //   Use setModelAssetName() if the custom TF Model is built in as an asset (AS only).
             //   Use setModelFileName() if you have downloaded a custom team model to the Robot Controller.
-            .setModelAssetName(TFOD_MODEL_ASSET)
+            //.setModelAssetName(TFOD_MODEL_ASSET)
             //.setModelFileName(TFOD_MODEL_FILE)
 
             // The following default settings are available to un-comment and edit as needed to 
@@ -144,7 +143,7 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
 
         // Set the camera (webcam vs. built-in RC phone camera).
         if (USE_WEBCAM) {
-            builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
+            builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam Front"));
         } else {
             builder.setCamera(BuiltinCameraDirection.BACK);
         }
