@@ -36,6 +36,8 @@ public class TestDoubleVision extends LinearOpMode {
      */
     private AprilTagProcessor aprilTag;
 
+    private static final String TFOD_MODEL_ASSET = "model_20231209_101628.tflite";
+
     /**
      * The variable to store our instance of the TensorFlow Object Detection processor.
      */
@@ -99,7 +101,7 @@ public class TestDoubleVision extends LinearOpMode {
 
 // Set the camera (webcam vs. built-in RC phone camera).
         if (USE_WEBCAM) {
-            builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
+            builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam Back"));
         } else {
             builder.setCamera(BuiltinCameraDirection.BACK);
         }
@@ -141,6 +143,8 @@ public class TestDoubleVision extends LinearOpMode {
         // -----------------------------------------------------------------------------------------
         // TFOD Configuration
         // -----------------------------------------------------------------------------------------
+
+        //tfod = new TfodProcessor.Builder().setModelAssetName(TFOD_MODEL_ASSET)
 
         tfod = new TfodProcessor.Builder()
                 .build();
