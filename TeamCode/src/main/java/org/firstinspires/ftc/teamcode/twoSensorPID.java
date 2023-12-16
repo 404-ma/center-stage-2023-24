@@ -30,7 +30,7 @@ public class twoSensorPID extends LinearOpMode {
         double lastErrorRot = 0;
 
 
-        double targetDist = 10;
+        double targetDist = 10.0;
         double approachSpeedLimDist = 0.25;
         double approachSpeedLimRot = 0.1;
         double lastTargetDist = targetDist;

@@ -42,7 +42,7 @@ import java.util.Date;
  *  This class collects telemetry data about its most recent values and exposes
  *  that data via (getTelemetry_...) methods.
  */
-
+@Deprecated
 public class gamePadInput {
 
 
