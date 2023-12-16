@@ -41,22 +41,12 @@ public class gamePadInputV2Test extends LinearOpMode {
             update_telemetry(gpIn, drvTrain);
             gamePadInputV2.GameplayInputType inpType = gpIn.WaitForGamepadInput(500);
             switch (inpType) {
-
-                /*
-                case LEFT_TRIGGER_ON:
-                    viperMotor.setPower(-0.5);
+                case LEFT_TRIGGER:
+                    viperMotor.setPower(gamepad1.left_trigger * -1);
                     break;
-                case LEFT_TRIGGER_OFF:
-                    viperMotor.setPower(0);
+                case RIGHT_TRIGGER:
+                    viperMotor.setPower(gamepad1.right_trigger * 1);
                     break;
-                case RIGHT_TRIGGER_ON:
-                    viperMotor.setPower(0.5);
-                    break;
-                case RIGHT_TRIGGER_OFF:
-                    viperMotor.setPower(0);
-                    break;
-
-                 */
                 case BUTTON_A:
                     conveyor.setPower(power);
                     break;

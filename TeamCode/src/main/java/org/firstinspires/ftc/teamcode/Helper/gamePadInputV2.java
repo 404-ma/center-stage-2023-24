@@ -245,18 +245,18 @@ public class gamePadInputV2 {
      */
     private GameplayInputType GetTrigger() {
 
-        boolean lockedOut = ((LastJoystickInputTime + TRIGGER_LOCKOUT_INTERVAL) - System.currentTimeMillis()) > 0;
+        boolean lockedOut = ((LastTriggerInputTime + TRIGGER_LOCKOUT_INTERVAL) - System.currentTimeMillis()) > 0;
 
         // Trigger Moved or Remaining in Same (Non Resting) Position Past Lockout Interval
         if (!lockedOut) {
-            boolean newleft = (inputGPad.left_trigger != LeftTriggerLast) && (inputGPad.left_trigger == 0f);
+            boolean newleft = (inputGPad.left_trigger != LeftTriggerLast);
             if (newleft) {
                 LastTriggerInputTime = System.currentTimeMillis();
                 LeftTriggerLast = inputGPad.left_trigger;
                 return (GameplayInputType.LEFT_TRIGGER);
             }
 
-            boolean newright = (inputGPad.right_trigger != RightTriggerLast) && (inputGPad.right_trigger == 0f);
+            boolean newright = (inputGPad.right_trigger != RightTriggerLast);
             if (newright) {
                 LastTriggerInputTime = System.currentTimeMillis();
                 RightTriggerLast = inputGPad.right_trigger;
