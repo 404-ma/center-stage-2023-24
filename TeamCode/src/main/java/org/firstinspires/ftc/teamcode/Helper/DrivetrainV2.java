@@ -16,8 +16,6 @@ import java.util.Date;
 
 
 public class DrivetrainV2 {
-
-
     private static final float STRAFING_ADJUSTMENT = 1.08f;
     private static final float JOYSTICK_Y_INPUT_ADJUSTMENT = -1f;
     private static final double BRAKING_STOP_THRESHOLD = 0.25;

@@ -7,8 +7,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.twoCamera;
 public class DistanceSystem {
-
-
         public static DistanceSensor distanceR;
         public static DistanceSensor distanceL;
 
@@ -21,9 +19,6 @@ public class DistanceSystem {
             double distRCM = distanceR.getDistance(DistanceUnit.CM);
             double distLCM = distanceL.getDistance(DistanceUnit.CM);
             double avgdist = (distRCM + distLCM) / 2;
-
-
-
 
             return avgdist;
         }
