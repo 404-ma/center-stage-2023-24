@@ -9,10 +9,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helper.DrivetrainV2;
 import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2;
 
-
 import java.util.Locale;
 
-@TeleOp(name= "Atharv is awesome gamePadInputV2 test ", group ="gamePadInputV2")
+@TeleOp(name= "Atharv is awesome gamePadInputV2 test ", group ="Test")
 public class gamePadInputV2Test extends LinearOpMode {
     private int tlm_MainLoopCount = 0;
 
@@ -20,7 +19,7 @@ public class gamePadInputV2Test extends LinearOpMode {
     public void runOpMode() {
         // Load Introduction and Wait for Start
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
-        telemetry.addLine("Coach Test - TeleOp Drive Test");
+        telemetry.addLine("TeleOp Drive Test");
         telemetry.addLine();
         telemetry.addData(">", "Press Start to Launch");
         telemetry.update();
@@ -75,7 +74,6 @@ public class gamePadInputV2Test extends LinearOpMode {
         telemetry.addLine().addData( "Inp Time", inpTime);
         telemetry.addLine().addData( "L Joy  X", "%6.3f", gamepad1.left_stick_x).addData("Y", "%6.3f", gamepad1.left_stick_y);
         telemetry.addLine().addData( "R Joy  X", "%6.3f", gamepad1.right_stick_x).addData("Y", "%6.3f", gamepad1.right_stick_y);
-        drv.getTelemetryLastPowerFrontLeft();
         telemetry.addLine("Drive Train");
         telemetry.addLine().addData( "Pwr  L F", drv.getTelemetryLastPowerFrontLeft());
         telemetry.addLine().addData( "Pwr  L B", drv.getTelemetryLastPowerBackLeft());
