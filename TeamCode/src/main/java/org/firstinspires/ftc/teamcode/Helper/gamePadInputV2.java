@@ -45,11 +45,6 @@ import java.util.Date;
 
 public class gamePadInputV2 {
 
-
-    public gamePadInputV2(Gamepad inputGPad) {
-        this.inputGPad = inputGPad;
-    }
-
     public enum GameplayInputType {
         NONE("No Input"),
         BUTTON_A("A Button"),
@@ -88,9 +83,9 @@ public class gamePadInputV2 {
     static final long WAIT_LOOP_SlEEP_INTERVAL = 20;  // This Interval should be Small
     static final long BUTTON_LOCKOUT_INTERVAL = 1000;
     static final long DPAD_LOCKOUT_INTERVAL = 1000;
+    static final long TRIGGER_LOCKOUT_INTERVAL = 20;
     static final long JOYSTICK_LOCKOUT_INTERVAL = 20;  // should be Small
 
-    static final long TRIGGER_LOCKOUT_INTERVAL = 20;
 
 
     // Telemetry Data
@@ -124,7 +119,8 @@ public class gamePadInputV2 {
     // -------------------------------------------------------------
 
     // Class Constructor
-    public void gamePadInput(@NonNull Gamepad gp) {
+    public gamePadInputV2(@NonNull Gamepad gp) {
+        this.inputGPad = gp;
     }
 
     // Telemetry Data Getters
@@ -237,37 +233,6 @@ public class gamePadInputV2 {
 
 
     /*
-     * Get Trigger: Checks for Gamepad Trigger Input Changes and Disregard Changes During the
-     *              Lockout Period.  It converts the floating Trigger value to an ON/OFF Input
-     *                 Trigger is considered ON when it transitions over 75%
-     *                 Trigger is considered OFF when it transitions under 25%
-     *              Returns an input type of NONE when no Trigger change is detected.
-     */
-    private GameplayInputType GetTrigger() {
-
-        boolean lockedOut = ((LastTriggerInputTime + TRIGGER_LOCKOUT_INTERVAL) - System.currentTimeMillis()) > 0;
-
-        // Trigger Moved or Remaining in Same (Non Resting) Position Past Lockout Interval
-        if (!lockedOut) {
-            boolean newleft = (inputGPad.left_trigger != LeftTriggerLast);
-            if (newleft) {
-                LastTriggerInputTime = System.currentTimeMillis();
-                LeftTriggerLast = inputGPad.left_trigger;
-                return (GameplayInputType.LEFT_TRIGGER);
-            }
-
-            boolean newright = (inputGPad.right_trigger != RightTriggerLast);
-            if (newright) {
-                LastTriggerInputTime = System.currentTimeMillis();
-                RightTriggerLast = inputGPad.right_trigger;
-                return (GameplayInputType.RIGHT_TRIGGER);
-            }
-        }
-        return (GameplayInputType.NONE);  // Catch all for No Joystick Input
-    }
-
-
-    /*
      * Get DPad: Checks for Gamepad DPad (Upper Left) Input Changes and Disregards Changes During
      *           the Lockout Period.
      *           Returns an input type of NONE when no Trigger change is detected.
@@ -292,6 +257,38 @@ public class gamePadInputV2 {
         }
         return (intype);
     }
+
+
+    /*
+     * Get Trigger: Checks for Gamepad Trigger Input Changes and Disregard Changes During the
+     *              Lockout Period.  It converts the floating Trigger value to an ON/OFF Input
+     *                 Trigger is considered ON when it transitions over 75%
+     *                 Trigger is considered OFF when it transitions under 25%
+     *              Returns an input type of NONE when no Trigger change is detected.
+     */
+    private GameplayInputType GetTrigger() {
+
+        boolean lockedOut = ((LastTriggerInputTime + TRIGGER_LOCKOUT_INTERVAL) - System.currentTimeMillis()) > 0;
+
+        // Trigger Moved or Remaining in Same (Non Resting) Position Past Lockout Interval
+        if (!lockedOut) {
+            boolean newLeft = (inputGPad.left_trigger != LeftTriggerLast);
+            if (newLeft) {
+                LastTriggerInputTime = System.currentTimeMillis();
+                LeftTriggerLast = inputGPad.left_trigger;
+                return (GameplayInputType.LEFT_TRIGGER);
+            }
+
+            boolean newRight = (inputGPad.right_trigger != RightTriggerLast);
+            if (newRight) {
+                LastTriggerInputTime = System.currentTimeMillis();
+                RightTriggerLast = inputGPad.right_trigger;
+                return (GameplayInputType.RIGHT_TRIGGER);
+            }
+        }
+        return (GameplayInputType.NONE);  // Catch all for No Joystick Input
+    }
+
 
     /*
      * Get Joystick: Checks for Change in Joystick Input Changes and Disregards Changes During
