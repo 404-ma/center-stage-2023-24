@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2;
 import java.util.Locale;
 
 @TeleOp(name= "Atharv is awesome gamePadInputV2 test ", group ="Test")
-public class gamePadInputV2Test extends LinearOpMode {
+public class drivetest3 extends LinearOpMode {
     private int tlm_MainLoopCount = 0;
 
     @Override
