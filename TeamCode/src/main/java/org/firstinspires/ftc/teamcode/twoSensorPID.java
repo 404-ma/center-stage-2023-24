@@ -57,6 +57,7 @@ public class twoSensorPID extends LinearOpMode {
         double kpRot = 0.04;
         double kdRot = 0;
         double kiRot = 0;
+
         double kpDist = 0.042;
         double kdDist = 0.0029*.75;
         double kiDist = 0.15/20;
@@ -70,18 +71,21 @@ public class twoSensorPID extends LinearOpMode {
             double distRCM = distanceR.getDistance(DistanceUnit.CM);
             double distLCM = distanceL.getDistance(DistanceUnit.CM);
 
-            //double distRCMFilt=
 
 
 
 
-            double errorDist = ((distLCM + distRCM)/2)-targetDist;
+            double errorDist = ((distLCM + distRCM)/2)-targetDist; // Average distance it is off from target distance
 
-            double errorChangeDist = errorDist - lastErrorDist;
+            double errorChangeDist = errorDist - lastErrorDist; // Change in average distance it is off from previous errorDist
+
+            //Using a Kalman Filter that considers previous errors to provide a better estimate for the current error
             currentFilterEstimateDist = (kalDist*previousFilterEstimateDist)+(1-kalDist)*errorChangeDist;
             previousFilterEstimateDist = currentFilterEstimateDist;
-            double derivativeDist = currentFilterEstimateDist/timer.seconds();
-            integralSumDist = integralSumDist + (errorDist*timer.seconds());
+
+
+            double derivativeDist = currentFilterEstimateDist/timer.seconds(); // Using slope formula to estimate the derivative of error
+            integralSumDist = integralSumDist + (errorDist * timer.seconds()); // Multiplying the error by time to estimate the integral of error
             if (integralSumDist > maxDistSum){
                 integralSumDist = maxDistSum;
             }
@@ -92,13 +96,13 @@ public class twoSensorPID extends LinearOpMode {
                 integralSumDist = 0;
             }
             if (gamepad1.a) {
-                powerDist = (kpDist * errorDist) + (kdDist * derivativeDist) + (kiDist * integralSumDist);
+                powerDist = (kpDist * errorDist) + (kdDist * derivativeDist) + (kiDist * integralSumDist); //Plugging all calculated values into PID equation
             }
             else {
                 powerDist = 0;
             }
 
-            if (powerDist > approachSpeedLimDist){
+            if (powerDist > approachSpeedLimDist){ //These next couple of lines make sure the powerDist is greater than the maximum power constant, ie. wont turn the robot too fast
                 powerDist = approachSpeedLimDist;
             }
             if (powerDist < -approachSpeedLimDist){
@@ -106,14 +110,15 @@ public class twoSensorPID extends LinearOpMode {
             }
 
 
-
+            //Exact same calculations as before only this time getting a PID value for how much the robot should rotate based on the difference in values of the two sensors
             double errorRot = distLCM - distRCM;
-
             double errorChangeRot = errorRot - lastErrorRot;
+
             currentFilterEstimateRot = (kalRot*previousFilterEstimateRot)+(1-kalRot)*errorChangeRot;
             previousFilterEstimateRot = currentFilterEstimateRot;
             double derivativeRot = currentFilterEstimateRot/timer.seconds();
             integralSumRot = integralSumRot + (errorRot*timer.seconds());
+
             if (integralSumRot > maxRotSum){
                 integralSumRot = maxRotSum;
             }
@@ -121,7 +126,7 @@ public class twoSensorPID extends LinearOpMode {
                 integralSumRot = -maxRotSum;
             }
 
-            if(Math.abs(errorDist) < rotDist && gamepad1.a){
+            if(Math.abs(errorDist) < rotDist && gamepad1.a){ // Only rotates the robot if the average distance from the target the range of rotating distance, a constant
                 powerRot = (kpRot*errorRot)+(kdRot*derivativeRot)+(kiRot*integralSumRot);
             }
             else{
