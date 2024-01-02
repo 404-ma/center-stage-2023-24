@@ -8,81 +8,66 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2;
 
 @TeleOp
 public class ArmTest extends LinearOpMode {
-    //Hi doruk :)
+
     @Override
     public void runOpMode() {
-        DcMotor frontLeft = hardwareMap.dcMotor.get("frontLeft");
-        DcMotor backLeft = hardwareMap.dcMotor.get("backLeft");
-        DcMotor frontRight = hardwareMap.dcMotor.get("frontRight");
-        DcMotor backRight = hardwareMap.dcMotor.get("backRight");
-        Servo grip = hardwareMap.servo.get("grip");
-        Servo arm = hardwareMap.servo.get("arm");
-        DistanceSensor distance = hardwareMap.get(DistanceSensor.class, "distance");
+        //Servo grip = hardwareMap.servo.get("grip");
+        Servo arm = hardwareMap.servo.get("ArmServo");
+        gamePadInputV2 gpIn = new gamePadInputV2(gamepad1);
+        float position = 0;
 
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        //backRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE );
-
-        double target = 10;
-
+        telemetry.addLine("Use DpadUp/Down for big changes and DpadLeft/Right for small changes");
+        telemetry.addLine("Use left/right bumpers to reverse direction");
+        telemetry.addData("position:", position);
+        telemetry.update();
 
         waitForStart();
-        double initialGripPos = grip.getPosition();
 
         if (isStopRequested()) return;
 
-
-
         while (opModeIsActive()) {
-            double y = -gamepad1.left_stick_y;
-            double x = gamepad1.left_stick_x * 1.1;
-            double rx = gamepad1.right_stick_x;
-
-            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-            double frontLeftPower = (y + x + rx) / denominator;
-            double backLeftPower = (y - x + rx) / denominator;
-            double frontRightPower = (y - x - rx) / denominator;
-            double backRightPower = (y + x - rx) / denominator;
-
-            if (gamepad1.a){
-                grip.setPosition(0.615);
+            gamePadInputV2.GameplayInputType inpType = gpIn.WaitForGamepadInput(500);
+            switch (inpType) {
+                case DPAD_UP:
+                    position += 0.1;
+                    telemetry.addData("position:", position);
+                    telemetry.update();
+                    break;
+                case DPAD_DOWN:
+                    position -= 0.1;
+                    telemetry.addData("position:", position);
+                    telemetry.update();
+                    break;
+                case DPAD_LEFT:
+                    position -= 0.001;
+                    telemetry.addData("position:", position);
+                    telemetry.update();
+                    break;
+                case DPAD_RIGHT:
+                    position += 0.001;
+                    telemetry.addData("position:", position);
+                    telemetry.update();
+                    break;
+                case BUTTON_A:
+                    arm.setPosition(position);
+                    break;
+                case BUTTON_L_BUMPER:
+                    arm.setDirection(Servo.Direction.REVERSE);
+                    telemetry.addLine("Servo Is Reversed");
+                    telemetry.addData("position:", position);
+                    telemetry.update();
+                    break;
+                case BUTTON_R_BUMPER:
+                    arm.setDirection(Servo.Direction.FORWARD);
+                    telemetry.addLine("Servo Is Forwarded");
+                    telemetry.addData("position:", position);
+                    telemetry.update();
+                    break;
             }
-            if (gamepad1.b) {
-                grip.setPosition(0.57);
-            }
-            if (gamepad1.dpad_up){
-                arm.setDirection(Servo.Direction.FORWARD);
-                arm.setPosition(0.8);
-            }
-            if (gamepad1.dpad_down) {
-                arm.setDirection(Servo.Direction.FORWARD);
-                arm.setPosition(0.37);
-            }
-            if (gamepad1.dpad_left) {
-                arm.setDirection(Servo.Direction.FORWARD);
-                arm.setPosition(0.35);
-            }
-            if (gamepad1.dpad_right) {
-                arm.setDirection(Servo.Direction.FORWARD);
-                arm.setPosition(0.0);
-            }
-
-
-
-
-
-            double error = target - distance.getDistance(DistanceUnit.CM);
-
-            //frontLeft.setPower(frontLeftPower);
-            //backLeft.setPower(backLeftPower);
-            //frontRight.setPower(frontRightPower);
-            //backRight.setPower(backRightPower);
-
         }
-
     }
 }
