@@ -1,9 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
+import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helper.DistanceSystem;
+import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 
 @Autonomous (name = "RR auto drive 1", group = "RoadRunner")
 public class RRautodrive1 extends LinearOpMode {
@@ -11,27 +16,25 @@ public class RRautodrive1 extends LinearOpMode {
         @Override
         public void runOpMode(){
                 telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
-                telemetry.addLine("DistanceSystemtest");
+                telemetry.addLine("Road Runner Test Drive");
                 telemetry.addLine();
                 telemetry.addData(">", "Press Start to Launch");
                 telemetry.update();
 
+                MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
+
                 waitForStart();
                 if (isStopRequested()) return;
                 telemetry.clear();
+
+                Action MoveOne = drive.actionBuilder(drive.pose)
+                        .strafeTo( new Vector2d(30,30))
+                        .build();
+
                 while (opModeIsActive()) {
-                        double distance = DistanceSystem.getDistance();
-                        double rangeError = (10 - distance);
-
-
-
-                        
-
-
+                        Actions.runBlocking(MoveOne);
+                        sleep(1000);
                 }
-
-
-
         }
 }
 
