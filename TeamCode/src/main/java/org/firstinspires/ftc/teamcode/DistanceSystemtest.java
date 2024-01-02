@@ -49,6 +49,8 @@ public class DistanceSystemtest extends LinearOpMode {
 
             drv.setDriveVector(forward, 0, rotate);
 
+            sleep(100);
+
         }
     }
 }
