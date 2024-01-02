@@ -40,7 +40,7 @@ public class DistanceSystemtest extends LinearOpMode {
 
             // Use the speed and turn "gains" to calculate how we want the robot to move.
             double forward = Range.clip(-rangeError * 0.1, -0.3, 0.3);
-            double rotate = Range.clip(pose.yaw * 0.01, -0.25, 0.25);
+            double rotate = Range.clip(-pose.yaw * 0.01, -0.25, 0.25);
 
 
             telemetry.addData("Distance", pose.range);
@@ -49,8 +49,10 @@ public class DistanceSystemtest extends LinearOpMode {
 
             drv.setDriveVector(forward, 0, rotate);
 
-            sleep(100);
 
+
+            sleep(100);
+        }
         }
     }
-}
+
