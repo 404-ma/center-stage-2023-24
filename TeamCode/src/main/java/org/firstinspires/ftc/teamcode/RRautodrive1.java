@@ -10,13 +10,13 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helper.DistanceSystem;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 
-@Autonomous (name = "RR auto drive 1", group = "RoadRunner")
-public class RRautodrive1 extends LinearOpMode {
+@Autonomous (name = "RR Auto Drive 1 - Strafe", group = "RoadRunner")
+public class RRAutoDrive1 extends LinearOpMode {
 
         @Override
         public void runOpMode(){
                 telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
-                telemetry.addLine("Road Runner Test Drive");
+                telemetry.addLine("RoadRunner Auto Drive 1 - Strafe");
                 telemetry.addLine();
                 telemetry.addData(">", "Press Start to Launch");
                 telemetry.update();

@@ -10,14 +10,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 
-@Autonomous(name="RoadRunner Drive Test", group = "RoadRunner")
-public class RRDriveTest extends LinearOpMode {
+@Autonomous (name = "RR Auto Drive 2 - Box", group = "RoadRunner")
+public class RRAutoDrive2 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
         // Load Introduction and Wait for Start
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
-        telemetry.addLine("Road Runner Test Drive");
+        telemetry.addLine("RoadRunner Auto Drive 2 - Box");
         telemetry.addLine();
         telemetry.addData(">", "Press Start to Launch");
         telemetry.update();
@@ -28,23 +28,30 @@ public class RRDriveTest extends LinearOpMode {
         if (isStopRequested()) return;
         telemetry.clear();
 
-        Action MoveOne = drive.actionBuilder(drive.pose)
-                .lineToX(20)
+        Action moveOne = drive.actionBuilder(drive.pose)
+                .lineToX(40)
                 .waitSeconds(1)
                 .turnTo(Math.toRadians(90))
                 .waitSeconds(1)
-                .lineToY(20)
+                .lineToY(30)
                 .waitSeconds(1)
                 .turnTo(Math.toRadians(180))
                 .build();
+        Actions.runBlocking(moveOne);
 
-        Action MoveTwo = drive.actionBuilder(drive.pose)
-                .splineTo(new Vector2d(20, 20), Math.toRadians(90))
-                .build();
-
-        Actions.runBlocking(MoveOne);
         sleep(1000);
-        Actions.runBlocking(MoveTwo);
+
+        Action moveTwo = drive.actionBuilder(drive.pose)
+                .lineToX(0)
+                .waitSeconds(1)
+                .turnTo(Math.toRadians(270))
+                .waitSeconds(1)
+                .lineToY(0)
+                .waitSeconds(1)
+                .turnTo(Math.toRadians(0))
+                .waitSeconds(1)
+                .build();
+        Actions.runBlocking(moveTwo);
     }
 
 }
