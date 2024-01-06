@@ -46,13 +46,10 @@ import java.util.List;
 
 @Config
 public final class MecanumDrive {
-
     public static class Params {
         // IMU orientation
-        /*
-         * Adjust the orientations here to match your robot. See the FTC SDK documentation for details.
-         * https://ftc-docs.firstinspires.org/en/latest/programming_resources/imu/imu.html?highlight=imu#physical-hub-mounting
-         */
+        //   Fill in these values based on
+        //   see https://ftc-docs.firstinspires.org/en/latest/programming_resources/imu/imu.html?highlight=imu#physical-hub-mounting
         public RevHubOrientationOnRobot.LogoFacingDirection logoFacingDirection =
                 RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
         public RevHubOrientationOnRobot.UsbFacingDirection usbFacingDirection =
@@ -62,14 +59,14 @@ public final class MecanumDrive {
         /* Configured with instructions from
          *  https://rr.brott.dev/docs/v1-0/tuning/
          */
-        public double inPerTick = 0.0029583;
-        public double lateralInPerTick = 0.0020197718187517266;
-        public double trackWidthTicks = 13401.61458884288;
+        public double inPerTick = 0.002925942;
+        public double lateralInPerTick = 0.002097982788242009;
+        public double trackWidthTicks = 4687.403695388044;
 
         // feedforward parameters (in tick units)
-        public double kV = 0.000559801833505542;
-        public double kS = 0.9745784101460147;
-        public double kA = 0.00007;
+        public double kS = 0.8048110237878299;
+        public double kV = 0.000603265235173417;
+        public double kA = 0.00008;
 
         // path profile parameters (in inches)
         public double maxWheelVel = 50;
@@ -81,9 +78,9 @@ public final class MecanumDrive {
         public double maxAngAccel = Math.PI;
 
         // path controller gains
-        public double axialGain = 0.0;
-        public double lateralGain = 0.0;
-        public double headingGain = 0.0; // shared with turn
+        public double axialGain = 6.5;
+        public double lateralGain = 18;
+        public double headingGain = 16; // shared with turn
 
         public double axialVelGain = 0.0;
         public double lateralVelGain = 0.0;
@@ -130,6 +127,8 @@ public final class MecanumDrive {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
 
+        //   Make sure your config has motors with these names (or change them)
+        //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
         leftFront = hardwareMap.get(DcMotorEx.class, "frontLeft");
         leftBack = hardwareMap.get(DcMotorEx.class, "backLeft");
         rightBack = hardwareMap.get(DcMotorEx.class, "backRight");
@@ -140,9 +139,14 @@ public final class MecanumDrive {
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        // Reverse motor directions if needed
         leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
         leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
 
+
+        //   Make sure your config has an IMU with this name (can be BNO or BHI)
+        //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 PARAMS.logoFacingDirection, PARAMS.usbFacingDirection));
@@ -150,10 +154,8 @@ public final class MecanumDrive {
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-        /*
-         * Follow instructions for Road Runner Tuning
-         *   https://rr.brott.dev/docs/v1-0/tuning/
-         */
+        // Follow instructions for Road Runner Tuning
+        // https://rr.brott.dev/docs/v1-0/tuning/
         localizer = new ThreeDeadWheelLocalizer(hardwareMap, PARAMS.inPerTick);
 
         FlightRecorder.write("MECANUM_PARAMS", PARAMS);
