@@ -29,13 +29,12 @@ public class RRAutoDrive3 extends LinearOpMode {
         telemetry.clear();
 
         Action moveOne = drive.actionBuilder(drive.pose)
-                .lineToX(30)
+                .lineToX(25)
                 .waitSeconds(1)
                 .turnTo(Math.toRadians(-90))
                 .waitSeconds(1)
-                .lineToY(30)
+                .lineToY(40)
                 .waitSeconds(1)
-                .turnTo(Math.toRadians(180))
                 .build();
         Actions.runBlocking(moveOne);
 

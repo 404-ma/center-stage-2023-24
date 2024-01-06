@@ -11,8 +11,7 @@ import org.firstinspires.ftc.teamcode.Helper.DistanceSystem;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 
 @Autonomous (name = "RR Auto Drive 1 - Strafe", group = "RoadRunner")
-public class RRAutoDrive1 extends LinearOpMode {
-
+public class RRautodrive1 extends LinearOpMode {
         @Override
         public void runOpMode(){
                 telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
