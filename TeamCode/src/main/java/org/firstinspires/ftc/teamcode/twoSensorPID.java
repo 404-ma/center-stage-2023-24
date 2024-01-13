@@ -101,7 +101,7 @@ public class twoSensorPID extends LinearOpMode {
             else {
                 powerDist = 0;
             }
-
+// forward variable
             if (powerDist > approachSpeedLimDist){ //These next couple of lines make sure the powerDist is greater than the maximum power constant, ie. wont turn the robot too fast
                 powerDist = approachSpeedLimDist;
             }
@@ -132,7 +132,7 @@ public class twoSensorPID extends LinearOpMode {
             else{
                 powerRot = 0;
             }
-
+//turn variable
             if (powerRot > approachSpeedLimRot){
                 powerRot = approachSpeedLimRot;
             }

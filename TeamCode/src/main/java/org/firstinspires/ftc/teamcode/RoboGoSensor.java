@@ -180,24 +180,32 @@ public class RoboGoSensor extends LinearOpMode
                 telemetry.addData("Stationary", "Drive %0f, Strafe %0f, Turn %0f ", drive, strafe, turn);
             }
 
-            double sensorEr = (distanceR.getDistance(DistanceUnit.CM) + distanceR.getDistance(DistanceUnit.CM) )/2;
+            double sensorEr = (distanceL.getDistance(DistanceUnit.CM) + distanceR.getDistance(DistanceUnit.CM) )/2;
 
 
             if(desiredTag.ftcPose.range == 12 && targetFound){
 
                 double rangeESen = (FINAL_DISTANCE - sensorEr);
-                double headingError = desiredTag.ftcPose.bearing;
-                double yawError = desiredTag.ftcPose.yaw;
+              // double headingError = desiredTag.ftcPose.bearing;
+              //double yawError = desiredTag.ftcPose.yaw;
 
 
-                drive = Range.clip(rangeESen* SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-                turn = Range.clip(-headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
-                strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+
+                drive = Range.clip(rangeESen * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+              //  turn = Range.clip(-headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
+              // strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+
+                //calculates rotational and distance power
 
                 telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
             }
             telemetry.update();
             game2.setDriveVector(drive,strafe,turn);
+
+            //strafe = zero
+            //drive = powerdistance
+            //turn = powerrot
+            //add it to setDriveVector
 
             // Apply desired axes motions to the drivetrain.
 

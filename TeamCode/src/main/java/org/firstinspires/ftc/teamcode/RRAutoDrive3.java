@@ -30,11 +30,8 @@ public class RRAutoDrive3 extends LinearOpMode {
 
         Action moveOne = drive.actionBuilder(drive.pose)
                 .lineToX(25)
-                .waitSeconds(1)
-                .turnTo(Math.toRadians(-90))
-                .waitSeconds(1)
-                .lineToY(40)
-                .waitSeconds(1)
+                .lineToX(22)
+                .splineTo(new Vector2d(12,12), Math.toRadians(-90))
                 .build();
         Actions.runBlocking(moveOne);
 
