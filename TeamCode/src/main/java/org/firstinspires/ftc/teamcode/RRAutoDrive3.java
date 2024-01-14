@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -30,24 +29,14 @@ public class RRAutoDrive3 extends LinearOpMode {
 
         Action moveOne = drive.actionBuilder(drive.pose)
                 .lineToX(25)
-                .lineToX(18)
-                .splineTo(new Vector2d(12,12), Math.toRadians(-90))
+                .lineToX(7)
+                .turnTo(Math.toRadians(-90))
+                .lineToY(34)
+                .turnTo(Math.toRadians(-100))
                 .build();
         Actions.runBlocking(moveOne);
 
         sleep(1000);
-
-        /*Action moveTwo = drive.actionBuilder(drive.pose)
-                .lineToX(0)
-                .waitSeconds(1)
-                .turnTo(Math.toRadians(270))
-                .waitSeconds(1)
-                .lineToY(0)
-                .waitSeconds(1)
-                .turnTo(Math.toRadians(0))
-                .waitSeconds(1)
-                .build();
-        Actions.runBlocking(moveTwo);*/
     }
 
 }
