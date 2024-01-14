@@ -9,14 +9,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 
-@Autonomous (name = "RR Auto Drive 3 - Box", group = "RoadRunner")
+@Autonomous (name = "RR Auto Drive 3 - Spike Mark 2  ", group = "RoadRunner")
 public class RRAutoDrive3 extends LinearOpMode {
 
     @Override
     public void runOpMode() {
         // Load Introduction and Wait for Start
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
-        telemetry.addLine("RoadRunner Auto Drive 2 - Box");
+        telemetry.addLine("RoadRunner Auto Drive 3");
         telemetry.addLine();
         telemetry.addData(">", "Press Start to Launch");
         telemetry.update();
