@@ -45,22 +45,22 @@ public class RRAutoDrive3 extends LinearOpMode {
         telemetry.clear();
 
         switch ((int) PARAMS.propSpikeMark) {
-            case 1:
+            case 3:
                 // Left Spike Mark
                 Action moveOne = drive.actionBuilder(drive.pose)
-                        .splineTo( new Vector2d(21, -3), Math.toRadians(-15))
+                        .splineTo( new Vector2d(21, -45), Math.toRadians(-15))
                         .setReversed(true)
                         .splineTo(new Vector2d(7,0),Math.toRadians(180))
                         .build();
                 Actions.runBlocking(moveOne);
                 break;
 
-            case 3:
+            case 1:
                 // Right Spike Mark
                 Action moveTwo = drive.actionBuilder(drive.pose)
-                        .splineTo( new Vector2d(21, 3), Math.toRadians(15))
+                        .splineTo( new Vector2d(21, 45), Math.toRadians(15))
                         .setReversed(true)
-                        .splineTo( new Vector2d(7, 0), Math.toRadians(0))
+                        .splineTo( new Vector2d(7, 0), Math.toRadians(180))
                         .build();
                 Actions.runBlocking(moveTwo);
                 break;
