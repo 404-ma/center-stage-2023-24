@@ -68,7 +68,6 @@ public class RRAutoDrive3 extends LinearOpMode {
                 Action moveThree = drive.actionBuilder(drive.pose)
                         .lineToX(25)
                         .lineToX(7)
-                        .turnTo(Math.toRadians(-90))
                         .build();
                 Actions.runBlocking(moveThree);
 
@@ -77,8 +76,6 @@ public class RRAutoDrive3 extends LinearOpMode {
 
         if (PARAMS.propSpikeMark == 2) {
             Action moveBar = drive.actionBuilder(drive.pose)
-                    .lineToX(25)
-                    .lineToX(7)
                     .turnTo(Math.toRadians(-90))
                     .lineToY(34)
                     .turnTo(Math.toRadians(-100))
