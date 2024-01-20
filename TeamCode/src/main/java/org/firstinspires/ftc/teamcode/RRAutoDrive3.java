@@ -48,9 +48,9 @@ public class RRAutoDrive3 extends LinearOpMode {
             case 3:
                 // Left Spike Mark
                 Action moveOne = drive.actionBuilder(drive.pose)
-                        .splineTo( new Vector2d(21, -3), Math.toRadians(-45))
+                        .splineTo( new Vector2d(18, -3), Math.toRadians(-30))
                         .setReversed(true)
-                        .splineTo(new Vector2d(7,0),Math.toRadians(180))
+                        .splineTo(new Vector2d(6,0),Math.toRadians(180))
                         .build();
                 Actions.runBlocking(moveOne);
                 break;
@@ -58,9 +58,9 @@ public class RRAutoDrive3 extends LinearOpMode {
             case 1:
                 // Right Spike Mark
                 Action moveTwo = drive.actionBuilder(drive.pose)
-                        .splineTo( new Vector2d(21, 3), Math.toRadians(45))
+                        .splineTo( new Vector2d(18, 3), Math.toRadians(30))
                         .setReversed(true)
-                        .splineTo( new Vector2d(7, 0), Math.toRadians(180))
+                        .splineTo( new Vector2d(6, 0), Math.toRadians(180))
                         .build();
                 Actions.runBlocking(moveTwo);
                 break;
@@ -68,9 +68,10 @@ public class RRAutoDrive3 extends LinearOpMode {
             default:
                 // Center Spike Mark
                 Action moveThree = drive.actionBuilder(drive.pose)
-                        .lineToX(25)
-                        .lineToX(7)
+                        .lineToX(21)
+                        .lineToX(6)
                         .build();
+
                 Actions.runBlocking(moveThree);
 
         }
