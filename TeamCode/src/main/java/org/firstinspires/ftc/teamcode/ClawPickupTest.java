@@ -19,6 +19,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2;
+import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2.GameplayInputType;
+
 
 
 import java.util.Locale;
@@ -30,17 +32,17 @@ public class ClawPickupTest extends LinearOpMode {
      *  FTC Dashboard Parameters
      */
     public static class Params {
-        public double armStartPos = 0.5;
-        public double armDownPos = 0.5;
-        public double armStartFwd = 1;
+        public double armForward = 1;
+        public double armUpPos = 0.3;
+        public double armDownPos = 0.2;
 
-        public double flipStartPos = 0.5;
-        public double flipDownPos = 0.5;
-        public double flipStartFwd = 1;
+        public double flipForward = 1;
+        public double flipDownPos = 0.53;
+        public double flipSuplexPos = 0.395;
 
-        public double gripStartPos = 0.5f;
-        public double gripDownPos = 0.5f;
-        public double gripStartFwd = 1;
+        public double gripForward = 1;
+        public double gripOpenPos = 0.28;
+        public double gripClosedPos = 0.10;
     }
 
     public static Params PARAMS = new Params();
@@ -52,17 +54,13 @@ public class ClawPickupTest extends LinearOpMode {
     private Servo flip;
     private Servo grip;
 
-    private float armPosition = (float) PARAMS.armStartPos;
-    private float armDownPosition = (float) PARAMS.armDownPos;
-    private boolean armForward = (PARAMS.armStartFwd != 0);
+    private boolean tlmArmForward = false;
+    private double tlmArmPosition = 0;
+    private boolean tlmGripForward = false;
+    private double tlmGripPosition = 0;
+    private boolean tlmFlipForward = false;
+    private double tlmFlipPosition = 0;
 
-    private float flipPosition = (float) PARAMS.flipStartPos;
-    private float flipDownPosition = (float) PARAMS.flipDownPos;
-    private boolean flipForward = (PARAMS.flipStartFwd != 0);
-
-    private float gripDownPosition = (float) PARAMS.gripDownPos;
-    private float gripPosition = (float) PARAMS.gripStartPos;
-    private boolean gripForward = (PARAMS.gripStartFwd != 0);
 
     @Override
     public void runOpMode() {
@@ -72,40 +70,60 @@ public class ClawPickupTest extends LinearOpMode {
             return;
         telemetry.clear();
 
-
         while (opModeIsActive()) {
             update_telemetry();
 
-            gamePadInputV2.GameplayInputType inpType = gpInput.WaitForGamepadInput(100);
+            GameplayInputType inpType = gpInput.WaitForGamepadInput(100);
             switch (inpType) {
                 case DPAD_UP:
-                    arm.setPosition(armPosition);
-                    break;
-
                 case DPAD_DOWN:
-                    arm.setPosition(armDownPosition);
+                    boolean up = (inpType == GameplayInputType.DPAD_UP);
+                    tlmArmPosition = up ? PARAMS.armUpPos : PARAMS.armDownPos;
+                    arm.setPosition(tlmArmPosition);
                     break;
 
-                case BUTTON_R_BUMPER:
-                    flip.setPosition(flipPosition);
-
+                case DPAD_LEFT:
+                case DPAD_RIGHT:
+                    boolean close = (inpType == GameplayInputType.DPAD_RIGHT);
+                    tlmGripPosition = close ? PARAMS.gripClosedPos : PARAMS.gripOpenPos;
+                    grip.setPosition(tlmGripPosition);
                     break;
-
-                case BUTTON_L_BUMPER:
-                    flip.setPosition(flipDownPosition);
-                    break;
-
 
                 case BUTTON_A:
-                    grip.setPosition(gripDownPosition);
+                case BUTTON_Y:
+                    boolean suplex = (inpType == GameplayInputType.BUTTON_A);
+                    tlmFlipPosition = suplex ? PARAMS.flipSuplexPos : PARAMS.flipDownPos;
+                    flip.setPosition(tlmFlipPosition);
+                    break;
+
+                case BUTTON_X:
+                    // Pickup and Suplex Pixel
+                    tlmGripPosition = PARAMS.gripClosedPos;
+                    grip.setPosition(tlmGripPosition);
+                    sleep(300);  // Wait for Grip to Close
+                    tlmArmPosition = PARAMS.armUpPos;
+                    arm.setPosition(tlmArmPosition);
+                    sleep(100);
+                    tlmFlipPosition = PARAMS.flipSuplexPos;
+                    flip.setPosition(tlmFlipPosition);
+                    sleep(700);  // Wait for Suplex to Finish
+                    tlmGripPosition = PARAMS.gripOpenPos;
+                    grip.setPosition(tlmGripPosition);
                     break;
 
                 case BUTTON_B:
-                    grip.setPosition(gripPosition);
+                    // Reset Claw to Down and Open
+                    tlmArmPosition = PARAMS.armDownPos;
+                    arm.setPosition(tlmArmPosition);
+                    sleep(100);  // let Arm Move Away from Conveyor
+                    tlmFlipPosition = PARAMS.flipDownPos;
+                    flip.setPosition(tlmFlipPosition);
                     break;
             }
+
         }
     }
+
 
     private boolean initialize() {
         boolean success = true;
@@ -117,12 +135,12 @@ public class ClawPickupTest extends LinearOpMode {
 
         // Initialize Helpers
         try {
-            dashboard = FtcDashboard.getInstance();
-            dashboard.clearTelemetry();
             gpInput = new gamePadInputV2(gamepad1);
             arm = hardwareMap.servo.get("ArmServo");
             flip = hardwareMap.servo.get("FlipServo");
             grip = hardwareMap.servo.get("ClawServo");
+            dashboard = FtcDashboard.getInstance();
+            dashboard.clearTelemetry();
         } catch (Exception e) {
             success = false;
         }
@@ -139,16 +157,23 @@ public class ClawPickupTest extends LinearOpMode {
         return (success);
     }
 
+
     private void update_telemetry() {
-        telemetry.addLine("TODO: Add Data Here...");
+        telemetry.addLine("Servo Values");
+        telemetry.addLine().addData("Arm Dir", (tlmArmForward ? "Forward" : "Reverse") );
+        telemetry.addLine().addData("Arm Pos", tlmArmPosition );
+        telemetry.addLine().addData("Grip Dir", (tlmGripForward ? "Forward" : "Reverse") );
+        telemetry.addLine().addData("Grip Pos", tlmGripPosition );
+        telemetry.addLine().addData("Flip Dir", (tlmFlipForward ? "Forward" : "Reverse") );
+        telemetry.addLine().addData("Flip Pos", tlmFlipPosition );
+
         telemetry.update();
 
         // FTC Dashboard Telemetry
         TelemetryPacket packet = new TelemetryPacket();
-        packet.put("Arm Position",  arm.getPosition());
+        packet.put("Arm Position",  tlmArmPosition);
         packet.put("Flip Position",  flip.getPosition());
-        packet.put("Grip Position",  grip.getPosition());
+        packet.put("Grip Position",  tlmGripPosition);
         dashboard.sendTelemetryPacket(packet);
     }
-
 }
