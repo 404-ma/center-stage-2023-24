@@ -19,16 +19,15 @@ public class RRAutoDrive4 extends LinearOpMode {
         telemetry.addData(">", "Press Start to Launch");
         telemetry.update();
 
-        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
+        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(5.83, 33.7, -90));
 
         waitForStart();
         if (isStopRequested()) return;
         telemetry.clear();
 
         Action moveOne = drive.actionBuilder(drive.pose)
-                .turnTo(Math.toRadians(-90))
-                .waitSeconds(1)
-                .lineToY(48)
+                .splineTo( new Vector2d(18, 50), Math.toRadians(-90))
+                .setReversed(true)
                 .waitSeconds(1)
                 .build();
         Actions.runBlocking(moveOne);
