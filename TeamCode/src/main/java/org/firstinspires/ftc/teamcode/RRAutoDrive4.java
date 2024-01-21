@@ -22,7 +22,9 @@ public class RRAutoDrive4 extends LinearOpMode {
         telemetry.addData(">", "Press Start to Launch");
         telemetry.update();
 
-        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(5.83, 33.7, -90));
+        dashboard = FtcDashboard.getInstance();
+        dashboard.clearTelemetry();
+        drive = new MecanumDrive(hardwareMap, new Pose2d(5.83, 33.7, 0));
 
         waitForStart();
         if (isStopRequested()) return;
@@ -30,7 +32,9 @@ public class RRAutoDrive4 extends LinearOpMode {
 
         Action moveOne = drive.actionBuilder(drive.pose)
                 .setReversed(true)
-                .splineTo( new Vector2d(18, 50), Math.toRadians(90))
+                .lineToY(45)
+                .waitSeconds(2)
+                .splineTo( new Vector2d(23, 60), Math.toRadians(0))
                 .build();
         Actions.runBlocking(moveOne);
 
