@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode;
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
@@ -10,6 +11,8 @@ import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 
 @Autonomous(name = "RR Auto Drive 4 - Box", group = "RoadRunner")
 public class RRAutoDrive4 extends LinearOpMode {
+    private FtcDashboard dashboard;
+    private MecanumDrive drive;
 
     @Override
     public void runOpMode() {
@@ -26,13 +29,14 @@ public class RRAutoDrive4 extends LinearOpMode {
         telemetry.clear();
 
         Action moveOne = drive.actionBuilder(drive.pose)
-                .splineTo( new Vector2d(18, 50), Math.toRadians(-90))
                 .setReversed(true)
-                .waitSeconds(1)
+                .splineTo( new Vector2d(18, 50), Math.toRadians(90))
                 .build();
         Actions.runBlocking(moveOne);
 
     }
+
+
 }
 
 
