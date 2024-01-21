@@ -6,24 +6,10 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
-import java.util.Locale;
-
-
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2;
 import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2.GameplayInputType;
 
-
-
-import java.util.Locale;
 
 @Config
 @TeleOp(name="Claw Pickup Test", group ="Hardware")
@@ -33,11 +19,11 @@ public class ClawPickupTest extends LinearOpMode {
      */
     public static class Params {
         public double armForward = 1;
-        public double armUpPos = 0.3;
+        public double armUpPos = 0.295;
         public double armDownPos = 0.2;
 
         public double flipForward = 1;
-        public double flipDownPos = 0.53;
+        public double flipDownPos = 0.54;
         public double flipSuplexPos = 0.395;
 
         public double gripForward = 1;
@@ -72,6 +58,15 @@ public class ClawPickupTest extends LinearOpMode {
 
         while (opModeIsActive()) {
             update_telemetry();
+
+            tlmArmForward = (PARAMS.armForward != 0);
+            arm.setDirection(tlmArmForward ? Servo.Direction.FORWARD : Servo.Direction.REVERSE);
+
+            tlmGripForward = (PARAMS.gripForward != 0);
+            grip.setDirection(tlmGripForward ? Servo.Direction.FORWARD : Servo.Direction.REVERSE);
+
+            tlmFlipForward = (PARAMS.flipForward != 0);
+            flip.setDirection(tlmFlipForward ? Servo.Direction.FORWARD : Servo.Direction.REVERSE);
 
             GameplayInputType inpType = gpInput.WaitForGamepadInput(100);
             switch (inpType) {
