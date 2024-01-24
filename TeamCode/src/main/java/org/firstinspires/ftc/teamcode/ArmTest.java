@@ -16,7 +16,8 @@ public class ArmTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         //Servo grip = hardwareMap.servo.get("grip");
-        Servo arm = hardwareMap.servo.get("ArmServo");
+        //Servo arm = hardwareMap.servo.get("ArmServo");
+        Servo arm = hardwareMap.servo.get("DroneServo");
         gamePadInputV2 gpIn = new gamePadInputV2(gamepad1);
         float position = 0;
 
@@ -43,12 +44,12 @@ public class ArmTest extends LinearOpMode {
                     telemetry.update();
                     break;
                 case DPAD_LEFT:
-                    position -= 0.001;
+                    position -= 0.05;
                     telemetry.addData("position:", position);
                     telemetry.update();
                     break;
                 case DPAD_RIGHT:
-                    position += 0.001;
+                    position += 0.05;
                     telemetry.addData("position:", position);
                     telemetry.update();
                     break;
