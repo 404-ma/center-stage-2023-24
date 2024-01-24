@@ -21,9 +21,10 @@ import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2.GameplayInputType;
 @Autonomous(name = "RR Auto Drive 4 - Box", group = "RoadRunner")
 public class RRAutoDrive4 extends LinearOpMode {
     public static class Params {
-        public double endX = 18;
-        public double endY = 60;
-        public double endHeading = -90;
+        public double endX = 24;
+        public double endY = 80;
+        public double endHeading = 90;
+
 
         private gamePadInputV2 gpInput;
         private FtcDashboard dashboard;
