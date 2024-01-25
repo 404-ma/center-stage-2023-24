@@ -16,7 +16,7 @@ public class ArmTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         //Servo grip = hardwareMap.servo.get("grip");
-        Servo arm = hardwareMap.servo.get("ArmServo");
+        Servo drone = hardwareMap.servo.get("DroneServo");
         gamePadInputV2 gpIn = new gamePadInputV2(gamepad1);
         double position = 0;
 
@@ -37,14 +37,14 @@ public class ArmTest extends LinearOpMode {
                     position = 0.7;
                     telemetry.addData("position:", position);
                     telemetry.update();
-                    arm.setPosition(position);
+                    drone.setPosition(position);
                     break;
                 //drone servo is set to 0.25
                 case BUTTON_X:
                     position = 0.25;
                     telemetry.addData("position:", position);
                     telemetry.update();
-                    arm.setPosition(position);
+                    drone.setPosition(position);
                     break;
 
                 case DPAD_UP:
@@ -63,16 +63,16 @@ public class ArmTest extends LinearOpMode {
                     telemetry.update();
                     break;
                  case BUTTON_A:
-                    arm.setPosition(position);
+                    drone.setPosition(position);
                     break;
                 case BUTTON_L_BUMPER:
-                    arm.setDirection(Servo.Direction.REVERSE);
+                    drone.setDirection(Servo.Direction.REVERSE);
                     telemetry.addLine("Servo Is Reversed");
                     telemetry.addData("position:", position);
                     telemetry.update();
                     break;
                 case BUTTON_R_BUMPER:
-                    arm.setDirection(Servo.Direction.FORWARD);
+                    drone.setDirection(Servo.Direction.FORWARD);
                     telemetry.addLine("Servo Is Forwarded");
                     telemetry.addData("position:", position);
                     telemetry.update();
