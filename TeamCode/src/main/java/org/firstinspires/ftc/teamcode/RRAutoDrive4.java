@@ -76,7 +76,7 @@ public class RRAutoDrive4 extends LinearOpMode {
         telemetry.clear();
 
         // Right Spike Mark
-        Retract(arm, flip, grip);
+        Start(arm, flip, grip);
 
         Action moveTwo = drive.actionBuilder(drive.pose)
                 .splineTo( new Vector2d(18, 3), Math.toRadians(30))
@@ -118,13 +118,16 @@ public class RRAutoDrive4 extends LinearOpMode {
     }
 
     public void Retract(Servo arm, Servo flip, Servo grip){
-        grip.setPosition(PARAMS.gripClosedPos);
-        sleep(300);  // Wait for Grip to Close
         arm.setPosition(PARAMS.armUpPos);
         sleep(100);
         flip.setPosition(PARAMS.flipSuplexPos);
-        sleep(700);  // Wait for Suplex to Finish
+        // Wait for Suplex to Finish
         grip.setPosition(PARAMS.gripOpenPos);
+    }
+    public void Start( Servo arm,Servo flip, Servo grip){
+        grip.setPosition(PARAMS.gripClosedPos);
+        arm.setPosition(PARAMS.armUpPos);
+        flip.setPosition(PARAMS.flipSuplexPos);
 
     }
 
