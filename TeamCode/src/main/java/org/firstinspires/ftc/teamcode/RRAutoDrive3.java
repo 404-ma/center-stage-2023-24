@@ -74,7 +74,7 @@ public class RRAutoDrive3 extends LinearOpMode {
 
                 Action moveOneb = drive.actionBuilder(drive.pose)
                         .setReversed(true)
-                        .splineTo(new Vector2d(6,0),Math.toRadians(180))
+                        .splineTo(new Vector2d(10,0),Math.toRadians(180))
                         .build();
 
                 Actions.runBlocking(moveOneb);
@@ -106,7 +106,7 @@ public class RRAutoDrive3 extends LinearOpMode {
                 PlacePixel(arm, flip, grip);
 
                 Action moveThreeb = drive.actionBuilder(drive.pose)
-                        .lineToX(6)
+                        .lineToX(8)
                         .build();
                 Actions.runBlocking(moveThreeb);
 
