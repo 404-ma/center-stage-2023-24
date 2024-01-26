@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Helper.ClawMoves;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 
 @Config
@@ -37,6 +38,7 @@ public class RRAutoDrive3 extends LinearOpMode {
 
     private FtcDashboard dashboard;
     private MecanumDrive drive;
+    private ClawMoves whiteClaw;
 
 
     @Override
@@ -58,6 +60,7 @@ public class RRAutoDrive3 extends LinearOpMode {
         dashboard = FtcDashboard.getInstance();
         dashboard.clearTelemetry();
         drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
+        whiteClaw = new ClawMoves(hardwareMap);
 
         waitForStart();
         if (isStopRequested()) return;
