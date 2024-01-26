@@ -34,7 +34,7 @@ public class DriveFirstMeet extends LinearOpMode {
         gamePadInputV2 gpIn1 = new gamePadInputV2(gamepad1);
         gamePadInputV2 gpIn2 = new gamePadInputV2(gamepad2);
         DrivetrainV2 drvTrain = new DrivetrainV2(hardwareMap);
-        update_telemetry(gpIn1, drvTrain);
+        update_telemetry(gpIn1,gpIn2,drvTrain);
 
         while (opModeIsActive()) {
             ++tlm_MainLoopCount;
@@ -65,7 +65,7 @@ public class DriveFirstMeet extends LinearOpMode {
     }
 
 
-    private void update_telemetry(gamePadInputV2 gpi,gamePadInputV2 gpi,DrivetrainV2 drv) {
+    private void update_telemetry(gamePadInputV2 gpi,gamePadInputV2 gpi2,DrivetrainV2 drv) {
         telemetry.addLine().addData( "Main Loop Cnt", tlm_MainLoopCount);
 
         telemetry.addLine("Game-pad Input");

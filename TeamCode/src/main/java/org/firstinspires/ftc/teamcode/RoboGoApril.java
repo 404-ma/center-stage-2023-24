@@ -164,21 +164,6 @@ public class RoboGoApril extends LinearOpMode
         }
     }
 
-    /**
-     * Move robot according to desired axes motions
-     * <p>
-     * Positive X is forward
-     * <p>
-     * Positive Y is strafe left
-     * <p>
-     * Positive Yaw is counter-clockwise
-     */
-
-
-    /**
-     * Initialize the AprilTag processor.
-     */
-
 
     private void initAprilTag() {
         // Create the AprilTag processor by using a builder.
@@ -204,7 +189,7 @@ public class RoboGoApril extends LinearOpMode
      Manually set the camera gain and exposure.
      This can only be called AFTER calling initAprilTag(), and only works for Webcams;
     */
-    private void    setManualExposure(int exposureMS, int gain) {
+    private void setManualExposure(int exposureMS, int gain) {
         // Wait for the camera to be open, then use the controls
 
         if (visionPortal == null) {
