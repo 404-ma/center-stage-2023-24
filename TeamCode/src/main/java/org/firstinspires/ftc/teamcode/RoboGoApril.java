@@ -10,8 +10,8 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDir
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
-import org.firstinspires.ftc.teamcode.Helper.gamePadInput;
-import org.firstinspires.ftc.teamcode.Helper.gamePadInput.GameplayInputType;
+import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2;
+import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2.GameplayInputType;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -50,13 +50,13 @@ public class RoboGoApril extends LinearOpMode
     private VisionPortal visionPortal;               // Used to manage the video source.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
-    private gamePadInput game1;
+    private gamePadInputV2 game1;
     private DrivetrainV2 game2;
 
     @Override public void runOpMode()
     {
 
-        game1 = new gamePadInput(gamepad1);
+        game1 = new gamePadInputV2(gamepad1);
         game2 = new DrivetrainV2(hardwareMap);
 
         boolean targetFound     = false;    // Set to true when an AprilTag target is detected
@@ -117,7 +117,6 @@ public class RoboGoApril extends LinearOpMode
                 telemetry.addData("\n>","Drive using joysticks to find valid target\n");
             }
 
-            telemetry.addData("Test: ",GameplayInputType.RIGHT_TRIGGER_ON);
             telemetry.addData("Test1: ",iN);
 
             // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
