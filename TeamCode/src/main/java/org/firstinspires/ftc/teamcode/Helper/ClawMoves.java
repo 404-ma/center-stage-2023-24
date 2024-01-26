@@ -12,7 +12,6 @@ import android.os.SystemClock;
 public class ClawMoves {
     // FTC Dashboard Parameters
     public static class Params {
-        // TODO: Fill in Claw Servo Parameter
         public double armUpPos = 0.295;
         public double flipSuplexPos = 0.395;
         public double gripOpenPos = 0.28;
@@ -30,7 +29,6 @@ public class ClawMoves {
 
     // Class Constructor
     public ClawMoves(@NonNull HardwareMap hdwMap) {
-        // TODO: Add Servo Initialization
         arm = hdwMap.servo.get("ArmServo");
         flip = hdwMap.servo.get("FlipServo");
         grip = hdwMap.servo.get("ClawServo");
@@ -63,10 +61,17 @@ public class ClawMoves {
         grip.setPosition(PARAMS.gripOpenPos);
     }
 
-    public void SuplexPixel () {
-        // Pickup and Suplex Pixel
+    public void closeGrip(){
         grip.setPosition(PARAMS.gripClosedPos);
         SystemClock.sleep(300); // Wait for Grip to Close
+    }
+
+    public void openGrip(){
+        grip.setPosition(PARAMS.gripClosedPos);
+        SystemClock.sleep(300); // Wait for Grip to Close
+    }
+    public void SuplexPixel () {
+        // Pickup and Suplex Pixel
         arm.setPosition(PARAMS.armUpPos);
         SystemClock.sleep(100);
         flip.setPosition(PARAMS.flipSuplexPos);
