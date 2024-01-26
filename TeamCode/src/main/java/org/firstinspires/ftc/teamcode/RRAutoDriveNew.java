@@ -11,16 +11,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Helper.ClawMoves;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
-import org.firstinspires.ftc.teamcode.RoboGoApril;
 
 @Config
-@Autonomous (name = "RR Auto Drive 3 - Spike Marks", group = "RoadRunner")
-public class RRAutoDrive3 extends LinearOpMode {
-    /*
-     *  FTC Dashboard Parameters
-     */
+@Autonomous(name = "RR Auto Drive 3 - Spike Marks", group = "RoadRunner")
+public class RRAutoDriveNew extends LinearOpMode {
+
     public static class Params {
         public double armForward = 1;
         public double armUpPos = 0.295;
@@ -32,14 +28,14 @@ public class RRAutoDrive3 extends LinearOpMode {
         public double gripOpenPos = 0.28;
         public double gripClosedPos = 0.10;
         public double propSpikeMark = 1;    //  Which Spike Mark is the Prop Located on
-        public boolean partnerDead = false;
-        public int dTime = 500;
     }
 
-    public static Params PARAMS = new Params();
+
+    public static RRAutoDrive3.Params PARAMS = new RRAutoDrive3.Params();
+
     private FtcDashboard dashboard;
     private MecanumDrive drive;
-    private ClawMoves whiteClaw;
+
 
     @Override
     public void runOpMode() {
@@ -60,26 +56,25 @@ public class RRAutoDrive3 extends LinearOpMode {
         dashboard = FtcDashboard.getInstance();
         dashboard.clearTelemetry();
         drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
-        whiteClaw = new ClawMoves(hardwareMap);
 
         waitForStart();
         if (isStopRequested()) return;
         telemetry.clear();
 
-        whiteClaw.AutonomousStart();
+        Start(arm,flip,grip);
         switch ((int) PARAMS.propSpikeMark) {
             case 3:
                 // Left Spike Mark
                 Action moveOne = drive.actionBuilder(drive.pose)
-                        .splineTo(new Vector2d(17, -3), Math.toRadians(-27))
+                        .splineTo( new Vector2d(17, -3), Math.toRadians(-27))
                         .build();
                 Actions.runBlocking(moveOne);
 
-                whiteClaw.PlacePixel();
+                PlacePixel(arm, flip, grip);
 
                 Action moveOneb = drive.actionBuilder(drive.pose)
                         .setReversed(true)
-                        .splineTo(new Vector2d(6, 0), Math.toRadians(180))
+                        .splineTo(new Vector2d(6,0),Math.toRadians(180))
                         .build();
 
                 Actions.runBlocking(moveOneb);
@@ -88,14 +83,14 @@ public class RRAutoDrive3 extends LinearOpMode {
             case 1:
                 // Right Spike Mark
                 Action moveTwo = drive.actionBuilder(drive.pose)
-                        .splineTo(new Vector2d(18, 3), Math.toRadians(30))
+                        .splineTo( new Vector2d(18, 3), Math.toRadians(30))
                         .build();
                 Actions.runBlocking(moveTwo);
 
-                whiteClaw.PlacePixel();
+                PlacePixel(arm, flip, grip);
                 Action moveBack = drive.actionBuilder(drive.pose)
                         .setReversed(true)
-                        .splineTo(new Vector2d(6, 0), Math.toRadians(180))
+                        .splineTo( new Vector2d(6, 0), Math.toRadians(180))
                         .build();
                 Actions.runBlocking(moveBack);
 
@@ -108,7 +103,7 @@ public class RRAutoDrive3 extends LinearOpMode {
                         .build();
                 Actions.runBlocking(moveThree);
 
-                whiteClaw.PlacePixel();
+                PlacePixel(arm, flip, grip);
 
                 Action moveThreeb = drive.actionBuilder(drive.pose)
                         .lineToX(6)
@@ -117,53 +112,75 @@ public class RRAutoDrive3 extends LinearOpMode {
 
 
         }
-        whiteClaw.RetractArm();
-
-
+        Retract(arm,flip,grip);
         Action moveBar = drive.actionBuilder(drive.pose)
                 .turnTo(Math.toRadians(-90))
                 .lineToY(40)
                 .build();
         Actions.runBlocking(moveBar);
 
-        if (PARAMS.partnerDead == false) {
-            sleep(PARAMS.dTime);
-            double targetX;
-            double targetY = 80.0;
+        switch ((int)  PARAMS.propSpikeMark) {
+            case 1:
+                //Backdrop Position 1
+                Action backdrop1 = drive.actionBuilder(drive.pose)
+                        .setReversed(true)
+                        .splineTo(new Vector2d(25.5,60), Math.toRadians(90))
+                        .splineTo(new Vector2d(25.5,80), Math.toRadians(90))
+                        .build();
 
-            if ((int) PARAMS.propSpikeMark == 1)
-                targetX = 25.5;
-            else if ((int) PARAMS.propSpikeMark == 3)
-                targetX = 36.5;
-            else
-                targetX = 30.0;
+                Actions.runBlocking(backdrop1);
+                break;
 
+            case 3:
+                //Backdrop position 3
+                Action backdrop3 = drive.actionBuilder(drive.pose)
+                        .setReversed(true)
+                        .splineTo(new Vector2d(36.5,60), Math.toRadians(90))
+                        .splineTo(new Vector2d(36.5,80), Math.toRadians(90))
+                        .build();
 
-            Action backdrop = drive.actionBuilder(drive.pose)
-                    .setReversed(true)
-                    .splineTo(new Vector2d(targetX, 60), Math.toRadians(90))
-                    .splineTo(new Vector2d(targetX, targetY), Math.toRadians(90))
-                    .build();
+                Actions.runBlocking(backdrop3);
+                break;
 
-            Actions.runBlocking(backdrop);}
-        else {
-            double targetX;
-            double targetY = 80.0;
+            default:
+                //Backdrop position 2
+                Action backdrop2 = drive.actionBuilder(drive.pose)
+                        .setReversed(true)
+                        .splineTo(new Vector2d(30,60), Math.toRadians(90))
+                        .splineTo(new Vector2d(30,80), Math.toRadians(90))
+                        .build();
 
-            if ((int) PARAMS.propSpikeMark == 1)
-                targetX = 25.5;
-            else if ((int) PARAMS.propSpikeMark == 3)
-                targetX = 36.5;
-            else
-                targetX = 30.0;
+                Actions.runBlocking(backdrop2);
+                break;
 
-
-            Action backdrop = drive.actionBuilder(drive.pose)
-                    .setReversed(true)
-                    .splineTo(new Vector2d(targetX, targetY), Math.toRadians(90))
-                    .build();
-
-            Actions.runBlocking(backdrop);
 
         }
-    }}
+
+    }
+
+
+    public void PlacePixel(Servo arm, Servo flip, Servo grip){
+        // Reset Claw to Down and Open
+        arm.setPosition(PARAMS.armDownPos);
+        sleep(100);  // let Arm Move Away from Conveyor
+        flip.setPosition(PARAMS.flipDownPos);
+        sleep(500);
+        grip.setPosition(PARAMS.gripOpenPos);
+    }
+
+    public void Retract(Servo arm, Servo flip, Servo grip){
+        arm.setPosition(PARAMS.armUpPos);
+        sleep(100);
+        flip.setPosition(PARAMS.flipSuplexPos);
+        // Wait for Suplex to Finish
+        grip.setPosition(PARAMS.gripOpenPos);
+    }
+    public void Start( Servo arm,Servo flip, Servo grip){
+        grip.setPosition(PARAMS.gripClosedPos);
+        arm.setPosition(PARAMS.armUpPos);
+        flip.setPosition(PARAMS.flipSuplexPos);
+
+        sleep(1000);
+    }
+}
+
