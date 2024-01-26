@@ -74,17 +74,56 @@ public class RRAutoDrive3 extends LinearOpMode {
 
                 Actions.runBlocking(moveThree);
 
+
         }
 
-            Action moveBar = drive.actionBuilder(drive.pose)
-                    .turnTo(Math.toRadians(-90))
-                    .lineToY(34)
-                    .build();
-            Actions.runBlocking(moveBar);
+        Action moveBar = drive.actionBuilder(drive.pose)
+                .turnTo(Math.toRadians(-90))
+                .lineToY(34)
+                .build();
+        Actions.runBlocking(moveBar);
+
+        switch ((int)  PARAMS.propSpikeMark) {
+
+           case 1:
+               //Backdrop Position 1
+               Action backdrop1 = drive.actionBuilder(drive.pose)
+                       .setReversed(true)
+                       .splineTo(new Vector2d(24,80), Math.toRadians(90))
+                       .build();
+
+               Actions.runBlocking(backdrop1);
+               break;
+
+           case 3:
+               //Backdrop position 3
+                   Action backdrop3 = drive.actionBuilder(drive.pose)
+                   .setReversed(true)
+                   .splineTo(new Vector2d(37,80), Math.toRadians(90))
+                   .build();
+
+               Actions.runBlocking(backdrop3);
+               break;
+
+           default:
+               //Backdrop position 2
+               Action backdrop2 = drive.actionBuilder(drive.pose)
+                       .setReversed(true)
+                       .splineTo(new Vector2d(30.5,80), Math.toRadians(90))
+                       .build();
+
+               Actions.runBlocking(backdrop2);
+               break;
+
+
+       }
+
 
 
 
         sleep(1000);
+
+
     }
 
 }
