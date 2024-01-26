@@ -61,6 +61,7 @@ public class RRAutoDrive3 extends LinearOpMode {
         if (isStopRequested()) return;
         telemetry.clear();
 
+        start();
         switch ((int) PARAMS.propSpikeMark) {
             case 3:
                 // Left Spike Mark
