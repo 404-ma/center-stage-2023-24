@@ -164,10 +164,10 @@ public class RRAutoDrive3 extends LinearOpMode {
                             .lineToX(6)
                             .build();
                     Actions.runBlocking(moveThreeb);
-                    whiteClaw.RetractArm();
-            }
+                }
+                whiteClaw.RetractArm();
 
-        }
+            }
     }
 
     public void toSpikeMarkBS(double targetX, double targetY){
