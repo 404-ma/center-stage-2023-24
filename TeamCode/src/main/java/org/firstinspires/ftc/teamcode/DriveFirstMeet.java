@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2;
 
 import java.util.Locale;
 
-@TeleOp(name= "Atharv is awesome gamePadInputV2 test ", group ="Test")
-public class drivetest3 extends LinearOpMode {
+@TeleOp(name= "DriveFirstMeet ", group ="Test")
+public class DriveFirstMeet extends LinearOpMode {
     private int tlm_MainLoopCount = 0;
 
     @Override
@@ -31,14 +31,15 @@ public class drivetest3 extends LinearOpMode {
         if (isStopRequested()) return;
         telemetry.clear();
 
-        gamePadInputV2 gpIn = new gamePadInputV2(gamepad1);
+        gamePadInputV2 gpIn1 = new gamePadInputV2(gamepad1);
+        gamePadInputV2 gpIn2 = new gamePadInputV2(gamepad2);
         DrivetrainV2 drvTrain = new DrivetrainV2(hardwareMap);
-        update_telemetry(gpIn, drvTrain);
+        update_telemetry(gpIn1, drvTrain);
 
         while (opModeIsActive()) {
             ++tlm_MainLoopCount;
-            update_telemetry(gpIn, drvTrain);
-            gamePadInputV2.GameplayInputType inpType = gpIn.WaitForGamepadInput(500);
+            update_telemetry(gpIn1,gpIn2,drvTrain);
+            gamePadInputV2.GameplayInputType inpType = gpIn1.WaitForGamepadInput(500);
             switch (inpType) {
                 case LEFT_TRIGGER:
                     viperMotor.setPower(gamepad1.left_trigger * -1);
@@ -64,7 +65,7 @@ public class drivetest3 extends LinearOpMode {
     }
 
 
-    private void update_telemetry(gamePadInputV2 gpi, DrivetrainV2 drv) {
+    private void update_telemetry(gamePadInputV2 gpi,gamePadInputV2 gpi,DrivetrainV2 drv) {
         telemetry.addLine().addData( "Main Loop Cnt", tlm_MainLoopCount);
 
         telemetry.addLine("Game-pad Input");
