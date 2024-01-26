@@ -104,8 +104,6 @@ public class RRAutoDrive4 extends LinearOpMode {
                 .splineTo( new Vector2d(PARAMS.endX,  PARAMS.endY), Math.toRadians(PARAMS.endHeading))
                 .build();
         Actions.runBlocking(moveOne);
-
-
     }
 
     public void PlacePixel(Servo arm, Servo flip, Servo grip){
@@ -128,14 +126,13 @@ public class RRAutoDrive4 extends LinearOpMode {
         grip.setPosition(PARAMS.gripClosedPos);
         arm.setPosition(PARAMS.armUpPos);
         flip.setPosition(PARAMS.flipSuplexPos);
-
     }
 
 
 
 }
 
-
+//7 - 9 inches from the board
 
 
 

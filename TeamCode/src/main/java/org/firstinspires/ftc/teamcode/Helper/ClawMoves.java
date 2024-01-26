@@ -1,51 +1,85 @@
 package org.firstinspires.ftc.teamcode.Helper;
 
-import androidx.annotation.NonNull;
 
+import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
-import java.security.PublicKey;
+import com.qualcomm.robotcore.hardware.Servo;
+import android.os.SystemClock;
 
 
 @Config
 public class ClawMoves {
     // FTC Dashboard Parameters
-
     public static class Params {
         // TODO: Fill in Claw Servo Parameter
-        public double temp = 1;
+        public double armUpPos = 0.295;
+        public double flipSuplexPos = 0.395;
+        public double gripOpenPos = 0.28;
+        public double gripClosedPos = 0.10;
+        public double armDownPos = 0.2;
+        public double flipDownPos = 0.54;
     }
 
     public static Params PARAMS = new Params();
 
+    private Servo arm;
+    private Servo flip;
+    private Servo grip;
 
 
     // Class Constructor
     public ClawMoves(@NonNull HardwareMap hdwMap) {
         // TODO: Add Servo Initialization
+        arm = hdwMap.servo.get("ArmServo");
+        flip = hdwMap.servo.get("FlipServo");
+        grip = hdwMap.servo.get("ClawServo");
     }
 
 
     // Claw Movements
     public void AutonomousStart () {
-        // TODO: Fill in Code For Automous Start Position
+        // Code For Automous Start Position
+        grip.setPosition(PARAMS.gripClosedPos);
+        arm.setPosition(PARAMS.armUpPos);
+        flip.setPosition(PARAMS.flipSuplexPos);
     }
 
     public void PlacePixel () {
-        // TODO: Fill in Code to Drop Pixel
+        // Reset Claw to Down and Open
+        arm.setPosition(PARAMS.armDownPos);
+        SystemClock.sleep(100); // let Arm Move Away from Conveyor
+        flip.setPosition(PARAMS.flipDownPos);
+        SystemClock.sleep(500);
+        grip.setPosition(PARAMS.gripOpenPos);
     }
 
     public void RetractArm () {
-        // TODO: Fill in Code to Retract Arm w/o Pixel for Driving
+        // Retract Arm w/o Pixel for Driving
+        arm.setPosition(PARAMS.armUpPos);
+        SystemClock.sleep(100);
+        flip.setPosition(PARAMS.flipSuplexPos);
+        // Wait for Suplex to Finish
+        grip.setPosition(PARAMS.gripOpenPos);
     }
 
     public void SuplexPixel () {
-        // TODO: Fill in Code to Close Grip, Pickup Pixel and Suplex it into Conveyor
+        // Pickup and Suplex Pixel
+        grip.setPosition(PARAMS.gripClosedPos);
+        SystemClock.sleep(300); // Wait for Grip to Close
+        arm.setPosition(PARAMS.armUpPos);
+        SystemClock.sleep(100);
+        flip.setPosition(PARAMS.flipSuplexPos);
+        SystemClock.sleep(700); // Wait for Suplex to Finish
+        grip.setPosition(PARAMS.gripOpenPos);
     }
 
     public void PrepForPixel () {
-        // TODO: Fill in Code to Prepare the Claw to Grab a Pixel.
+        // Reset Claw to Down and Open
+        grip.setPosition(PARAMS.gripOpenPos);
+        arm.setPosition(PARAMS.armDownPos);
+        SystemClock.sleep(100); // let Arm Move Away from Conveyor
+        flip.setPosition(PARAMS.flipDownPos);
     }
 
 }
