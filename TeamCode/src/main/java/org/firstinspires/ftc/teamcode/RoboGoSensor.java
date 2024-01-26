@@ -29,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 
 @TeleOp(name="Abika and Subo are amazing") //this is the file name in hub
 
+@Disabled
 public class RoboGoSensor extends LinearOpMode
 {
     // Adjust these numbers to suit your robot.

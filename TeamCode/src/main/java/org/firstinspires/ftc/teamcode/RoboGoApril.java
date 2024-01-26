@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 @TeleOp(name="Omni Drive To AprilTag") //this is the file name in hub
 
+@Disabled
 public class RoboGoApril extends LinearOpMode
 {
     // Adjust these numbers to suit your robot.
