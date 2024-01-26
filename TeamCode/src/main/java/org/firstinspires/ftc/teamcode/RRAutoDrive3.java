@@ -49,9 +49,11 @@ public class RRAutoDrive3 extends LinearOpMode {
         telemetry.update();
 
         Servo arm = hardwareMap.servo.get("ArmServo");
+        arm.setDirection(Servo.Direction.FORWARD);
         Servo flip = hardwareMap.servo.get("FlipServo");
+        flip.setDirection(Servo.Direction.FORWARD);
         Servo grip = hardwareMap.servo.get("ClawServo");
-
+        grip.setDirection(Servo.Direction.FORWARD);
 
         dashboard = FtcDashboard.getInstance();
         dashboard.clearTelemetry();
