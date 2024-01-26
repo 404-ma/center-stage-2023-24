@@ -70,11 +70,11 @@ public class RRAutoDrive3 extends LinearOpMode {
         whiteClaw.AutonomousStart();
         switch ((int) PARAMS.propSpikeMark) {
             case 3:
-                typeB(  17,-3);
+                toSpikeMarkFS(17, -3);
                 break;
 
             case 1:
-                typeB(18,3);
+                toSpikeMarkFS(18, 3);
                 break;
 
             default:
@@ -118,9 +118,8 @@ public class RRAutoDrive3 extends LinearOpMode {
                     .splineTo(new Vector2d(targetX, targetY), Math.toRadians(90))
                     .build();
 
-            Actions.runBlocking(backdrop);}
-
-        else {
+            Actions.runBlocking(backdrop);
+        } else {
             double targetX;
             double targetY = 80.0;
 
@@ -140,14 +139,38 @@ public class RRAutoDrive3 extends LinearOpMode {
             Actions.runBlocking(backdrop);
         }
 
-        if(PARAMS.backstage == false){
+        if (PARAMS.backstage == false) {
 
+            whiteClaw.AutonomousStart();
+            switch ((int) PARAMS.propSpikeMark) {
+                case 3:
+                    toSpikeMarkFS(17, -3);
+                    break;
+
+                case 1:
+                    toSpikeMarkFS(18, 3);
+                    break;
+
+                default:
+                    // Center Spike Mark
+                    Action moveThree = drive.actionBuilder(drive.pose)
+                            .lineToX(21)
+                            .build();
+                    Actions.runBlocking(moveThree);
+
+                    whiteClaw.PlacePixel();
+
+                    Action moveThreeb = drive.actionBuilder(drive.pose)
+                            .lineToX(6)
+                            .build();
+                    Actions.runBlocking(moveThreeb);
+                    whiteClaw.RetractArm();
+            }
 
         }
-
     }
 
-    public void typeB( double targetX, double targetY){
+    public void toSpikeMarkBS(double targetX, double targetY){
         Action moveRb = drive.actionBuilder(drive.pose)
                 .splineTo(new Vector2d(targetX, targetY), Math.toRadians(-27))
                 .build();
@@ -162,8 +185,13 @@ public class RRAutoDrive3 extends LinearOpMode {
         Actions.runBlocking(moveRb2);
     }
 
-    public void typeC(double targetX, double targetY){
+    public void toSpikeMarkFS(double targetX,double targetY){
+        Action moveRb = drive.actionBuilder(drive.pose)
+                .splineTo(new Vector2d(targetX, targetY), Math.toRadians(-27))
+                .build();
+        Actions.runBlocking(moveRb);
 
+        whiteClaw.PlacePixel();
 
     }
 }
