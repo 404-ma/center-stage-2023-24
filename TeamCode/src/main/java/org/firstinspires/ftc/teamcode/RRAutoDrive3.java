@@ -33,6 +33,7 @@ public class RRAutoDrive3 extends LinearOpMode {
         public double gripClosedPos = 0.10;
         public double propSpikeMark = 1;    //  Which Spike Mark is the Prop Located on
         public boolean partnerDead = false;
+        public boolean backstage = true;
         public int dTime = 500;
     }
 
@@ -69,36 +70,11 @@ public class RRAutoDrive3 extends LinearOpMode {
         whiteClaw.AutonomousStart();
         switch ((int) PARAMS.propSpikeMark) {
             case 3:
-                // Left Spike Mark
-                Action moveOne = drive.actionBuilder(drive.pose)
-                        .splineTo(new Vector2d(17, -3), Math.toRadians(-27))
-                        .build();
-                Actions.runBlocking(moveOne);
-
-                whiteClaw.PlacePixel();
-
-                Action moveOneb = drive.actionBuilder(drive.pose)
-                        .setReversed(true)
-                        .splineTo(new Vector2d(6, 0), Math.toRadians(180))
-                        .build();
-
-                Actions.runBlocking(moveOneb);
+                typeB(  17,-3);
                 break;
 
             case 1:
-                // Right Spike Mark
-                Action moveTwo = drive.actionBuilder(drive.pose)
-                        .splineTo(new Vector2d(18, 3), Math.toRadians(30))
-                        .build();
-                Actions.runBlocking(moveTwo);
-
-                whiteClaw.PlacePixel();
-                Action moveBack = drive.actionBuilder(drive.pose)
-                        .setReversed(true)
-                        .splineTo(new Vector2d(6, 0), Math.toRadians(180))
-                        .build();
-                Actions.runBlocking(moveBack);
-
+                typeB(18,3);
                 break;
 
             default:
@@ -114,11 +90,8 @@ public class RRAutoDrive3 extends LinearOpMode {
                         .lineToX(6)
                         .build();
                 Actions.runBlocking(moveThreeb);
-
-
         }
         whiteClaw.RetractArm();
-
 
         Action moveBar = drive.actionBuilder(drive.pose)
                 .turnTo(Math.toRadians(-90))
@@ -146,6 +119,7 @@ public class RRAutoDrive3 extends LinearOpMode {
                     .build();
 
             Actions.runBlocking(backdrop);}
+
         else {
             double targetX;
             double targetY = 80.0;
@@ -164,6 +138,32 @@ public class RRAutoDrive3 extends LinearOpMode {
                     .build();
 
             Actions.runBlocking(backdrop);
+        }
+
+        if(PARAMS.backstage == false){
+
 
         }
-    }}
+
+    }
+
+    public void typeB( double targetX, double targetY){
+        Action moveRb = drive.actionBuilder(drive.pose)
+                .splineTo(new Vector2d(targetX, targetY), Math.toRadians(-27))
+                .build();
+        Actions.runBlocking(moveRb);
+
+        whiteClaw.PlacePixel();
+
+        Action moveRb2 = drive.actionBuilder(drive.pose)
+                .setReversed(true)
+                .splineTo(new Vector2d(6, 0), Math.toRadians(180))
+                .build();
+        Actions.runBlocking(moveRb2);
+    }
+
+    public void typeC(double targetX, double targetY){
+
+
+    }
+}
