@@ -59,12 +59,6 @@ public class AutoFirstMeet extends LinearOpMode {
 
                 //PlacePixel(flip, grip);
 
-                Action moveOneb = drive.actionBuilder(drive.pose)
-                        .setReversed(true)
-                        .splineTo(new Vector2d(6, 0), Math.toRadians(180))
-                        .build();
-
-                Actions.runBlocking(moveOneb);
                 break;
 
             case 1:
@@ -74,14 +68,6 @@ public class AutoFirstMeet extends LinearOpMode {
                         .build();
                 Actions.runBlocking(moveTwo);
 
-                //PlacePixel(flip, grip);
-
-                Action moveBack = drive.actionBuilder(drive.pose)
-                        .setReversed(true)
-                        .splineTo(new Vector2d(6, 0), Math.toRadians(180))
-                        .build();
-
-                Actions.runBlocking(moveBack);
                 break;
 
             default:
@@ -91,13 +77,13 @@ public class AutoFirstMeet extends LinearOpMode {
                         .build();
                 Actions.runBlocking(moveThree);
 
-                //PlacePixel(flip, grip);
-
-                Action moveThreeb = drive.actionBuilder(drive.pose)
-                        .lineToX(6)
-                        .build();
-                Actions.runBlocking(moveThreeb);
         }
+        Action moveBack = drive.actionBuilder(drive.pose)
+                .setReversed(true)
+                .splineTo(new Vector2d(6, 0), Math.toRadians(180))
+                .build();
+
+        Actions.runBlocking(moveBack);
 
         //Retract(flip, grip);
 
