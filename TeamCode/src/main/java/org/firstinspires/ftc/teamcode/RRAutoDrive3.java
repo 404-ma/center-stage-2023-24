@@ -61,7 +61,7 @@ public class RRAutoDrive3 extends LinearOpMode {
         if (isStopRequested()) return;
         telemetry.clear();
 
-        start();
+        Start(arm,flip,grip);
         switch ((int) PARAMS.propSpikeMark) {
             case 3:
                 // Left Spike Mark
@@ -112,7 +112,7 @@ public class RRAutoDrive3 extends LinearOpMode {
 
 
         }
-
+        Retract(arm,flip,grip);
         Action moveBar = drive.actionBuilder(drive.pose)
                 .turnTo(Math.toRadians(-90))
                 .lineToY(34)
