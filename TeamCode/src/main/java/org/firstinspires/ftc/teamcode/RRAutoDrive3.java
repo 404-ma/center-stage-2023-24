@@ -74,7 +74,7 @@ public class RRAutoDrive3 extends LinearOpMode {
 
                 Action moveOneb = drive.actionBuilder(drive.pose)
                         .setReversed(true)
-                        .splineTo(new Vector2d(10,0),Math.toRadians(180))
+                        .splineTo(new Vector2d(6,0),Math.toRadians(180))
                         .build();
 
                 Actions.runBlocking(moveOneb);
@@ -106,7 +106,7 @@ public class RRAutoDrive3 extends LinearOpMode {
                 PlacePixel(arm, flip, grip);
 
                 Action moveThreeb = drive.actionBuilder(drive.pose)
-                        .lineToX(8)
+                        .lineToX(6)
                         .build();
                 Actions.runBlocking(moveThreeb);
 
@@ -125,7 +125,7 @@ public class RRAutoDrive3 extends LinearOpMode {
                //Backdrop Position 1
                Action backdrop1 = drive.actionBuilder(drive.pose)
                        .setReversed(true)
-                       .splineTo(new Vector2d(24,80), Math.toRadians(90))
+                       .splineTo(new Vector2d(34,80), Math.toRadians(90))
                        .build();
 
                Actions.runBlocking(backdrop1);
@@ -135,7 +135,7 @@ public class RRAutoDrive3 extends LinearOpMode {
                //Backdrop position 3
                    Action backdrop3 = drive.actionBuilder(drive.pose)
                    .setReversed(true)
-                   .splineTo(new Vector2d(37,80), Math.toRadians(90))
+                   .splineTo(new Vector2d(41,80), Math.toRadians(90))
                    .build();
 
                Actions.runBlocking(backdrop3);
@@ -145,7 +145,7 @@ public class RRAutoDrive3 extends LinearOpMode {
                //Backdrop position 2
                Action backdrop2 = drive.actionBuilder(drive.pose)
                        .setReversed(true)
-                       .splineTo(new Vector2d(30.5,80), Math.toRadians(90))
+                       .splineTo(new Vector2d(32.5,80), Math.toRadians(90))
                        .build();
 
                Actions.runBlocking(backdrop2);
