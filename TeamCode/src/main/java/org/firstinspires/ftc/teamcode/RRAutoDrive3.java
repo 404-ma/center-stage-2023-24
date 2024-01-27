@@ -78,7 +78,7 @@ public class RRAutoDrive3 extends LinearOpMode {
                     toSpikeMarkBack(17, -3, 36.5, -27);
                     break;
                 case 1:
-                    toSpikeMarkBack(18, 3, 25.5., 30);
+                    toSpikeMarkBack(18, 3, 25.5, 30);
                     break;
                 default:
                     toSpikeMarkBack(21, 0, 30.0, 0);
