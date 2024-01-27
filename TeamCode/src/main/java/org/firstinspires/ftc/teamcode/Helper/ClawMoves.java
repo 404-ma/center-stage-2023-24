@@ -16,7 +16,9 @@ public class ClawMoves {
         public double flipSuplexPos = 0.395;
         public double gripOpenPos = 0.28;
         public double gripClosedPos = 0.10;
+
         public double armDownPos = 0.2;
+
         public double flipDownPos = 0.54;
     }
 
@@ -25,6 +27,8 @@ public class ClawMoves {
     private Servo arm;
     private Servo flip;
     private Servo grip;
+
+    private int level;
 
 
     // Class Constructor
@@ -68,7 +72,12 @@ public class ClawMoves {
 
     public void openGrip(){
         grip.setPosition(PARAMS.gripOpenPos);
-        SystemClock.sleep(300); // Wait for Grip to Close
+        SystemClock.sleep(300); // Wait for Grip to Open
+    }
+
+    public void ClawMoves(int level){
+        double pos = PARAMS.armDownPos + (level * 0.001);
+        arm.setPosition(pos);
     }
     public void SuplexPixel () {
         // Pickup and Suplex Pixel
