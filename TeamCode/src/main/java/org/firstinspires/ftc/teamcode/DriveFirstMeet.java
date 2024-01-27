@@ -31,9 +31,12 @@ public class DriveFirstMeet extends LinearOpMode {
         DcMotor viperMotor = hardwareMap.dcMotor.get("viperMotor");
         CRServo conveyor = hardwareMap.crservo.get("conveyor");
 
-        Servo arm = hardwareMap.servo.get("arm");
-        Servo flip = hardwareMap.servo.get("flip");
-        Servo grip = hardwareMap.servo.get("grip");
+        Servo arm = hardwareMap.servo.get("ArmServo");
+        arm.setDirection(Servo.Direction.FORWARD);
+        Servo flip = hardwareMap.servo.get("FlipServo");
+        flip.setDirection(Servo.Direction.FORWARD);
+        Servo grip = hardwareMap.servo.get("ClawServo");
+        grip.setDirection(Servo.Direction.FORWARD);
 
         waitForStart();
         if (isStopRequested()) return;
@@ -46,7 +49,8 @@ public class DriveFirstMeet extends LinearOpMode {
         Conveyor cyr = new Conveyor(hardwareMap);
         update_telemetry(gpIn1, gpIn2, drvTrain);
 
-        boolean test = false;
+        boolean suplex = false;
+        boolean clawOpen = false;
         double speedMultiplier = 1;
 
         while (opModeIsActive()) {
@@ -67,16 +71,16 @@ public class DriveFirstMeet extends LinearOpMode {
                     yclaw.moveLevel(2);
                     break;
                 case BUTTON_L_BUMPER:
-                    test = !test;
-                    if (!test) {
+                    suplex = !suplex;
+                    if (!suplex) {
                         yclaw.PrepForPixel();
                     } else {
                         yclaw.SuplexPixel();
                     }
                     break;
                 case BUTTON_R_BUMPER:
-                    test = !test;
-                    if (!test) {
+                    clawOpen = !clawOpen;
+                    if (clawOpen) {
                         yclaw.openGrip();
                     } else {
                         yclaw.closeGrip();
@@ -110,7 +114,7 @@ public class DriveFirstMeet extends LinearOpMode {
             gamePadInputV2.GameplayInputType inpType2 = gpIn2.WaitForGamepadInput(30);
             switch (inpType2) {
                 case RIGHT_TRIGGER:
-                    double power = Math.min(gamepad1.left_trigger, 0.2);
+                    double power = Math.min(gamepad1.right_trigger, 0.2);
                     conveyor.setPower(power);
                     break;
                 case LEFT_TRIGGER:

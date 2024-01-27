@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.RoboGoApril;
 
 @Config
-@Autonomous (name = "RR Auto Drive 3 - Spike Marks", group = "RoadRunner")
+@Autonomous (name = "RR Auto Drive Red - Spike Marks", group = "RoadRunner")
 public class RRAutoDriveRed extends LinearOpMode {
     /*
      *  FTC Dashboard Parameters
