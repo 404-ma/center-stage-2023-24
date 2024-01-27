@@ -98,13 +98,6 @@ public class DriveFirstMeet extends LinearOpMode {
                 case BUTTON_Y:
                     speedMultiplier = 1;
                     break;
-                case RIGHT_TRIGGER:
-                    viperMotor.setPower(gamepad1.right_trigger * 1);
-                    break;
-                case LEFT_TRIGGER:
-                    double power = Math.min(gamepad1.left_trigger, 0.5);
-                    conveyor.setPower(power);
-                    break;
                 case JOYSTICK:
                     drvTrain.setDriveVectorFromJoystick(gamepad1.left_stick_x * (float) speedMultiplier,
                             gamepad1.right_stick_x * (float) speedMultiplier, gamepad1.left_stick_y * (float) speedMultiplier);
@@ -113,18 +106,16 @@ public class DriveFirstMeet extends LinearOpMode {
 
             gamePadInputV2.GameplayInputType inpType2 = gpIn2.WaitForGamepadInput(30);
             switch (inpType2) {
-                case RIGHT_TRIGGER:
-                    double power = Math.min(gamepad1.right_trigger, 0.2);
+                case LEFT_TRIGGER:
+                    double power = Math.min(gamepad2.left_trigger, 0.5);
                     conveyor.setPower(power);
                     break;
-                case LEFT_TRIGGER:
-                    double power2 = Math.min(gamepad1.left_trigger, -0.2);
-                    conveyor.setPower(power2);
+                case RIGHT_TRIGGER:
+                    double powerBack = Math.min(gamepad2.right_trigger, 0.5);
+                    conveyor.setPower(-powerBack);
                     break;
                 case JOYSTICK:
-                    viperMotor.setPower(gamepad1.left_stick_y * 0.5);
-
-                    //TODO;set gantryslide using rigth_stick_y
+                    viperMotor.setPower(gamepad2.right_stick_y * -0.5);
                     break;
             }
         }
@@ -134,12 +125,12 @@ public class DriveFirstMeet extends LinearOpMode {
         telemetry.addLine().addData("Main Loop Cnt", tlm_MainLoopCount);
 
         telemetry.addLine("Game-pad Input");
-        telemetry.addLine().addData("Input Ct", gpi1.getTelemetry_InputCount());
-        telemetry.addLine().addData("Inp Last", gpi1.getTelemetry_InputLastType().toString());
-        String inpTime = new java.text.SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS", Locale.US).format(gpi1.getTelemetry_InputLastTimestamp());
+        telemetry.addLine().addData("Input Ct", gpi2.getTelemetry_InputCount());
+        telemetry.addLine().addData("Inp Last", gpi2.getTelemetry_InputLastType().toString());
+        String inpTime = new java.text.SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS", Locale.US).format(gpi2.getTelemetry_InputLastTimestamp());
         telemetry.addLine().addData("Inp Time", inpTime);
-        telemetry.addLine().addData("L Joy  X", "%6.3f", gamepad1.left_stick_x).addData("Y", "%6.3f", gamepad1.left_stick_y);
-        telemetry.addLine().addData("R Joy  X", "%6.3f", gamepad1.right_stick_x).addData("Y", "%6.3f", gamepad1.right_stick_y);
+        telemetry.addLine().addData("L Joy  X", "%6.3f", gamepad2.left_stick_x).addData("Y", "%6.3f", gamepad2.left_stick_y);
+        telemetry.addLine().addData("R Joy  X", "%6.3f", gamepad2.right_stick_x).addData("Y", "%6.3f", gamepad2.right_stick_y);
         telemetry.addLine("Drive Train");
         telemetry.addLine().addData("Pwr  L F", drv.getTelemetryLastPowerFrontLeft());
         telemetry.addLine().addData("Pwr  L B", drv.getTelemetryLastPowerBackLeft());
