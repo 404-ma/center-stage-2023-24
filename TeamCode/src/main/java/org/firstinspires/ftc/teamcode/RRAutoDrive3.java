@@ -79,13 +79,13 @@ public class RRAutoDrive3 extends LinearOpMode {
         } else {
             switch ((int) PARAMS.propSpikeMark) {
                 case 3:
-                    toSpikeMarkBack(17, -3, 35, -27);
+                    toSpikeMarkBack(17.0, -3.0, 35.0, -27);
                     break;
                 case 1:
-                    toSpikeMarkBack(18, 3, 25.5, 30);
+                    toSpikeMarkBack(18.0, 3.0, 25.5, 30);
                     break;
                 default:
-                    toSpikeMarkBack(21, 0, 30.0, 0);
+                    toSpikeMarkBack(21.0, 0.0, 30.0, 0);
                     break;
             }
         }
@@ -148,7 +148,7 @@ public class RRAutoDrive3 extends LinearOpMode {
         Actions.runBlocking(moveRb);
 
         whiteClaw.PlacePixel();
-        sleep(500);
+        sleep(650);
         whiteClaw.RetractArm();
 
         Action moveBack = drive.actionBuilder(drive.pose)
@@ -158,7 +158,7 @@ public class RRAutoDrive3 extends LinearOpMode {
         Actions.runBlocking(moveBack);
 
         Action moveRb3 = drive.actionBuilder(drive.pose)
-                .strafeTo(new Vector2d(targetX,18))
+                .strafeTo(new Vector2d(targetX,38))
                 .build();
         Actions.runBlocking(moveRb3);
 
