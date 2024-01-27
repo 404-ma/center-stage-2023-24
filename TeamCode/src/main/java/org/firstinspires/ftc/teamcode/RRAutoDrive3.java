@@ -79,7 +79,7 @@ public class RRAutoDrive3 extends LinearOpMode {
         } else {
             switch ((int) PARAMS.propSpikeMark) {
                 case 3:
-                    toSpikeMarkBack(17, -3, 36.5, -27);
+                    toSpikeMarkBack(17, -3, 35, -27);
                     break;
                 case 1:
                     toSpikeMarkBack(18, 3, 25.5, 30);

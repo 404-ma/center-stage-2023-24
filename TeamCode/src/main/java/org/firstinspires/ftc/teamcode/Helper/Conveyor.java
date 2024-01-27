@@ -18,7 +18,6 @@ public class Conveyor {
     }
 
     public static Params PARAMS = new Params();
-
     public DcMotorEx viperMotor;
     public Encoder viperEncoder;
     private CRServo conv;
@@ -45,7 +44,7 @@ public class Conveyor {
 
     public void moveViper(){
 
-        viperMotor.setPower(0.3);
+        viperMotor.setPower(0.5);
     }
 
     public void stopViper(){
