@@ -75,9 +75,11 @@ public class ClawMoves {
         SystemClock.sleep(300); // Wait for Grip to Open
     }
 
-    public void MoveLevel(int level){
-        double pos = PARAMS.armDownPos + (level * 0.001);
+    public void moveLevel(int level){
+        double pos = PARAMS.armDownPos + (level * 0.005);
+        double flipPos = PARAMS.flipDownPos - (level * 0.005);
         arm.setPosition(pos);
+        flip.setPosition(flipPos);
     }
     public void SuplexPixel () {
         // Pickup and Suplex Pixel
