@@ -25,7 +25,6 @@ public class DriveFirstMeet extends LinearOpMode {
         telemetry.update();
         DcMotor viperMotor = hardwareMap.dcMotor.get("viperMotor");
         CRServo conveyor = hardwareMap.crservo.get("conveyor");
-        int power = 1;
 
         waitForStart();
         if (isStopRequested()) return;
@@ -41,20 +40,16 @@ public class DriveFirstMeet extends LinearOpMode {
             update_telemetry(gpIn1,gpIn2,drvTrain);
             gamePadInputV2.GameplayInputType inpType = gpIn1.WaitForGamepadInput(500);
             switch (inpType) {
-                case LEFT_TRIGGER:
-                    viperMotor.setPower(gamepad1.left_trigger * -1);
-                    break;
+                //case LEFT_TRIGGER:
+                //    viperMotor.setPower(gamepad1.left_trigger * -1);
+                //    break;
                 case RIGHT_TRIGGER:
                     viperMotor.setPower(gamepad1.right_trigger * 1);
                     break;
-                case BUTTON_A:
+                case LEFT_TRIGGER:
+                    double power = Math.min(gamepad1.left_trigger, 0.5);
                     conveyor.setPower(power);
                     break;
-                case NONE:
-                    conveyor.setPower(0);
-                    break;
-                case BUTTON_B:
-                    power = -power;
                 case JOYSTICK:
                     // Set Drivetrain Power
                     drvTrain.setDriveVectorFromJoystick(  gamepad1.left_stick_x,
@@ -65,13 +60,13 @@ public class DriveFirstMeet extends LinearOpMode {
     }
 
 
-    private void update_telemetry(gamePadInputV2 gpi,gamePadInputV2 gpi2,DrivetrainV2 drv) {
+    private void update_telemetry(gamePadInputV2 gpi1, gamePadInputV2 gpi2, DrivetrainV2 drv) {
         telemetry.addLine().addData( "Main Loop Cnt", tlm_MainLoopCount);
 
         telemetry.addLine("Game-pad Input");
-        telemetry.addLine().addData( "Input Ct", gpi.getTelemetry_InputCount());
-        telemetry.addLine().addData( "Inp Last", gpi.getTelemetry_InputLastType().toString());
-        String inpTime = new java.text.SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS", Locale.US).format(gpi.getTelemetry_InputLastTimestamp());
+        telemetry.addLine().addData( "Input Ct", gpi1.getTelemetry_InputCount());
+        telemetry.addLine().addData( "Inp Last", gpi1.getTelemetry_InputLastType().toString());
+        String inpTime = new java.text.SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS", Locale.US).format(gpi1.getTelemetry_InputLastTimestamp());
         telemetry.addLine().addData( "Inp Time", inpTime);
         telemetry.addLine().addData( "L Joy  X", "%6.3f", gamepad1.left_stick_x).addData("Y", "%6.3f", gamepad1.left_stick_y);
         telemetry.addLine().addData( "R Joy  X", "%6.3f", gamepad1.right_stick_x).addData("Y", "%6.3f", gamepad1.right_stick_y);

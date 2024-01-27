@@ -13,7 +13,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helper.ClawMoves;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
-import org.firstinspires.ftc.teamcode.RoboGoApril;
 
 @Config
 @Autonomous (name = "RR Auto Drive 3 - Spike Marks", group = "RoadRunner")
@@ -33,6 +32,7 @@ public class RRAutoDrive3 extends LinearOpMode {
         public double gripClosedPos = 0.10;
         public double propSpikeMark = 1;    //  Which Spike Mark is the Prop Located on
         public boolean partnerDead = false;
+        public boolean backstage = true;
         public int dTime = 500;
     }
 
@@ -67,58 +67,39 @@ public class RRAutoDrive3 extends LinearOpMode {
         telemetry.clear();
 
         whiteClaw.AutonomousStart();
-        switch ((int) PARAMS.propSpikeMark) {
-            case 3:
-                // Left Spike Mark
-                Action moveOne = drive.actionBuilder(drive.pose)
-                        .splineTo(new Vector2d(17, -3), Math.toRadians(-27))
-                        .build();
-                Actions.runBlocking(moveOne);
 
-                whiteClaw.PlacePixel();
-
-                Action moveOneb = drive.actionBuilder(drive.pose)
-                        .setReversed(true)
-                        .splineTo(new Vector2d(6, 0), Math.toRadians(180))
-                        .build();
-
-                Actions.runBlocking(moveOneb);
-                break;
-
-            case 1:
-                // Right Spike Mark
-                Action moveTwo = drive.actionBuilder(drive.pose)
-                        .splineTo(new Vector2d(18, 3), Math.toRadians(30))
-                        .build();
-                Actions.runBlocking(moveTwo);
-
-                whiteClaw.PlacePixel();
-                Action moveBack = drive.actionBuilder(drive.pose)
-                        .setReversed(true)
-                        .splineTo(new Vector2d(6, 0), Math.toRadians(180))
-                        .build();
-                Actions.runBlocking(moveBack);
-
-                break;
-
-            default:
-                // Center Spike Mark
-                Action moveThree = drive.actionBuilder(drive.pose)
-                        .lineToX(21)
-                        .build();
-                Actions.runBlocking(moveThree);
-
-                whiteClaw.PlacePixel();
-
-                Action moveThreeb = drive.actionBuilder(drive.pose)
-                        .lineToX(6)
-                        .build();
-                Actions.runBlocking(moveThreeb);
+        if (!PARAMS.backstage) {
+            switch ((int) PARAMS.propSpikeMark) {
+                case 3:
+                    toSpikeMarkFront(17, -3);
+                    break;
+                case 1:
+                    toSpikeMarkFront(18, 3);
+                    break;
+                default:
+                    toSpikeMarkFront(21, 0);
+                    break;
+            }
+        } else {
+            switch ((int) PARAMS.propSpikeMark) {
+                case 3:
+                    toSpikeMarkBack(17, -3);
+                    break;
+                case 1:
+                    toSpikeMarkBack(18, 3);
+                    break;
+                default:
+                    toSpikeMarkBack(21, 0);
+                    break;
+            }
 
 
         }
-        whiteClaw.RetractArm();
 
+
+
+
+        whiteClaw.RetractArm();
 
         Action moveBar = drive.actionBuilder(drive.pose)
                 .turnTo(Math.toRadians(-90))
@@ -138,15 +119,12 @@ public class RRAutoDrive3 extends LinearOpMode {
             else
                 targetX = 30.0;
 
-
             Action backdrop = drive.actionBuilder(drive.pose)
                     .setReversed(true)
-                    .splineTo(new Vector2d(targetX, 60), Math.toRadians(90))
                     .splineTo(new Vector2d(targetX, targetY), Math.toRadians(90))
                     .build();
-
-            Actions.runBlocking(backdrop);}
-        else {
+            Actions.runBlocking(backdrop);
+        } else {
             double targetX;
             double targetY = 80.0;
 
@@ -160,10 +138,41 @@ public class RRAutoDrive3 extends LinearOpMode {
 
             Action backdrop = drive.actionBuilder(drive.pose)
                     .setReversed(true)
+                    .splineTo(new Vector2d(targetX, 60), Math.toRadians(90))
                     .splineTo(new Vector2d(targetX, targetY), Math.toRadians(90))
                     .build();
 
             Actions.runBlocking(backdrop);
-
         }
-    }}
+
+    }
+
+    public void toSpikeMarkFront(double targetX, double targetY){
+        Action moveRb = drive.actionBuilder(drive.pose)
+                .splineTo(new Vector2d(targetX, targetY), Math.toRadians(-27))
+                .build();
+        Actions.runBlocking(moveRb);
+
+        whiteClaw.PlacePixel();
+
+        Action moveRb2 = drive.actionBuilder(drive.pose)
+                .setReversed(true)
+                .splineTo(new Vector2d(6, 0), Math.toRadians(180))
+                .build();
+        Actions.runBlocking(moveRb2);
+
+        whiteClaw.RetractArm();
+    }
+
+    public void toSpikeMarkBack(double targetX, double targetY){
+        Action moveRb = drive.actionBuilder(drive.pose)
+                .splineTo(new Vector2d(targetX, targetY), Math.toRadians(-27))
+                .build();
+        Actions.runBlocking(moveRb);
+
+        whiteClaw.PlacePixel();
+        sleep(100);
+        whiteClaw.RetractArm();
+
+    }
+}

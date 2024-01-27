@@ -1,20 +1,17 @@
 package org.firstinspires.ftc.teamcode;
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-;import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
 import com.arcrobotics.ftclib.controller.PController;
 import com.arcrobotics.ftclib.controller.PDController;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.controller.PIDFController;
 
-
-
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Helper.gamePadInput;
-import org.firstinspires.ftc.teamcode.Helper.gamePadInput.GameplayInputType;
-
-
+import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2;
+import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2.GameplayInputType;
 
 @Disabled
 public class twoSensor extends LinearOpMode {
@@ -22,14 +19,13 @@ public class twoSensor extends LinearOpMode {
     double kI;
     double kF;
     double kD;
-    private gamePadInput game1;
-
+    private gamePadInputV2 game1;
 
     public void runOpMode() {
 
         DistanceSensor distanceR = hardwareMap.get(DistanceSensor.class, "distanceR");
         DistanceSensor distanceL = hardwareMap.get(DistanceSensor.class, "distanceL");
-        game1 = new gamePadInput(gamepad1);
+        game1 = new gamePadInputV2(gamepad1);
 
         GameplayInputType iN = game1.WaitForGamepadInput(100);
 
@@ -74,12 +70,11 @@ public class twoSensor extends LinearOpMode {
             yNum++;
         }
 
-        if (yNum % 2 == 1) {
+        if (yNum % 2 == 1)
             autoPilot = true;
-        } else if (yNum % 2 == 0) {
+        else if (yNum % 2 == 0)
             autoPilot = false;
 
-        }
         double distRCM = distanceR.getDistance(DistanceUnit.CM);
         double distLCM = distanceL.getDistance(DistanceUnit.CM);
     }

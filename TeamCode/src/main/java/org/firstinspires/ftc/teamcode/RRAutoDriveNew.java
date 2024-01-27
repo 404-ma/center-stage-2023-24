@@ -14,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 
 @Config
-@Autonomous(name = "RR Auto Drive 3 - Spike Marks", group = "RoadRunner")
+@Autonomous(name = "RR Auto Drive * New *", group = "RoadRunner")
 public class RRAutoDriveNew extends LinearOpMode {
 
     public static class Params {
