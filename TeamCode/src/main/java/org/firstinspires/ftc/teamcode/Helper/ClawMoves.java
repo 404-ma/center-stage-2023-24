@@ -75,7 +75,7 @@ public class ClawMoves {
         SystemClock.sleep(300); // Wait for Grip to Open
     }
 
-    public void ClawMoves(int level){
+    public void MoveLevel(int level){
         double pos = PARAMS.armDownPos + (level * 0.001);
         arm.setPosition(pos);
     }
