@@ -24,7 +24,7 @@ public class RRAutoDrive3 extends LinearOpMode {
     public static class Params {
         public double propSpikeMark = 1;    //  Which Spike Mark is the Prop Located on
         public boolean partnerDead = true;
-        public boolean backstage = false;
+        public boolean backstage = true;
         public int dTime = 500;
     }
 
@@ -92,13 +92,13 @@ public class RRAutoDrive3 extends LinearOpMode {
 
         whiteClaw.PrepForPixel();
         whiteConveyor.moveViper();
-        sleep(1000);
+        sleep(1090);
         whiteConveyor.stopViper();
         whiteConveyor.moveConvForward();
         sleep(1000);
         whiteConveyor.stopConv();
         whiteConveyor.moveDownViper();
-        sleep(1000);
+        sleep(1090);
 
 
     }

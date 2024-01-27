@@ -88,7 +88,7 @@ public class DriveFirstMeet extends LinearOpMode {
                     break;
 
                 case BUTTON_A:
-                    speedMultiplier = 0;
+                    speedMultiplier = 0.25;
                     break;
                 case BUTTON_X:
                     speedMultiplier = 0.75;
