@@ -160,6 +160,5 @@ public class RRAutoDriveRed extends LinearOpMode {
                 .strafeTo(new Vector2d(targetX,-36))
                 .build();
         Actions.runBlocking(moveRb3);
-
     }
 }
