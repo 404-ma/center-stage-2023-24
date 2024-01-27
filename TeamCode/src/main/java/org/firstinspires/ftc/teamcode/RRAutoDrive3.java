@@ -60,27 +60,25 @@ public class RRAutoDrive3 extends LinearOpMode {
 
         whiteClaw.AutonomousStart();
 
-
-
         if (!PARAMS.backstage) {
             switch ((int) PARAMS.propSpikeMark) {
                 case 3:
-                    toSpikeMarkFront(17.0, -3.0, 25.5, -27, PARAMS.partnerDead);
+                    toSpikeMarkFront(17.0, -3.0, 36.5, -27, PARAMS.partnerDead);
                     break;
                 case 1:
-                    toSpikeMarkFront(18.0, 3.0, 36.5, 180, PARAMS.partnerDead);
+                    toSpikeMarkFront(18.0, 3.0, 25.5, 30, PARAMS.partnerDead);
                     break;
                 default:
-                    toSpikeMarkFront(21.0, 0.0, 30.0, 30, PARAMS.partnerDead);
+                    toSpikeMarkFront(21.0, 0.0, 30.0, 0, PARAMS.partnerDead);
                     break;
             }
         } else {
             switch ((int) PARAMS.propSpikeMark) {
                 case 3:
-                    toSpikeMarkBack(17, -3, 25.5);
+                    toSpikeMarkBack(17, -3, 36.5);
                     break;
                 case 1:
-                    toSpikeMarkBack(18, 3, 36.5);
+                    toSpikeMarkBack(18, 3, 25.5);
                     break;
                 default:
                     toSpikeMarkBack(21, 0, 30.0);
