@@ -126,16 +126,17 @@ public class RRAutoDrive3 extends LinearOpMode {
             Action backdrop = drive.actionBuilder(drive.pose)
                     .setReversed(true)
                     .splineTo(new Vector2d(targetX, 60), Math.toRadians(90))
-                    .splineTo(new Vector2d(targetX, 80), Math.toRadians(90))
+                    .splineTo(new Vector2d(targetX, 83), Math.toRadians(90))
                     .build();
             Actions.runBlocking(backdrop);
         }
+
         else {
             sleep(PARAMS.dTime);
 
             Action backdrop = drive.actionBuilder(drive.pose)
                     .setReversed(true)
-                    .splineTo(new Vector2d(targetX, 80), Math.toRadians(90))
+                    .splineTo(new Vector2d(targetX, 83), Math.toRadians(90))
                     .build();
             Actions.runBlocking(backdrop);
         }
@@ -148,7 +149,7 @@ public class RRAutoDrive3 extends LinearOpMode {
         Actions.runBlocking(moveRb);
 
         whiteClaw.PlacePixel();
-        sleep(650);
+        sleep(850);
         whiteClaw.RetractArm();
 
         Action moveBack = drive.actionBuilder(drive.pose)
@@ -158,7 +159,7 @@ public class RRAutoDrive3 extends LinearOpMode {
         Actions.runBlocking(moveBack);
 
         Action moveRb3 = drive.actionBuilder(drive.pose)
-                .strafeTo(new Vector2d(targetX,38))
+                .strafeTo(new Vector2d(targetX,36))
                 .build();
         Actions.runBlocking(moveRb3);
 
