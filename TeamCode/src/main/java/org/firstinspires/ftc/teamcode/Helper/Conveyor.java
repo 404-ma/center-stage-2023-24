@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.ftc.Encoder;
 import com.acmerobotics.roadrunner.ftc.OverflowEncoder;
 import com.acmerobotics.roadrunner.ftc.RawEncoder;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -22,17 +23,13 @@ public class Conveyor {
     public static Params PARAMS = new Params();
     public DcMotorEx leftFront, leftBack, rightBack, rightFront;
 
-    private Servo Conveyor;
-
     private Servo motor;
 
     public Encoder par0;
 
     public Conveyor(@NonNull HardwareMap hdwMap){
-        leftFront = hdwMap.get(DcMotorEx.class, "frontLeft");
-        leftBack = hdwMap.get(DcMotorEx.class, "backLeft");
-        rightBack = hdwMap.get(DcMotorEx.class, "backRight");
-        rightFront = hdwMap.get(DcMotorEx.class, "frontRight");
+        DcMotor viperMotor = hdwMap.dcMotor.get("viperMotor");
+        CRServo conveyor = hdwMap.crservo.get("conveyor");
 
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -40,11 +37,11 @@ public class Conveyor {
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Reverse motor directions if needed
-        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftBack.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        par0 = new OverflowEncoder(new RawEncoder(hdwMap.get(DcMotorEx.class, "frontLeft")));
+        par0 = new OverflowEncoder(new RawEncoder(hdwMap.get(DcMotorEx.class, "viperMotor")));
     }
 
 
