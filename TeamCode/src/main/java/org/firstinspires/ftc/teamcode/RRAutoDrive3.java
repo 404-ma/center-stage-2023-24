@@ -129,16 +129,23 @@ public class RRAutoDrive3 extends LinearOpMode {
         }
     }
 
-    public void toSpikeMarkBack(double targetX, double targetY, double X){
+    public void toSpikeMarkBack(double X, double Y, double targetX, int ang){
         Action moveRb = drive.actionBuilder(drive.pose)
-                .splineTo(new Vector2d(targetX, targetY), Math.toRadians(-27))
+                .splineTo(new Vector2d(X, Y), Math.toRadians(ang))
                 .build();
         Actions.runBlocking(moveRb);
+
         whiteClaw.PlacePixel();
 
-        Action moveRb3 = drive.actionBuilder(drive.pose)
-                .splineTo(new Vector2d(6,0),Math.toRadians(90))
+        Action moveBack = drive.actionBuilder(drive.pose)
                 .setReversed(true)
+                .splineTo(new Vector2d(6, 0), Math.toRadians(180))
+                .build();
+        Actions.runBlocking(moveBack);
+
+        whiteClaw.RetractArm();
+
+        Action moveRb3 = drive.actionBuilder(drive.pose)
                 .strafeTo(new Vector2d(30,10))
                 .build();
         Actions.runBlocking(moveRb3);
