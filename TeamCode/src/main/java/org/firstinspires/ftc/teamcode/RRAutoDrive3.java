@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helper.ClawMoves;
+import org.firstinspires.ftc.teamcode.Helper.Conveyor;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.RoboGoApril;
 
@@ -32,6 +33,9 @@ public class RRAutoDrive3 extends LinearOpMode {
     private FtcDashboard dashboard;
     private MecanumDrive drive;
     private ClawMoves whiteClaw;
+    private Conveyor whiteConveyor;
+
+
 
     @Override
     public void runOpMode() {
@@ -85,6 +89,10 @@ public class RRAutoDrive3 extends LinearOpMode {
                     break;
             }
         }
+
+        whiteConveyor.moveConvForward();
+        sleep(1000);
+        whiteConveyor.stopConv();
 
     }
 
@@ -146,7 +154,7 @@ public class RRAutoDrive3 extends LinearOpMode {
         Actions.runBlocking(moveBack);
 
         Action moveRb3 = drive.actionBuilder(drive.pose)
-                .strafeTo(new Vector2d(targetX,10))
+                .strafeTo(new Vector2d(targetX,16))
                 .build();
         Actions.runBlocking(moveRb3);
 
