@@ -146,15 +146,9 @@ public class RRAutoDrive3 extends LinearOpMode {
         whiteClaw.RetractArm();
 
         Action moveRb3 = drive.actionBuilder(drive.pose)
-                .strafeTo(new Vector2d(30,10))
+                .strafeTo(new Vector2d(targetX,10))
                 .build();
         Actions.runBlocking(moveRb3);
-
-        Action moveToBoard = drive.actionBuilder(drive.pose)
-                .setReversed(true)
-                .splineTo(new Vector2d(targetX,10), Math.toRadians(90))
-                .build();
-        Actions.runBlocking(moveToBoard);
 
     }
 }
