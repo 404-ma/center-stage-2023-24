@@ -59,6 +59,7 @@ public class ClawPickupTest extends LinearOpMode {
             return;
         telemetry.clear();
 
+        int level = 1;
         while (opModeIsActive()) {
             update_telemetry();
 
@@ -74,10 +75,15 @@ public class ClawPickupTest extends LinearOpMode {
             GameplayInputType inpType = gpInput.WaitForGamepadInput(100);
             switch (inpType) {
                 case DPAD_UP:
+                    ++level;
+                    level = Math.max(level, 4);
+                    whiteClaw.MoveLevel(level);
+                    break;
+
                 case DPAD_DOWN:
-                    boolean up = (inpType == GameplayInputType.DPAD_UP);
-                    tlmArmPosition = up ? PARAMS.armUpPos : PARAMS.armDownPos;
-                    arm.setPosition(tlmArmPosition);
+                    --level;
+                    level = Math.max(level, 0);
+                    whiteClaw.MoveLevel(level);
                     break;
 
                 case DPAD_LEFT:
@@ -110,6 +116,8 @@ public class ClawPickupTest extends LinearOpMode {
                 case BUTTON_R_BUMPER:
                     whiteClaw.RetractArm();
                     break;
+
+
             }
 
         }
