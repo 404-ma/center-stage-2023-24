@@ -67,7 +67,7 @@ public class ClawMoves {
     }
 
     public void openGrip(){
-        grip.setPosition(PARAMS.gripClosedPos);
+        grip.setPosition(PARAMS.gripOpenPos);
         SystemClock.sleep(300); // Wait for Grip to Close
     }
     public void SuplexPixel () {
