@@ -30,6 +30,7 @@ public class Conveyor {
     }
 
     public void moveConvForward(){
+
         conv.setPower(0.7);
     }
 
@@ -38,14 +39,17 @@ public class Conveyor {
     }
 
     public void stopConv(){
+
         conv.setPower(0);
     }
 
     public void moveViper(){
-        viperMotor.setPower(0.5);
+
+        viperMotor.setPower(0.3);
     }
 
     public void stopViper(){
+
         viperMotor.setPower(0);
     }
 
