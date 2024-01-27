@@ -106,8 +106,8 @@ public class DriveFirstMeet extends LinearOpMode {
                     conveyor.setPower(power);
                     break;
                 case JOYSTICK:
-                    drvTrain.setDriveVectorFromJoystick(gamepad1.left_stick_x,
-                            gamepad1.right_stick_x, gamepad1.left_stick_y);
+                    drvTrain.setDriveVectorFromJoystick(gamepad1.left_stick_x * (float) speedMultiplier,
+                            gamepad1.right_stick_x * (float) speedMultiplier, gamepad1.left_stick_y * (float) speedMultiplier);
                     break;
             }
 
@@ -123,6 +123,7 @@ public class DriveFirstMeet extends LinearOpMode {
                     break;
                 case JOYSTICK:
                     viperMotor.setPower(gamepad1.left_stick_y * 0.5);
+
                     //TODO;set gantryslide using rigth_stick_y
                     break;
             }
