@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.ftc.Encoder;
 import com.acmerobotics.roadrunner.ftc.OverflowEncoder;
 import com.acmerobotics.roadrunner.ftc.RawEncoder;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.CRServo;
 
@@ -29,6 +30,17 @@ public class Conveyor {
          conv = hdwMap.crservo.get("conveyor");
     }
 
+    public void moveConvForward(){
+        conv.setPower(0.7);
+    }
+
+    public void moveConvBackward(){
+        conv.setPower(-0.7);
+    }
+
+    public void stopConv(){
+        conv.setPower(0);
+    }
 
 
 }
