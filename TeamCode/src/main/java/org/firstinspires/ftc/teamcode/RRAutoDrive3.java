@@ -57,6 +57,7 @@ public class RRAutoDrive3 extends LinearOpMode {
         dashboard.clearTelemetry();
         drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         whiteClaw = new ClawMoves(hardwareMap);
+        whiteConveyor = new Conveyor(hardwareMap);
 
         waitForStart();
         if (isStopRequested()) return;
@@ -154,7 +155,7 @@ public class RRAutoDrive3 extends LinearOpMode {
         Actions.runBlocking(moveBack);
 
         Action moveRb3 = drive.actionBuilder(drive.pose)
-                .strafeTo(new Vector2d(targetX,16))
+                .strafeTo(new Vector2d(targetX,18))
                 .build();
         Actions.runBlocking(moveRb3);
 

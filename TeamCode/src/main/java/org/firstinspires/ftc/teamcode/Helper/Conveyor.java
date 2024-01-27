@@ -15,7 +15,6 @@ import com.qualcomm.robotcore.hardware.CRServo;
 public class Conveyor {
 
     public static class Params{
-
     }
 
     public static Params PARAMS = new Params();
