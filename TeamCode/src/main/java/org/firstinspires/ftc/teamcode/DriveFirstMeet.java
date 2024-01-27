@@ -50,7 +50,7 @@ public class DriveFirstMeet extends LinearOpMode {
         while (opModeIsActive()) {
             ++tlm_MainLoopCount;
             update_telemetry(gpIn1,gpIn2,drvTrain);
-            gamePadInputV2.GameplayInputType inpType = gpIn1.WaitForGamepadInput(500);
+            gamePadInputV2.GameplayInputType inpType = gpIn1.WaitForGamepadInput(30);
             switch (inpType) {
                 case DPAD_UP:
                       yclaw.MoveLevel(3);
@@ -96,7 +96,7 @@ public class DriveFirstMeet extends LinearOpMode {
                             gamepad1.right_stick_x, gamepad1.left_stick_y );
                     break;
             }
-            gamePadInputV2.GameplayInputType inpType2 = gpIn2.WaitForGamepadInput(500);
+            gamePadInputV2.GameplayInputType inpType2 = gpIn2.WaitForGamepadInput(30);
             switch (inpType2) {
 
                 case RIGHT_TRIGGER:

@@ -81,6 +81,7 @@ public class ClawMoves {
         arm.setPosition(pos);
         flip.setPosition(flipPos);
     }
+
     public void SuplexPixel () {
         // Pickup and Suplex Pixel
         arm.setPosition(PARAMS.armUpPos);
