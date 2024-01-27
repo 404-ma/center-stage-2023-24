@@ -44,7 +44,7 @@ public class Conveyor {
 
     public void moveViper(){
 
-        viperMotor.setPower(0.5);
+        viperMotor.setPower(0.7);
     }
 
     public void stopViper(){
