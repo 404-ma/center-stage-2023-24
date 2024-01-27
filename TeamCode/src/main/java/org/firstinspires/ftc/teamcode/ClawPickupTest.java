@@ -77,13 +77,13 @@ public class ClawPickupTest extends LinearOpMode {
                 case DPAD_UP:
                     ++level;
                     level = Math.max(level, 4);
-                    whiteClaw.MoveLevel(level);
+                    whiteClaw.moveLevel(level );
                     break;
 
                 case DPAD_DOWN:
                     --level;
                     level = Math.max(level, 0);
-                    whiteClaw.MoveLevel(level);
+                    whiteClaw.moveLevel(level);
                     break;
 
                 case DPAD_LEFT:
