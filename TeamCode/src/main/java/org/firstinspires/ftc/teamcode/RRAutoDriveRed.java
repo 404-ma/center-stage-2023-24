@@ -149,7 +149,6 @@ public class RRAutoDriveRed extends LinearOpMode {
         whiteClaw.PlacePixel();
         sleep(850);
         whiteClaw.RetractArm();
-
         Action moveBack = drive.actionBuilder(drive.pose)
                 .setReversed(true)
                 .splineTo(new Vector2d(6, 0), Math.toRadians(-90))
