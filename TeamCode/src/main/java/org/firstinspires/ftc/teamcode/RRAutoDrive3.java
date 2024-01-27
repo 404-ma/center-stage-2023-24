@@ -151,7 +151,7 @@ public class RRAutoDrive3 extends LinearOpMode {
         Actions.runBlocking(moveRb3);
 
         Action moveToBoard = drive.actionBuilder(drive.pose)
-                .splineTo(new Vector2d(X,10), Math.toRadians(90))
+                .splineTo(new Vector2d(X,10), Math.toRadians(-90))
                 .build();
         Actions.runBlocking(moveToBoard);
 
