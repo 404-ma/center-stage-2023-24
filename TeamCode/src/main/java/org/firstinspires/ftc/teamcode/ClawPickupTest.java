@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2;
 import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2.GameplayInputType;
+import org.firstinspires.ftc.teamcode.Helper.ClawMoves;
+
 
 
 @Config
@@ -39,6 +41,7 @@ public class ClawPickupTest extends LinearOpMode {
     private Servo arm;
     private Servo flip;
     private Servo grip;
+    private ClawMoves whiteClaw;
 
     private boolean tlmArmForward = false;
     private double tlmArmPosition = 0;
@@ -92,27 +95,20 @@ public class ClawPickupTest extends LinearOpMode {
                     break;
 
                 case BUTTON_X:
-                    // Pickup and Suplex Pixel
-                    tlmGripPosition = PARAMS.gripClosedPos;
-                    grip.setPosition(tlmGripPosition);
-                    sleep(300);  // Wait for Grip to Close
-                    tlmArmPosition = PARAMS.armUpPos;
-                    arm.setPosition(tlmArmPosition);
-                    sleep(100);
-                    tlmFlipPosition = PARAMS.flipSuplexPos;
-                    flip.setPosition(tlmFlipPosition);
-                    sleep(700);  // Wait for Suplex to Finish
-                    tlmGripPosition = PARAMS.gripOpenPos;
-                    grip.setPosition(tlmGripPosition);
+                    whiteClaw.SuplexPixel();
                     break;
 
                 case BUTTON_B:
-                    // Reset Claw to Down and Open
-                    tlmArmPosition = PARAMS.armDownPos;
-                    arm.setPosition(tlmArmPosition);
-                    sleep(100);  // let Arm Move Away from Conveyor
-                    tlmFlipPosition = PARAMS.flipDownPos;
-                    flip.setPosition(tlmFlipPosition);
+                    whiteClaw.PrepForPixel();
+                    break;
+
+                case BUTTON_L_BUMPER:
+                    whiteClaw.AutonomousStart();
+                    whiteClaw.PlacePixel();
+                    break;
+
+                case BUTTON_R_BUMPER:
+                    whiteClaw.RetractArm();
                     break;
             }
 
@@ -134,6 +130,7 @@ public class ClawPickupTest extends LinearOpMode {
             arm = hardwareMap.servo.get("ArmServo");
             flip = hardwareMap.servo.get("FlipServo");
             grip = hardwareMap.servo.get("ClawServo");
+            whiteClaw = new ClawMoves(hardwareMap);
             dashboard = FtcDashboard.getInstance();
             dashboard.clearTelemetry();
         } catch (Exception e) {
