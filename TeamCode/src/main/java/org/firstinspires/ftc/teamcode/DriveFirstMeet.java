@@ -56,8 +56,28 @@ public class DriveFirstMeet extends LinearOpMode {
                             gamepad1.right_stick_x, gamepad1.left_stick_y );
                     break;
             }
+            gamePadInputV2.GameplayInputType inpType2 = gpIn2.WaitForGamepadInput(500);
+            switch (inpType2) {
+
+                case RIGHT_TRIGGER:
+                    double power = Math.min(gamepad1.left_trigger, 0.2);
+                    conveyor.setPower(power);
+                    break;
+
+
+                case LEFT_TRIGGER:
+                    double power2 = Math.min(gamepad1.left_trigger, -0.2);
+                    conveyor.setPower(power2);
+                    break;
+
+                case JOYSTICK:
+                    drvTrain.setDriveVectorFromJoystick(gamepad1.left_stick_x,
+                            gamepad1.right_stick_x, gamepad1.left_stick_y);
+                    break;
+                    }
+
+            }
         }
-    }
 
 
     private void update_telemetry(gamePadInputV2 gpi1, gamePadInputV2 gpi2, DrivetrainV2 drv) {
