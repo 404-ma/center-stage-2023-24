@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Helper.ClawMoves;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 
 @Config
@@ -25,6 +26,8 @@ public class AutoFirstMeet extends LinearOpMode {
 
     private FtcDashboard dashboard;
     private MecanumDrive drive;
+    private ClawMoves whiteClaw;
+
 
 
     @Override
@@ -49,6 +52,8 @@ public class AutoFirstMeet extends LinearOpMode {
         if (isStopRequested()) return;
         telemetry.clear();
 
+        whiteClaw.AutonomousStart();
+
         switch ((int) PARAMS.propSpikeMark) {
             case 3:
                 // Left Spike Mark
@@ -57,7 +62,7 @@ public class AutoFirstMeet extends LinearOpMode {
                         .build();
                 Actions.runBlocking(moveOne);
 
-                //PlacePixel(flip, grip);
+                whiteClaw.PlacePixel();
 
                 break;
 
@@ -85,7 +90,7 @@ public class AutoFirstMeet extends LinearOpMode {
 
         Actions.runBlocking(moveBack);
 
-        //Retract(flip, grip);
+        whiteClaw.RetractArm();
 
         Action moveBar = drive.actionBuilder(drive.pose)
                 .turnTo(Math.toRadians(-90))
