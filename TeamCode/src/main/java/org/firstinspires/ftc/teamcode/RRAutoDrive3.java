@@ -91,7 +91,7 @@ public class RRAutoDrive3 extends LinearOpMode {
         }
 
         whiteConveyor.moveViper();
-        sleep(100);
+        sleep(500);
         whiteConveyor.stopViper();
         whiteConveyor.moveConvForward();
         sleep(1000);
