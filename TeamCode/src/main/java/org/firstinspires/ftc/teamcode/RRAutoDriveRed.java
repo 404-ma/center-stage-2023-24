@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.RoboGoApril;
 
 @Config
 @Autonomous (name = "RR Auto Drive 3 - Spike Marks", group = "RoadRunner")
-public class RRAutoDrive3 extends LinearOpMode {
+public class RRAutoDriveRed extends LinearOpMode {
     /*
      *  FTC Dashboard Parameters
      */
@@ -61,18 +61,17 @@ public class RRAutoDrive3 extends LinearOpMode {
         whiteClaw.AutonomousStart();
 
 
-
         if (!PARAMS.backstage) {
             switch ((int) PARAMS.propSpikeMark) {
                 case 3:
-                    toSpikeMarkFront(17.0, -3.0, 25.5, -27, PARAMS.partnerDead);
-                    break;
+                        toSpikeMarkFront(17.0, -3.0, 25.5, -27, PARAMS.partnerDead);
+                        break;
                 case 1:
-                    toSpikeMarkFront(18.0, 3.0, 36.5, 180, PARAMS.partnerDead);
-                    break;
+                        toSpikeMarkFront(18.0, 3.0, 36.5, 180, PARAMS.partnerDead);
+                        break;
                 default:
-                    toSpikeMarkFront(21.0, 0.0, 30.0, 30, PARAMS.partnerDead);
-                    break;
+                        toSpikeMarkFront(21.0, 0.0, 30.0, 30, PARAMS.partnerDead);
+                        break;
             }
         } else {
             switch ((int) PARAMS.propSpikeMark) {
@@ -130,8 +129,7 @@ public class RRAutoDrive3 extends LinearOpMode {
             Actions.runBlocking(backdrop);
         }
     }
-
-    public void toSpikeMarkBack(double targetX, double targetY, double X){
+    public void toSpikeMarkBack(double targetX, double targetY, double X) {
         Action moveRb = drive.actionBuilder(drive.pose)
                 .splineTo(new Vector2d(targetX, targetY), Math.toRadians(-27))
                 .build();
@@ -139,16 +137,15 @@ public class RRAutoDrive3 extends LinearOpMode {
         whiteClaw.PlacePixel();
 
         Action moveRb3 = drive.actionBuilder(drive.pose)
-                .splineTo(new Vector2d(6,0),Math.toRadians(90))
+                .splineTo(new Vector2d(6, 0), Math.toRadians(90))
                 .setReversed(true)
-                .strafeTo(new Vector2d(30,10))
+                .strafeTo(new Vector2d(30, 10))
                 .build();
         Actions.runBlocking(moveRb3);
 
         Action moveToBoard = drive.actionBuilder(drive.pose)
-                .splineTo(new Vector2d(X,10), Math.toRadians(90))
+                .splineTo(new Vector2d(X, 10), Math.toRadians(90))
                 .build();
         Actions.runBlocking(moveToBoard);
-
     }
 }
