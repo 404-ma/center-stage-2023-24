@@ -1,11 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.os.SystemClock;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Helper.ClawMoves;
 import org.firstinspires.ftc.teamcode.Helper.DrivetrainV2;
 import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2;
 
@@ -26,6 +30,10 @@ public class DriveFirstMeet extends LinearOpMode {
         DcMotor viperMotor = hardwareMap.dcMotor.get("viperMotor");
         CRServo conveyor = hardwareMap.crservo.get("conveyor");
 
+        Servo arm = hardwareMap.servo.get("arm");
+        Servo flip = hardwareMap.servo.get("flip");
+        Servo grip = hardwareMap.servo.get("grip");
+
         waitForStart();
         if (isStopRequested()) return;
         telemetry.clear();
@@ -33,6 +41,7 @@ public class DriveFirstMeet extends LinearOpMode {
         gamePadInputV2 gpIn1 = new gamePadInputV2(gamepad1);
         gamePadInputV2 gpIn2 = new gamePadInputV2(gamepad2);
         DrivetrainV2 drvTrain = new DrivetrainV2(hardwareMap);
+        ClawMoves yclaw = new ClawMoves(hardwareMap);
         update_telemetry(gpIn1,gpIn2,drvTrain);
 
         while (opModeIsActive()) {
@@ -49,6 +58,7 @@ public class DriveFirstMeet extends LinearOpMode {
                 case LEFT_TRIGGER:
                     double power = Math.min(gamepad1.left_trigger, 0.5);
                     conveyor.setPower(power);
+
                     break;
                 case JOYSTICK:
                     // Set Drivetrain Power
@@ -71,13 +81,19 @@ public class DriveFirstMeet extends LinearOpMode {
                     break;
 
                 case JOYSTICK:
-                    drvTrain.setDriveVectorFromJoystick(gamepad1.left_stick_x,
-                            gamepad1.right_stick_x, gamepad1.left_stick_y);
+                    viperMotor.setPower(gamepad1.right_trigger * 1);
+
                     break;
                     }
 
+
             }
+
+
         }
+
+
+
 
 
     private void update_telemetry(gamePadInputV2 gpi1, gamePadInputV2 gpi2, DrivetrainV2 drv) {
