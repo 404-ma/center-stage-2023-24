@@ -22,15 +22,6 @@ public class RRAutoDrive3 extends LinearOpMode {
      *  FTC Dashboard Parameters
      */
     public static class Params {
-        public double armForward = 1;
-        public double armUpPos = 0.295;
-        public double armDownPos = 0.2;
-        public double flipForward = 1;
-        public double flipDownPos = 0.54;
-        public double flipSuplexPos = 0.395;
-        public double gripForward = 1;
-        public double gripOpenPos = 0.28;
-        public double gripClosedPos = 0.10;
         public double propSpikeMark = 1;    //  Which Spike Mark is the Prop Located on
         public boolean partnerDead = false;
         public boolean backstage = true;
