@@ -91,13 +91,16 @@ public class RRAutoDriveRed extends LinearOpMode {
 
         whiteClaw.PrepForPixel();
         whiteConveyor.moveViper();
-        sleep(1000);
+
+        sleep(1080);
         whiteConveyor.stopViper();
+
         whiteConveyor.moveConvForward();
-        sleep(1000);
+        sleep(1080);
+
         whiteConveyor.stopConv();
         whiteConveyor.moveDownViper();
-        sleep(1000);
+        sleep(1080);
 
     }
 

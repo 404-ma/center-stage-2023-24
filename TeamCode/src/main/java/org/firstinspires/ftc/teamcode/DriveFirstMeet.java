@@ -86,8 +86,9 @@ public class DriveFirstMeet extends LinearOpMode {
                         yclaw.closeGrip();
                     }
                     break;
+
                 case BUTTON_A:
-                    speedMultiplier = 0.25;
+                    speedMultiplier = 0;
                     break;
                 case BUTTON_X:
                     speedMultiplier = 0.75;
