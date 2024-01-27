@@ -152,7 +152,7 @@ public class RRAutoDrive3 extends LinearOpMode {
 
         Action moveToBoard = drive.actionBuilder(drive.pose)
                 .setReversed(true)
-                .splineTo(new Vector2d(X,10), Math.toRadians(90))
+                .splineTo(new Vector2d(targetX,10), Math.toRadians(90))
                 .build();
         Actions.runBlocking(moveToBoard);
 
