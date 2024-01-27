@@ -65,29 +65,16 @@ public class RRAutoDrive3 extends LinearOpMode {
         if (!PARAMS.backstage) {
             switch ((int) PARAMS.propSpikeMark) {
                 case 3:
-                    if(!PARAMS.partnerDead){
-                        toSpikeMarkFrontND(17.0, -3.0, 25.5, -27);}
-                    else{
-                        toSpikeMarkFrontD(17.0, -3.0, 25.5, -27);
-                        }
+                    toSpikeMarkFront(17.0, -3.0, 25.5, -27, PARAMS.partnerDead);
                     break;
                 case 1:
-                    if(!PARAMS.partnerDead) {
-                        toSpikeMarkFrontND(18.0, 3.0, 36.5, 180);}
-                    else{
-                        toSpikeMarkFrontD(18.0, 3.0,36.5, 180);
-                    }
+                    toSpikeMarkFront(18.0, 3.0, 36.5, 180, PARAMS.partnerDead);
                     break;
                 default:
-                    if(!PARAMS.partnerDead) {
-                        toSpikeMarkFrontND(21.0, 0.0, 30.0, 30);}
-                    else{
-                        toSpikeMarkFrontD(21.0,0.0,30.0,30);
-                    }
+                    toSpikeMarkFront(21.0, 0.0, 30.0, 30, PARAMS.partnerDead);
                     break;
-                }
             }
-        else {
+        } else {
             switch ((int) PARAMS.propSpikeMark) {
                 case 3:
                     toSpikeMarkBack(17, -3, 25.5);
@@ -103,7 +90,7 @@ public class RRAutoDrive3 extends LinearOpMode {
 
     }
 
-    public void toSpikeMarkFrontND(double X, double Y, double targetX, int ang){
+    public void toSpikeMarkFront(double X, double Y, double targetX, int ang, boolean partDead) {
         Action moveRb = drive.actionBuilder(drive.pose)
                 .splineTo(new Vector2d(X, Y), Math.toRadians(ang))
                 .build();
@@ -125,45 +112,24 @@ public class RRAutoDrive3 extends LinearOpMode {
                 .build();
         Actions.runBlocking(moveBar);
 
-        sleep(PARAMS.dTime);
+        if(partDead){
+            Action backdrop = drive.actionBuilder(drive.pose)
+                    .setReversed(true)
+                    .splineTo(new Vector2d(targetX, 60), Math.toRadians(90))
+                    .splineTo(new Vector2d(targetX, 80), Math.toRadians(90))
+                    .build();
+            Actions.runBlocking(backdrop);
+        }
+        else {
+            sleep(PARAMS.dTime);
 
-        Action backdrop = drive.actionBuilder(drive.pose)
-                .setReversed(true)
-                .splineTo(new Vector2d(targetX, 80), Math.toRadians(90))
-                .build();
-        Actions.runBlocking(backdrop);
+            Action backdrop = drive.actionBuilder(drive.pose)
+                    .setReversed(true)
+                    .splineTo(new Vector2d(targetX, 80), Math.toRadians(90))
+                    .build();
+            Actions.runBlocking(backdrop);
+        }
     }
-
-    public void toSpikeMarkFrontD(double X, Double Y, double targetX, int ang){
-
-        Action moveRb = drive.actionBuilder(drive.pose)
-                .splineTo(new Vector2d(X, Y), Math.toRadians(ang))
-                .build();
-        Actions.runBlocking(moveRb);
-        whiteClaw.PlacePixel();
-
-        Action moveBack = drive.actionBuilder(drive.pose)
-                .setReversed(true)
-                .splineTo(new Vector2d(6, 0), Math.toRadians(180))
-                .build();
-        Actions.runBlocking(moveBack);
-
-        whiteClaw.RetractArm();
-
-        Action moveBar = drive.actionBuilder(drive.pose)
-                .turnTo(Math.toRadians(-90))
-                .lineToY(40)
-                .build();
-        Actions.runBlocking(moveBar);
-
-        Action backdrop = drive.actionBuilder(drive.pose)
-                .setReversed(true)
-                .splineTo(new Vector2d(targetX, 60), Math.toRadians(90))
-                .splineTo(new Vector2d(targetX, 80), Math.toRadians(90))
-                .build();
-        Actions.runBlocking(backdrop);
-    }
-
 
     public void toSpikeMarkBack(double targetX, double targetY, double X){
         Action moveRb = drive.actionBuilder(drive.pose)
