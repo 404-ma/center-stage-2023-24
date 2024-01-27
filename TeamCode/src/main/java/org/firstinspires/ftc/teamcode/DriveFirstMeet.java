@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.internal.camera.delegating.DelegatingCaptureSequence;
 import org.firstinspires.ftc.teamcode.Helper.ClawMoves;
 import org.firstinspires.ftc.teamcode.Helper.DrivetrainV2;
 import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2;
@@ -44,11 +45,40 @@ public class DriveFirstMeet extends LinearOpMode {
         ClawMoves yclaw = new ClawMoves(hardwareMap);
         update_telemetry(gpIn1,gpIn2,drvTrain);
 
+         boolean test = false;
+
         while (opModeIsActive()) {
             ++tlm_MainLoopCount;
             update_telemetry(gpIn1,gpIn2,drvTrain);
             gamePadInputV2.GameplayInputType inpType = gpIn1.WaitForGamepadInput(500);
             switch (inpType) {
+                case DPAD_UP:
+                      yclaw.MoveLevel(3);
+                case DPAD_DOWN:
+                      yclaw.MoveLevel(1);
+                case DPAD_RIGHT:
+                      yclaw.MoveLevel(4);
+                case DPAD_LEFT:
+                      yclaw.MoveLevel(2);
+                case BUTTON_L_BUMPER:
+                     test = !test;
+                    if (!test) {
+                        yclaw.PrepForPixel();
+                    } else {
+                        yclaw.SuplexPixel();
+                    }
+                    break;
+
+                case BUTTON_R_BUMPER:
+                      test = !test;
+                    if (!test) {
+                        yclaw.openGrip();
+                    } else {
+                        yclaw.closeGrip();
+                    }
+                     break;
+
+
                 //case LEFT_TRIGGER:
                 //    viperMotor.setPower(gamepad1.left_trigger * -1);
                 //    break;
