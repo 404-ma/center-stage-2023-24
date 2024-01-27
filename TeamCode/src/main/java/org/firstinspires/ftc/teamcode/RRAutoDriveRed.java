@@ -23,7 +23,7 @@ public class RRAutoDriveRed extends LinearOpMode {
     public static class Params {
         public double propSpikeMark = 1;    //  Which Spike Mark is the Prop Located on
         public boolean partnerDead = false;
-        public boolean backstage = true;
+        public boolean backstage = false;
         public int dTime = 500;
     }
 
