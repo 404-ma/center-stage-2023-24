@@ -90,6 +90,7 @@ public class RRAutoDrive3 extends LinearOpMode {
             }
         }
 
+        whiteClaw.PrepForPixel();
         whiteConveyor.moveViper();
         sleep(1500);
         whiteConveyor.stopViper();
