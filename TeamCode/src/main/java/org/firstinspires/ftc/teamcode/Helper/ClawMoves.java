@@ -1,8 +1,12 @@
 package org.firstinspires.ftc.teamcode.Helper;
 
 
+
+
 import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import android.os.SystemClock;
@@ -99,4 +103,33 @@ public class ClawMoves {
         flip.setPosition(PARAMS.flipDownPos);
     }
 
-}
+
+    public class Suplex implements Action {
+
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            SuplexPixel();
+            return true;
+        }
+
+    }
+
+    public Action Suplex() {
+        return new Suplex();
+    }
+
+
+
+
+
+         }
+
+
+
+
+
+
+
+
+
