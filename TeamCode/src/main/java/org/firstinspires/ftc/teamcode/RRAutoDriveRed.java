@@ -22,7 +22,7 @@ public class RRAutoDriveRed extends LinearOpMode {
      */
     public static class Params {
         public double propSpikeMark = 1;    //  Which Spike Mark is the Prop Located on
-        public boolean partnerDead = false;
+        public boolean partnerDead = true;
         public boolean backstage = true;
         public int dTime = 500;
     }
@@ -91,11 +91,16 @@ public class RRAutoDriveRed extends LinearOpMode {
 
         whiteClaw.PrepForPixel();
         whiteConveyor.moveViper();
-        sleep(1000);
+
+        sleep(1090);
         whiteConveyor.stopViper();
+
         whiteConveyor.moveConvForward();
         sleep(1000);
+
         whiteConveyor.stopConv();
+        whiteConveyor.moveDownViper();
+        sleep(1090);
 
     }
 
@@ -125,7 +130,7 @@ public class RRAutoDriveRed extends LinearOpMode {
             Action backdrop = drive.actionBuilder(drive.pose)
                     .setReversed(true)
                     .splineTo(new Vector2d(targetX, -60), Math.toRadians(-90))
-                    .splineTo(new Vector2d(targetX, -80), Math.toRadians(-90))
+                    .splineTo(new Vector2d(targetX, -83), Math.toRadians(-90))
                     .build();
             Actions.runBlocking(backdrop);
         }
@@ -134,7 +139,7 @@ public class RRAutoDriveRed extends LinearOpMode {
 
             Action backdrop = drive.actionBuilder(drive.pose)
                     .setReversed(true)
-                    .splineTo(new Vector2d(targetX, -80), Math.toRadians(-90))
+                    .splineTo(new Vector2d(targetX, -83), Math.toRadians(-90))
                     .build();
             Actions.runBlocking(backdrop);
         }
@@ -147,9 +152,8 @@ public class RRAutoDriveRed extends LinearOpMode {
         Actions.runBlocking(moveRb);
 
         whiteClaw.PlacePixel();
-        sleep(500);
+        sleep(850);
         whiteClaw.RetractArm();
-
         Action moveBack = drive.actionBuilder(drive.pose)
                 .setReversed(true)
                 .splineTo(new Vector2d(6, 0), Math.toRadians(-90))
@@ -157,9 +161,8 @@ public class RRAutoDriveRed extends LinearOpMode {
         Actions.runBlocking(moveBack);
 
         Action moveRb3 = drive.actionBuilder(drive.pose)
-                .strafeTo(new Vector2d(targetX,-18))
+                .strafeTo(new Vector2d(targetX,-36))
                 .build();
         Actions.runBlocking(moveRb3);
-
     }
 }
