@@ -45,7 +45,7 @@ public class ClawMoves {
 
     // Claw Movements
     public void AutonomousStart () {
-        // Code For Automous Start Position
+        // Code For Autonomous Start Position
         grip.setPosition(PARAMS.gripClosedPos);
         arm.setPosition(PARAMS.armUpPos);
         flip.setPosition(PARAMS.flipSuplexPos);
@@ -105,8 +105,6 @@ public class ClawMoves {
 
 
     public class Suplex implements Action {
-
-
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             SuplexPixel();
@@ -119,11 +117,7 @@ public class ClawMoves {
         return new Suplex();
     }
 
-
-
-
-
-         }
+ }
 
 
 

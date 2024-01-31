@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -9,10 +10,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helper.ClawMoves;
-import org.firstinspires.ftc.teamcode.Helper.DistanceSystem;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 
-@Disabled
 @Autonomous (name = "RR Auto Drive 1 - Strafe", group = "RoadRunner")
 public class RRautodrive1 extends LinearOpMode {
 
@@ -32,9 +31,11 @@ public class RRautodrive1 extends LinearOpMode {
                 waitForStart();
                 telemetry.clear();
 
-                while (opModeIsActive()) {
+                Action move = new SequentialAction(whiteClaw.Suplex());
 
-                        Actions.runBlocking(whiteClaw.Suplex());
+                while (opModeIsActive()) {
+                        Actions.runBlocking(whiteClaw.Suplex() );
+
                         sleep(1000);
                 }
         }
