@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 public class RRautodrive1 extends LinearOpMode {
 
         private ClawMoves whiteClaw;
+
         @Override
         public void runOpMode(){
                 telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
@@ -31,12 +32,11 @@ public class RRautodrive1 extends LinearOpMode {
                 waitForStart();
                 telemetry.clear();
 
-                Action move = new SequentialAction(whiteClaw.Suplex());
-
                 while (opModeIsActive()) {
-                        Actions.runBlocking(whiteClaw.Suplex() );
+                        Actions.runBlocking(whiteClaw.PlacePixel());
+                        sleep(500);
+                        Actions.runBlocking(whiteClaw.RetractArm());
 
-                        sleep(1000);
                 }
         }
 }
