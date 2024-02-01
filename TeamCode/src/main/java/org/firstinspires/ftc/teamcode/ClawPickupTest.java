@@ -1,54 +1,21 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2;
 import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2.GameplayInputType;
 import org.firstinspires.ftc.teamcode.Helper.ClawMoves;
 
 
-
-@Config
 @TeleOp(name="Claw Pickup Test", group ="Hardware")
 public class ClawPickupTest extends LinearOpMode {
-    /*
-     *  FTC Dashboard Parameters
-     */
-    public static class Params {
-        public double armForward = 1;
-        public double armUpPos = 0.295;
-        public double armDownPos = 0.2;
-
-        public double flipForward = 1;
-        public double flipDownPos = 0.54;
-        public double flipSuplexPos = 0.395;
-
-        public double gripForward = 1;
-        public double gripOpenPos = 0.28;
-        public double gripClosedPos = 0.10;
-    }
-
-    public static Params PARAMS = new Params();
-
     // Internal Variables
     private gamePadInputV2 gpInput;
     private FtcDashboard dashboard;
-    private Servo arm;
-    private Servo flip;
-    private Servo grip;
     private ClawMoves whiteClaw;
-
-    private boolean tlmArmForward = false;
-    private double tlmArmPosition = 0;
-    private boolean tlmGripForward = false;
-    private double tlmGripPosition = 0;
-    private boolean tlmFlipForward = false;
-    private double tlmFlipPosition = 0;
 
 
     @Override
@@ -62,15 +29,6 @@ public class ClawPickupTest extends LinearOpMode {
         int level = 1;
         while (opModeIsActive()) {
             update_telemetry();
-
-            tlmArmForward = (PARAMS.armForward != 0);
-            arm.setDirection(tlmArmForward ? Servo.Direction.FORWARD : Servo.Direction.REVERSE);
-
-            tlmGripForward = (PARAMS.gripForward != 0);
-            grip.setDirection(tlmGripForward ? Servo.Direction.FORWARD : Servo.Direction.REVERSE);
-
-            tlmFlipForward = (PARAMS.flipForward != 0);
-            flip.setDirection(tlmFlipForward ? Servo.Direction.FORWARD : Servo.Direction.REVERSE);
 
             GameplayInputType inpType = gpInput.WaitForGamepadInput(100);
             switch (inpType) {
@@ -87,17 +45,19 @@ public class ClawPickupTest extends LinearOpMode {
                     break;
 
                 case DPAD_LEFT:
+                    whiteClaw.MoveGrip(ClawMoves.PARAMS.gripOpenPos);
+                    break;
+
                 case DPAD_RIGHT:
-                    boolean close = (inpType == GameplayInputType.DPAD_RIGHT);
-                    tlmGripPosition = close ? PARAMS.gripClosedPos : PARAMS.gripOpenPos;
-                    grip.setPosition(tlmGripPosition);
+                    whiteClaw.MoveGrip(ClawMoves.PARAMS.gripClosedPos);
                     break;
 
                 case BUTTON_A:
+                    whiteClaw.MoveFlip(ClawMoves.PARAMS.flipSuplexPos);
+                    break;
+
                 case BUTTON_Y:
-                    boolean suplex = (inpType == GameplayInputType.BUTTON_A);
-                    tlmFlipPosition = suplex ? PARAMS.flipSuplexPos : PARAMS.flipDownPos;
-                    flip.setPosition(tlmFlipPosition);
+                    whiteClaw.MoveFlip(ClawMoves.PARAMS.flipDownPos);
                     break;
 
                 case BUTTON_X:
@@ -116,10 +76,7 @@ public class ClawPickupTest extends LinearOpMode {
                 case BUTTON_R_BUMPER:
                     whiteClaw.RetractArm();
                     break;
-
-
             }
-
         }
     }
 
@@ -135,9 +92,6 @@ public class ClawPickupTest extends LinearOpMode {
         // Initialize Helpers
         try {
             gpInput = new gamePadInputV2(gamepad1);
-            arm = hardwareMap.servo.get("ArmServo");
-            flip = hardwareMap.servo.get("FlipServo");
-            grip = hardwareMap.servo.get("ClawServo");
             whiteClaw = new ClawMoves(hardwareMap);
             dashboard = FtcDashboard.getInstance();
             dashboard.clearTelemetry();
@@ -160,20 +114,16 @@ public class ClawPickupTest extends LinearOpMode {
 
     private void update_telemetry() {
         telemetry.addLine("Servo Values");
-        telemetry.addLine().addData("Arm Dir", (tlmArmForward ? "Forward" : "Reverse") );
-        telemetry.addLine().addData("Arm Pos", tlmArmPosition );
-        telemetry.addLine().addData("Grip Dir", (tlmGripForward ? "Forward" : "Reverse") );
-        telemetry.addLine().addData("Grip Pos", tlmGripPosition );
-        telemetry.addLine().addData("Flip Dir", (tlmFlipForward ? "Forward" : "Reverse") );
-        telemetry.addLine().addData("Flip Pos", tlmFlipPosition );
-
+        telemetry.addLine().addData("Arm Pos", whiteClaw.tlmArmPosition );
+        telemetry.addLine().addData("Flip Pos", whiteClaw.tlmFlipPosition );
+        telemetry.addLine().addData("Grip Pos", whiteClaw.tlmGripPosition );
         telemetry.update();
 
         // FTC Dashboard Telemetry
         TelemetryPacket packet = new TelemetryPacket();
-        packet.put("Arm Position",  tlmArmPosition);
-        packet.put("Flip Position",  flip.getPosition());
-        packet.put("Grip Position",  tlmGripPosition);
+        packet.put("Arm Position",  whiteClaw.tlmArmPosition);
+        packet.put("Flip Position",  whiteClaw.tlmFlipPosition);
+        packet.put("Grip Position",  whiteClaw.tlmGripPosition);
         dashboard.sendTelemetryPacket(packet);
     }
 }
