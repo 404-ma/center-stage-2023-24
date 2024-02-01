@@ -1,11 +1,7 @@
 package org.firstinspires.ftc.teamcode.Helper;
 
-
-
-
 import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -16,67 +12,100 @@ import android.os.SystemClock;
 public class ClawMoves {
     // FTC Dashboard Parameters
     public static class Params {
-        public double armUpPos = 0.295;
+        public double armUpPos = 0.287;
+        public double armDownPos = 0.215;
+
         public double flipSuplexPos = 0.395;
-        public double gripOpenPos = 0.28;
-        public double gripClosedPos = 0.10;
+        public double flipDownPos = 0.537;
 
-        public double armDownPos = 0.2;
-
-        public double flipDownPos = 0.54;
+        public double gripOpenPos = 0.655;
+        public double gripClosedPos = 0.380;
     }
 
     public static Params PARAMS = new Params();
+
+    public double tlmArmPosition = -1;
+    public double tlmGripPosition = -1;
+    public double tlmFlipPosition = -1;
 
     private Servo arm;
     private Servo flip;
     private Servo grip;
 
-    private int level;
-
 
     // Class Constructor
     public ClawMoves(@NonNull HardwareMap hdwMap) {
         arm = hdwMap.servo.get("ArmServo");
+        arm.setDirection(Servo.Direction.FORWARD);
+
         flip = hdwMap.servo.get("FlipServo");
+        flip.setDirection(Servo.Direction.FORWARD);
+
         grip = hdwMap.servo.get("ClawServo");
+        grip.setDirection(Servo.Direction.FORWARD);
     }
 
+     // Single Servo Movements
+    public void MoveArm(double position) {
+        arm.setPosition(position);
+        tlmArmPosition = position;
+    }
 
-    // Claw Movements
+    public void MoveFlip(double position) {
+        flip.setPosition(position);
+        tlmFlipPosition = position;
+    }
+
+    public void MoveGrip(double position) {
+        grip.setPosition(position);
+        tlmGripPosition = position;
+    }
+
+    /*
+     * Autonomous Claw Movements
+     */
     public void AutonomousStart () {
         // Code For Autonomous Start Position
-        grip.setPosition(PARAMS.gripClosedPos);
-        arm.setPosition(PARAMS.armUpPos);
-        flip.setPosition(PARAMS.flipSuplexPos);
+        MoveGrip(PARAMS.gripClosedPos);
+        MoveArm(PARAMS.armUpPos);
+        MoveFlip(PARAMS.flipSuplexPos);
     }
 
-    public void PlacePixel () {
-        // Reset Claw to Down and Open
-        arm.setPosition(PARAMS.armDownPos);
-        SystemClock.sleep(100); // let Arm Move Away from Conveyor
-        flip.setPosition(PARAMS.flipDownPos);
-        SystemClock.sleep(500);
-        grip.setPosition(PARAMS.gripOpenPos);
+
+    public Action PlacePixel() {
+        return packet -> {
+            // Autonomous Place Preloaded Pixel on Mat
+            MoveArm(PARAMS.armDownPos);
+            // Allow Time for Arm to Move Away from Conveyor
+            SystemClock.sleep(100);
+            MoveFlip(PARAMS.flipDownPos);
+            // Allow Time for Arm to Move to Mat
+            SystemClock.sleep(500);
+            MoveGrip(PARAMS.gripOpenPos);
+            return false;
+        };
     }
 
-    public void RetractArm () {
-        // Retract Arm w/o Pixel for Driving
-        arm.setPosition(PARAMS.armUpPos);
-        SystemClock.sleep(100);
-        flip.setPosition(PARAMS.flipSuplexPos);
-        // Wait for Suplex to Finish
-        grip.setPosition(PARAMS.gripOpenPos);
+    public Action RetractArm() {
+        return packet -> {
+            MoveGrip(PARAMS.gripOpenPos);
+            MoveArm(PARAMS.armUpPos);
+            // Allow Time for Arm to Move Off the Mat
+            SystemClock.sleep(100);
+            MoveFlip(PARAMS.flipSuplexPos);
+            return false;
+        };
     }
 
+    /*
+     * Driver Claw Movements
+     */
     public void closeGrip(){
         grip.setPosition(PARAMS.gripClosedPos);
-        SystemClock.sleep(300); // Wait for Grip to Close
     }
 
     public void openGrip(){
         grip.setPosition(PARAMS.gripOpenPos);
-        SystemClock.sleep(300); // Wait for Grip to Open
     }
 
     public void moveLevel(int level){
@@ -88,6 +117,7 @@ public class ClawMoves {
 
     public void SuplexPixel () {
         // Pickup and Suplex Pixel
+        // TODO: Rewrite w/ Deferred Actions
         arm.setPosition(PARAMS.armUpPos);
         SystemClock.sleep(100);
         flip.setPosition(PARAMS.flipSuplexPos);
@@ -97,26 +127,12 @@ public class ClawMoves {
 
     public void PrepForPixel () {
         // Reset Claw to Down and Open
+        // TODO: Rewrite w/ Deferred Actions
         grip.setPosition(PARAMS.gripOpenPos);
         arm.setPosition(PARAMS.armDownPos);
         SystemClock.sleep(100); // let Arm Move Away from Conveyor
         flip.setPosition(PARAMS.flipDownPos);
     }
-
-
-    public class Suplex implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            SuplexPixel();
-            return true;
-        }
-
-    }
-
-    public Action Suplex() {
-        return new Suplex();
-    }
-
  }
 
 
