@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -73,7 +75,7 @@ public class RRAutoDrive3 extends LinearOpMode {
                     toSpikeMarkFront(18.0, 3.0, 25.5, 30, PARAMS.partnerDead);
                     break;
                 default:
-                    toSpikeMarkFront(21.0, 0.0, 30.0, 0, PARAMS.partnerDead);
+                    toSpikeMarkFront(21.0, -3.0, 30.0, 0, PARAMS.partnerDead);
                     break;
             }
         } else {
@@ -107,17 +109,13 @@ public class RRAutoDrive3 extends LinearOpMode {
         Action moveRb = drive.actionBuilder(drive.pose)
                 .splineTo(new Vector2d(X, Y), Math.toRadians(ang))
                 .build();
-        Actions.runBlocking(moveRb);
-
-        whiteClaw.PlacePixel();
+        Actions.runBlocking(new SequentialAction(moveRb, whiteClaw.PlacePixel()));
 
         Action moveBack = drive.actionBuilder(drive.pose)
                 .setReversed(true)
                 .splineTo(new Vector2d(6, 0), Math.toRadians(180))
                 .build();
-        Actions.runBlocking(moveBack);
-
-        whiteClaw.RetractArm();
+        Actions.runBlocking(new ParallelAction(moveBack, whiteClaw.RetractArm()));
 
         Action moveBar = drive.actionBuilder(drive.pose)
                 .turnTo(Math.toRadians(-90))
