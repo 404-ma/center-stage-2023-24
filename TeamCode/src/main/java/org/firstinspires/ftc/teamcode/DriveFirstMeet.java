@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helper.ClawMoves;
 import org.firstinspires.ftc.teamcode.Helper.Conveyor;
+import org.firstinspires.ftc.teamcode.Helper.DeferredActions;
 import org.firstinspires.ftc.teamcode.Helper.DrivetrainV2;
 import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2;
 
@@ -37,6 +38,7 @@ public class DriveFirstMeet extends LinearOpMode {
         flip.setDirection(Servo.Direction.FORWARD);
         Servo grip = hardwareMap.servo.get("ClawServo");
         grip.setDirection(Servo.Direction.FORWARD);
+        DeferredActions pro = new DeferredActions(hardwareMap);
 
         waitForStart();
         if (isStopRequested()) return;
@@ -121,6 +123,8 @@ public class DriveFirstMeet extends LinearOpMode {
             }
 
             // TODO: Add Deferred Actions
+            pro.ProcessDeferredActions();
+
         }
     }
 
