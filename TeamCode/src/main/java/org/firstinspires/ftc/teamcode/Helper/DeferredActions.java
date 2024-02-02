@@ -29,9 +29,10 @@ public class DeferredActions {
     private List<Pair<Long, DeferredActionType>> deferredActions =
             new ArrayList<Pair<Long, DeferredActionType>>();
 
-    public void DeferredActions(@NonNull HardwareMap hdwMap){
+    private ClawMoves claw;
+    public DeferredActions(@NonNull HardwareMap hdwMap){
         // Initialize Objects
-
+        claw = new ClawMoves(hdwMap);
     }
 
     public void CreateDeferredAction(long deltaMS, DeferredActionType event) {
@@ -40,16 +41,20 @@ public class DeferredActions {
     }
 
     public void ProcessDeferredActions() {
-        // TODO: Iterate over the Action List and Check if Past TriggerTime
         for (Pair act : deferredActions) {
             if (currentTimeMillis() >= (long) act.first) {
-                // TODO: If action is ready to be triggered, process action and remove from queue
                 switch ((DeferredActionType) act.second) {
                     case CLAW_FLIP_SUPLEX:
-                        //claw.MoveFlip(ClawMoves.PARAMS.flipSuplexPos);
+                        claw.MoveFlip(ClawMoves.PARAMS.flipSuplexPos);
+                        deferredActions.remove(act);
+                        break;
+
+                    case CLAW_OPEN_GRIP:
+                        claw.MoveGrip(ClawMoves.PARAMS.gripOpenPos);
+                        deferredActions.remove(act);
                         break;
                 }
-                deferredActions.remove(act);
+
             }
         }
     }
