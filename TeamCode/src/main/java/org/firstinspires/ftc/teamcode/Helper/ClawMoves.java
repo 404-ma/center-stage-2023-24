@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.Helper;
 
+import static org.firstinspires.ftc.teamcode.Helper.DeferredActions.DeferredActionType.CLAW_FLIP_SUPLEX;
+import static org.firstinspires.ftc.teamcode.Helper.DeferredActions.DeferredActionType.CLAW_OPEN_GRIP;
+
 import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
@@ -32,6 +35,8 @@ public class ClawMoves {
     private Servo flip;
     private Servo grip;
 
+    private DeferredActions procrastinate;
+
 
     // Class Constructor
     public ClawMoves(@NonNull HardwareMap hdwMap) {
@@ -43,6 +48,8 @@ public class ClawMoves {
 
         grip = hdwMap.servo.get("ClawServo");
         grip.setDirection(Servo.Direction.FORWARD);
+
+        procrastinate = new DeferredActions(hdwMap);
     }
 
      // Single Servo Movements
@@ -119,10 +126,9 @@ public class ClawMoves {
         // Pickup and Suplex Pixel
         // TODO: Rewrite w/ Deferred Actions
         arm.setPosition(PARAMS.armUpPos);
-        SystemClock.sleep(100);
-        flip.setPosition(PARAMS.flipSuplexPos);
-        SystemClock.sleep(700); // Wait for Suplex to Finish
-        grip.setPosition(PARAMS.gripOpenPos);
+        procrastinate.CreateDeferredAction(100,CLAW_FLIP_SUPLEX);
+        // Wait for Suplex to Finish
+        procrastinate.CreateDeferredAction(700,CLAW_OPEN_GRIP);
     }
 
     public void PrepForPixel () {
