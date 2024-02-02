@@ -63,7 +63,6 @@ public class RRAutoDrive3 extends LinearOpMode {
         waitForStart();
         if (isStopRequested()) return;
         telemetry.clear();
-
         whiteClaw.AutonomousStart();
 
         if (!PARAMS.backstage) {
@@ -84,7 +83,7 @@ public class RRAutoDrive3 extends LinearOpMode {
                     toSpikeMarkBack(13.0, -3.0, 35.0, -27);
                     break;
                 case 1:
-                    toSpikeMarkBack(15.0, 3.0, 25.5, 30);
+                    toSpikeMarkBack(13.0, 3.0, 25.5, 30);
                     break;
                 default:
                     toSpikeMarkBack(21.0, -3.0, 30.0, 0);
