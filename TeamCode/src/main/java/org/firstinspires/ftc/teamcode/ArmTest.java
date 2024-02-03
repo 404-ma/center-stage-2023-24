@@ -77,6 +77,8 @@ public class ArmTest extends LinearOpMode {
                     telemetry.addData("position:", position);
                     telemetry.update();
                     break;
+
+
             }
         }
     }

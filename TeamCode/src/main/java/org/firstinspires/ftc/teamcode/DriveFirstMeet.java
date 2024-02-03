@@ -22,6 +22,7 @@ import java.util.Locale;
 @TeleOp(name = "DriveFirstMeet", group = "Test")
 public class DriveFirstMeet extends LinearOpMode {
     private int tlm_MainLoopCount = 0;
+    private boolean setReversed = false;
 
     private ClawMoves yclaw;
     @Override
@@ -36,12 +37,7 @@ public class DriveFirstMeet extends LinearOpMode {
         CRServo conveyor = hardwareMap.crservo.get("conveyor");
 
         // TODO: Remove direct calls to servos and use ClawMoves
-        Servo arm = hardwareMap.servo.get("ArmServo");
-        arm.setDirection(Servo.Direction.FORWARD);
-        Servo flip = hardwareMap.servo.get("FlipServo");
-        flip.setDirection(Servo.Direction.FORWARD);
-        Servo grip = hardwareMap.servo.get("ClawServo");
-        grip.setDirection(Servo.Direction.FORWARD);
+
 
         waitForStart();
         if (isStopRequested()) return;
@@ -63,8 +59,15 @@ public class DriveFirstMeet extends LinearOpMode {
             update_telemetry(gpIn1, gpIn2, drvTrain);
 
             // TODO: Add Driver Button to Reverse Drive Perspective
+
+
             // TODO: Add Driver Button for Breaking
+
+
             // TODO: Extract GamePad1 and Gamepad2 Processing to seperate methods.
+
+
+
             gamePadInputV2.GameplayInputType inpType = gpIn1.WaitForGamepadInput(30);
             switch (inpType) {
                 case DPAD_UP:
@@ -117,9 +120,16 @@ public class DriveFirstMeet extends LinearOpMode {
                     speedMultiplier = 1;
                     break;
 
+                case BUTTON_BACK:
+                    setReversed = !setReversed;
+
+
+                    break;
+
                 case JOYSTICK:
                     drvTrain.setDriveVectorFromJoystick(gamepad1.left_stick_x * (float) speedMultiplier,
-                            gamepad1.right_stick_x * (float) speedMultiplier, gamepad1.left_stick_y * (float) speedMultiplier);
+                            gamepad1.right_stick_x * (float) speedMultiplier,
+                            gamepad1.left_stick_y * (float) speedMultiplier, setReversed);
                     break;
             }
 
@@ -176,7 +186,6 @@ public class DriveFirstMeet extends LinearOpMode {
         telemetry.addLine().addData("Pwr  L B", drv.getTelemetryLastPowerBackLeft());
         telemetry.addLine().addData("Pwr  R F", drv.getTelemetryLastPowerFrontRight());
         telemetry.addLine().addData("Pwr  R B", drv.getTelemetryLastPowerBackRight());
-        telemetry.addLine().addData("Braking ", drv.getBrakeStatus());
         telemetry.addLine().addData("Brake Ct", drv.getTelemetryBrakeCount());
         telemetry.addLine().addData("BTimeout", drv.getTelemetryBrakeTimeoutCount());
 

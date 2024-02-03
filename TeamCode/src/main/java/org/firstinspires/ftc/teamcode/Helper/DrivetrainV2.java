@@ -16,6 +16,11 @@ import java.util.Date;
 
 
 public class DrivetrainV2 {
+
+
+
+
+
     private static final float STRAFING_ADJUSTMENT = 1.08f;
     private static final float JOYSTICK_Y_INPUT_ADJUSTMENT = -1f;
     private static final double BRAKING_STOP_THRESHOLD = 0.25;
@@ -39,6 +44,7 @@ public class DrivetrainV2 {
     private int telemetryBrakeCount = 0;
     private int telemetryBrakeTimeoutCount = 0;
 
+    private boolean reverseMode = false;
 
     public DrivetrainV2 (@NonNull HardwareMap hdwMap) {
         drvMotorFrontLeft = hdwMap.dcMotor.get("frontLeft");
@@ -92,14 +98,17 @@ public class DrivetrainV2 {
     public void setDriveVector(double forward, double strafe, double rotate) {
         if (brakingOn) return;
 
-
         double denominator = Math.max(Math.abs(forward) + Math.abs(strafe) + Math.abs(rotate), 1);
-
 
         double pwrFrontLeft = (forward + strafe + rotate) / denominator;
         double pwrBackLeft = (forward - strafe + rotate) / denominator;
         double pwrFrontRight = (forward - strafe - rotate) / denominator;
         double pwrBackRight = (forward + strafe - rotate) / denominator;
+
+        if (reverseMode) {
+            forward = -forward;
+            strafe = -strafe;
+        }
 
 
         drvMotorFrontLeft.setPower(pwrFrontLeft);
@@ -116,22 +125,26 @@ public class DrivetrainV2 {
     }
 
 
-    public void setDriveVectorFromJoystick(float stickLeftX, float stickRightX, float stickY) {
+    public void setDriveVectorFromJoystick(float stickLeftX, float stickRightX, float stickLeftY,boolean setReversed) {
         if (brakingOn) return;
 
 
-        double forward = stickY * JOYSTICK_Y_INPUT_ADJUSTMENT;
+
+        double forward = stickLeftY * JOYSTICK_Y_INPUT_ADJUSTMENT;
         double strafe = stickLeftX * STRAFING_ADJUSTMENT;
-        double rotate = stickRightX;
+
+
+        if (setReversed) {
+            forward = stickLeftY * JOYSTICK_Y_INPUT_ADJUSTMENT * -1;
+            strafe = stickLeftX * STRAFING_ADJUSTMENT * -1;
+        }
+
+            double rotate = stickRightX;
 
 
         setDriveVector(forward, strafe, rotate);
     }
 
-
-    public boolean getBrakeStatus() {
-        return brakingOn;
-    }
 
 
     public void setBrakeStatus(boolean braking)  {
