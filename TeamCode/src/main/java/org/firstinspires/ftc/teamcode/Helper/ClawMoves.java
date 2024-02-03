@@ -23,6 +23,8 @@ public class ClawMoves {
 
         public double gripOpenPos = 0.655;
         public double gripClosedPos = 0.380;
+
+        public double gripOpenPosTop = 0.49;
     }
 
     public static Params PARAMS = new Params();
