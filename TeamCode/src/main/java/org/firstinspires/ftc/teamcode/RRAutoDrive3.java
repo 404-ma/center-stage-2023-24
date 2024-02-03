@@ -67,7 +67,7 @@ public class RRAutoDrive3 extends LinearOpMode {
 
         switch((int) PARAMS.propSpikeMark){
             case 3:
-                toSpikeMark(17.0,-3.0,-24);
+                toSpikeMark(17.0,-3.0,-24, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(36.5, PARAMS.partnerDead);
                 }
@@ -76,7 +76,7 @@ public class RRAutoDrive3 extends LinearOpMode {
                 }
                 break;
             case 1:
-                toSpikeMark(18.0, 3.0, 32);
+                toSpikeMark(18.0, 3.0, 32, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(25.5, PARAMS.partnerDead);
                 }
@@ -85,7 +85,7 @@ public class RRAutoDrive3 extends LinearOpMode {
                 }
                 break;
             default:
-                toSpikeMark(21.0, -3.0,0);
+                toSpikeMark(21.0, -3.0,0, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(30.0, PARAMS.partnerDead);
                 }
@@ -110,7 +110,7 @@ public class RRAutoDrive3 extends LinearOpMode {
 
     }
     //to the spike mark
-    public void toSpikeMark(double X, double Y, int ang){
+    public void toSpikeMark(double X, double Y, int ang, boolean position){
         Action moveRb = drive.actionBuilder(drive.pose)
                 .splineTo(new Vector2d(X, Y), Math.toRadians(ang))
                 .build();
