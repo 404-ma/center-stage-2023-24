@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.Helper.ClawMoves.PARAMS;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -10,15 +12,18 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helper.ClawMoves;
 import org.firstinspires.ftc.teamcode.Helper.Conveyor;
 import org.firstinspires.ftc.teamcode.Helper.DeferredActions;
+import org.firstinspires.ftc.teamcode.Helper.DeferredActions.DeferredActionType;
 import org.firstinspires.ftc.teamcode.Helper.DrivetrainV2;
 import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2;
 
+import java.util.List;
 import java.util.Locale;
 
 @TeleOp(name = "DriveFirstMeet", group = "Test")
 public class DriveFirstMeet extends LinearOpMode {
     private int tlm_MainLoopCount = 0;
 
+    private ClawMoves yclaw;
     @Override
     public void runOpMode() {
         // Load Introduction and Wait for Start
@@ -37,7 +42,6 @@ public class DriveFirstMeet extends LinearOpMode {
         flip.setDirection(Servo.Direction.FORWARD);
         Servo grip = hardwareMap.servo.get("ClawServo");
         grip.setDirection(Servo.Direction.FORWARD);
-        DeferredActions pro = new DeferredActions(hardwareMap);
 
         waitForStart();
         if (isStopRequested()) return;
@@ -46,7 +50,7 @@ public class DriveFirstMeet extends LinearOpMode {
         gamePadInputV2 gpIn1 = new gamePadInputV2(gamepad1);
         gamePadInputV2 gpIn2 = new gamePadInputV2(gamepad2);
         DrivetrainV2 drvTrain = new DrivetrainV2(hardwareMap);
-        ClawMoves yclaw = new ClawMoves(hardwareMap);
+        yclaw = new ClawMoves(hardwareMap);
         Conveyor cyr = new Conveyor(hardwareMap);
         update_telemetry(gpIn1, gpIn2, drvTrain);
 
@@ -135,8 +139,24 @@ public class DriveFirstMeet extends LinearOpMode {
             }
 
             // Deferred Actions
-            pro.ProcessDeferredActions();
+        }
+    }
 
+
+    // Deferred Actions
+    public void ProcessDeferredActions(){
+        List<DeferredActionType> action = DeferredActions.GetReadyActions();
+
+        for(DeferredActionType actionType: action){
+            switch(actionType){
+                case CLAW_FLIP_SUPLEX:
+                    yclaw.MoveFlip(ClawMoves.PARAMS.flipSuplexPos);
+                    break;
+
+                case CLAW_OPEN_GRIP:
+                    yclaw.MoveGrip(ClawMoves.PARAMS.gripOpenPos);
+                    break;
+            }
         }
     }
 
