@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.os.SystemClock;
+import static org.firstinspires.ftc.teamcode.Helper.ClawMoves.PARAMS;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -11,15 +11,19 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helper.ClawMoves;
 import org.firstinspires.ftc.teamcode.Helper.Conveyor;
+import org.firstinspires.ftc.teamcode.Helper.DeferredActions;
+import org.firstinspires.ftc.teamcode.Helper.DeferredActions.DeferredActionType;
 import org.firstinspires.ftc.teamcode.Helper.DrivetrainV2;
 import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2;
 
+import java.util.List;
 import java.util.Locale;
 
 @TeleOp(name = "DriveFirstMeet", group = "Test")
 public class DriveFirstMeet extends LinearOpMode {
     private int tlm_MainLoopCount = 0;
 
+    private ClawMoves yclaw;
     @Override
     public void runOpMode() {
         // Load Introduction and Wait for Start
@@ -31,6 +35,7 @@ public class DriveFirstMeet extends LinearOpMode {
         DcMotor viperMotor = hardwareMap.dcMotor.get("viperMotor");
         CRServo conveyor = hardwareMap.crservo.get("conveyor");
 
+        // TODO: Remove direct calls to servos and use ClawMoves
         Servo arm = hardwareMap.servo.get("ArmServo");
         arm.setDirection(Servo.Direction.FORWARD);
         Servo flip = hardwareMap.servo.get("FlipServo");
@@ -45,7 +50,7 @@ public class DriveFirstMeet extends LinearOpMode {
         gamePadInputV2 gpIn1 = new gamePadInputV2(gamepad1);
         gamePadInputV2 gpIn2 = new gamePadInputV2(gamepad2);
         DrivetrainV2 drvTrain = new DrivetrainV2(hardwareMap);
-        ClawMoves yclaw = new ClawMoves(hardwareMap);
+        yclaw = new ClawMoves(hardwareMap);
         Conveyor cyr = new Conveyor(hardwareMap);
         update_telemetry(gpIn1, gpIn2, drvTrain);
 
@@ -56,20 +61,28 @@ public class DriveFirstMeet extends LinearOpMode {
         while (opModeIsActive()) {
             ++tlm_MainLoopCount;
             update_telemetry(gpIn1, gpIn2, drvTrain);
+
+            // TODO: Add Driver Button to Reverse Drive Perspective
+            // TODO: Add Driver Button for Breaking
+            // TODO: Extract GamePad1 and Gamepad2 Processing to seperate methods.
             gamePadInputV2.GameplayInputType inpType = gpIn1.WaitForGamepadInput(30);
             switch (inpType) {
                 case DPAD_UP:
                     yclaw.moveLevel(3);
                     break;
+
                 case DPAD_DOWN:
                     yclaw.moveLevel(1);
                     break;
+
                 case DPAD_RIGHT:
                     yclaw.moveLevel(4);
                     break;
+
                 case DPAD_LEFT:
                     yclaw.moveLevel(2);
                     break;
+
                 case BUTTON_L_BUMPER:
                     suplex = !suplex;
                     if (!suplex) {
@@ -78,6 +91,7 @@ public class DriveFirstMeet extends LinearOpMode {
                         yclaw.SuplexPixel();
                     }
                     break;
+
                 case BUTTON_R_BUMPER:
                     clawOpen = !clawOpen;
                     if (clawOpen) {
@@ -90,15 +104,19 @@ public class DriveFirstMeet extends LinearOpMode {
                 case BUTTON_A:
                     speedMultiplier = 0.25;
                     break;
+
                 case BUTTON_X:
                     speedMultiplier = 0.75;
                     break;
+
                 case BUTTON_B:
                     speedMultiplier = 0.5;
                     break;
+
                 case BUTTON_Y:
                     speedMultiplier = 1;
                     break;
+
                 case JOYSTICK:
                     drvTrain.setDriveVectorFromJoystick(gamepad1.left_stick_x * (float) speedMultiplier,
                             gamepad1.right_stick_x * (float) speedMultiplier, gamepad1.left_stick_y * (float) speedMultiplier);
@@ -120,11 +138,30 @@ public class DriveFirstMeet extends LinearOpMode {
                     break;
             }
 
-            // TODO: Add Deferred Actions
+            // Deferred Actions
+        }
+    }
+
+
+    // Deferred Actions
+    public void ProcessDeferredActions(){
+        List<DeferredActionType> action = DeferredActions.GetReadyActions();
+
+        for(DeferredActionType actionType: action){
+            switch(actionType){
+                case CLAW_FLIP_SUPLEX:
+                    yclaw.MoveFlip(ClawMoves.PARAMS.flipSuplexPos);
+                    break;
+
+                case CLAW_OPEN_GRIP:
+                    yclaw.MoveGrip(ClawMoves.PARAMS.gripOpenPos);
+                    break;
+            }
         }
     }
 
     private void update_telemetry(gamePadInputV2 gpi1, gamePadInputV2 gpi2, DrivetrainV2 drv) {
+        // TODO:  Review Telemetry and Remove Unneeded Data.
         telemetry.addLine().addData("Main Loop Cnt", tlm_MainLoopCount);
 
         telemetry.addLine("Game-pad Input");

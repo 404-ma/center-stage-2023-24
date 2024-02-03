@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.Helper;
 
-import static org.firstinspires.ftc.teamcode.Helper.DeferredActions.DeferredActionType.CLAW_FLIP_SUPLEX;
-import static org.firstinspires.ftc.teamcode.Helper.DeferredActions.DeferredActionType.CLAW_OPEN_GRIP;
+import static org.firstinspires.ftc.teamcode.Helper.DeferredActions.DeferredActionType;
+
 
 import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
@@ -37,7 +37,6 @@ public class ClawMoves {
     private Servo flip;
     private Servo grip;
 
-    private DeferredActions procrastinate;
 
 
     // Class Constructor
@@ -50,8 +49,6 @@ public class ClawMoves {
 
         grip = hdwMap.servo.get("ClawServo");
         grip.setDirection(Servo.Direction.FORWARD);
-
-        procrastinate = new DeferredActions(hdwMap);
     }
 
      // Single Servo Movements
@@ -110,12 +107,16 @@ public class ClawMoves {
      * Driver Claw Movements
      */
     public void closeGrip(){
-        grip.setPosition(PARAMS.gripClosedPos);
+        MoveGrip(PARAMS.gripClosedPos);
     }
 
     public void openGrip(){
-        grip.setPosition(PARAMS.gripOpenPos);
+        MoveGrip(PARAMS.gripOpenPos);
     }
+
+    public void suplexFlip() { MoveFlip(PARAMS.flipSuplexPos); }
+
+    public void downFlip() { MoveFlip(PARAMS.flipDownPos); }
 
     public void moveLevel(int level){
         double pos = PARAMS.armDownPos + (level * 0.005);
@@ -126,20 +127,19 @@ public class ClawMoves {
 
     public void SuplexPixel () {
         // Pickup and Suplex Pixel
-        // TODO: Rewrite w/ Deferred Actions
         arm.setPosition(PARAMS.armUpPos);
-        procrastinate.CreateDeferredAction(100,CLAW_FLIP_SUPLEX);
-        // Wait for Suplex to Finish
-        procrastinate.CreateDeferredAction(700,CLAW_OPEN_GRIP);
+        DeferredActions.CreateDeferredAction(100, DeferredActionType.CLAW_FLIP_SUPLEX);
+        // Wait for Pixel over Bin
+        DeferredActions.CreateDeferredAction(700, DeferredActionType.CLAW_OPEN_GRIP);
     }
+
 
     public void PrepForPixel () {
         // Reset Claw to Down and Open
-        // TODO: Rewrite w/ Deferred Actions
         grip.setPosition(PARAMS.gripOpenPos);
         arm.setPosition(PARAMS.armDownPos);
-        SystemClock.sleep(100); // let Arm Move Away from Conveyor
-        flip.setPosition(PARAMS.flipDownPos);
+        // Wait for Arm to Separate from Bin
+        DeferredActions.CreateDeferredAction(80, DeferredActionType.CLAW_FLIP_DOWN);
     }
  }
 

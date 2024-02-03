@@ -24,6 +24,8 @@ public class Conveyor {
 
     public Conveyor(@NonNull HardwareMap hdwMap){
          viperMotor =   hdwMap.get(DcMotorEx.class, "viperMotor");
+         // TODO: Set ZeroPowerBehavior - Determine what action should be...
+         // TODO: Add Odometry to Viper Motor
          viperEncoder = new OverflowEncoder(new RawEncoder(hdwMap.get(DcMotorEx.class, "viperMotor")));
          conv = hdwMap.crservo.get("conveyor");
     }
@@ -50,6 +52,7 @@ public class Conveyor {
     public void moveDownViper(){
 
         viperMotor.setPower(-0.5);
+        // TODO:  Encoporate Encoder --viperEncoder.getPositionAndVelocity()
     }
 
     public void stopViper(){
