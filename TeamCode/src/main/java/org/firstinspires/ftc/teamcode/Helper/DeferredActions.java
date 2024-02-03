@@ -13,7 +13,8 @@ public class DeferredActions {
     public enum DeferredActionType {
         CLAW_FLIP_SUPLEX("Claw Flip Suplex"),
         CLAW_FLIP_DOWN("Claw Flip Down"),
-        CLAW_OPEN_GRIP("Claw Open Grip");
+        CLAW_OPEN_GRIP("Claw Open Grip"),
+        CLAW_ARM_SUPLEX("Claw Arm Raise");
 
         private final String description;
 
