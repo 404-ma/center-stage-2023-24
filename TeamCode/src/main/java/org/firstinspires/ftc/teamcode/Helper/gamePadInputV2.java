@@ -53,6 +53,7 @@ public class gamePadInputV2 {
         BUTTON_Y("Y Button"),
         BUTTON_L_BUMPER("L Bumper"),
         BUTTON_R_BUMPER("R Bumper"),
+        BUTTON_BACK( "Back Button"),
         LEFT_TRIGGER("L Trigger"),
         RIGHT_TRIGGER("R Trigger"),
         DPAD_UP("DPad: UP"),
@@ -60,6 +61,9 @@ public class gamePadInputV2 {
         DPAD_LEFT("DPad: LEFT"),
         DPAD_RIGHT("DPad: RIGHT"),
         JOYSTICK("Joystick");
+
+
+
 
         private final String description;
 
@@ -217,6 +221,7 @@ public class gamePadInputV2 {
         if (inputGPad.y) intype = GameplayInputType.BUTTON_Y;
         if (inputGPad.left_bumper) intype = GameplayInputType.BUTTON_L_BUMPER;
         if (inputGPad.right_bumper) intype = GameplayInputType.BUTTON_R_BUMPER;
+        if(inputGPad.back) intype= GameplayInputType.BUTTON_BACK;
 
 
         // Check For Duplicate Button Input and Disregard Same Button During Lockout Period
