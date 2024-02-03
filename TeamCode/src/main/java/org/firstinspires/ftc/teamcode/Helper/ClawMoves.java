@@ -128,6 +128,7 @@ public class ClawMoves {
 
     public void SuplexPixel () {
         // Pickup and Suplex Pixel
+        grip.setPosition(PARAMS.gripClosedPos);
         arm.setPosition(PARAMS.armUpPos);
         DeferredActions.CreateDeferredAction(100, DeferredActionType.CLAW_FLIP_SUPLEX);
         // Wait for Pixel over Bin
