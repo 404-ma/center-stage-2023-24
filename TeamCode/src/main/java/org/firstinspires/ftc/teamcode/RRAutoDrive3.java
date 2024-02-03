@@ -95,7 +95,6 @@ public class RRAutoDrive3 extends LinearOpMode {
                 break;
         }
 
-
         whiteClaw.PrepForPixel();
         whiteConveyor.moveViper();
         sleep(1090);
@@ -116,6 +115,13 @@ public class RRAutoDrive3 extends LinearOpMode {
                 .splineTo(new Vector2d(X, Y), Math.toRadians(ang))
                 .build();
         Actions.runBlocking(new SequentialAction(moveRb, whiteClaw.PlacePixel()));
+
+        if(!PARAMS.frontStage){
+
+            whiteClaw.PlacePixel();
+            sleep(850);
+            whiteClaw.RetractArm();
+        }
 
         Action moveBack = drive.actionBuilder(drive.pose)
                 .setReversed(true)
@@ -155,10 +161,15 @@ public class RRAutoDrive3 extends LinearOpMode {
 
     //to the panel in the back
     public void toBackPanel(double targetX){
-        sleep(850);
+
+        Action moveBack = drive.actionBuilder(drive.pose)
+                .setReversed(true)
+                .splineTo(new Vector2d(6, 0), Math.toRadians(-90))
+                .build();
+        Actions.runBlocking(moveBack);
 
         Action moveRb3 = drive.actionBuilder(drive.pose)
-                .strafeTo(new Vector2d(targetX,36))
+                .strafeTo(new Vector2d(targetX,-36))
                 .build();
         Actions.runBlocking(moveRb3);
     }
