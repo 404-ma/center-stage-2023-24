@@ -221,7 +221,7 @@ public class gamePadInputV2 {
         if (inputGPad.y) intype = GameplayInputType.BUTTON_Y;
         if (inputGPad.left_bumper) intype = GameplayInputType.BUTTON_L_BUMPER;
         if (inputGPad.right_bumper) intype = GameplayInputType.BUTTON_R_BUMPER;
-        if(inputGPad.back) intype= GameplayInputType.BUTTON_BACK;
+        if (inputGPad.back) intype= GameplayInputType.BUTTON_BACK;
 
 
         // Check For Duplicate Button Input and Disregard Same Button During Lockout Period
