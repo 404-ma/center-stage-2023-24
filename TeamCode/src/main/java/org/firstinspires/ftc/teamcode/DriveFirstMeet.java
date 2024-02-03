@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.os.SystemClock;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -61,6 +59,7 @@ public class DriveFirstMeet extends LinearOpMode {
             update_telemetry(gpIn1, gpIn2, drvTrain);
 
             // TODO: Add Driver Button to Reverse Drive Perspective
+            // TODO: Add Driver Button for Breaking
             // TODO: Extract GamePad1 and Gamepad2 Processing to seperate methods.
             gamePadInputV2.GameplayInputType inpType = gpIn1.WaitForGamepadInput(30);
             switch (inpType) {
