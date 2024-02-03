@@ -51,7 +51,7 @@ public class DeferredActions {
             }
         }
 
-        // Remove Ready Actions from Deffered list
+        // Remove Ready Actions from Deferred list
         for (Pair act : removals) { deferredActions.remove(act); }
 
         return (readyActions);
