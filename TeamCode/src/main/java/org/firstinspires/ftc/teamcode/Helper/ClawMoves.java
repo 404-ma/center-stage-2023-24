@@ -108,12 +108,16 @@ public class ClawMoves {
      * Driver Claw Movements
      */
     public void closeGrip(){
-        grip.setPosition(PARAMS.gripClosedPos);
+        MoveGrip(PARAMS.gripClosedPos);
     }
 
     public void openGrip(){
-        grip.setPosition(PARAMS.gripOpenPos);
+        MoveGrip(PARAMS.gripOpenPos);
     }
+
+    public void suplexFlip() { MoveFlip(PARAMS.flipSuplexPos); }
+
+    public void downFlip() { MoveFlip(PARAMS.flipDownPos); }
 
     public void moveLevel(int level){
         double pos = PARAMS.armDownPos + (level * 0.005);
