@@ -32,6 +32,7 @@ public class DriveFirstMeet extends LinearOpMode {
         DcMotor viperMotor = hardwareMap.dcMotor.get("viperMotor");
         CRServo conveyor = hardwareMap.crservo.get("conveyor");
 
+        // TODO: Remove direct calls to servos and use ClawMoves
         Servo arm = hardwareMap.servo.get("ArmServo");
         arm.setDirection(Servo.Direction.FORWARD);
         Servo flip = hardwareMap.servo.get("FlipServo");
@@ -58,20 +59,27 @@ public class DriveFirstMeet extends LinearOpMode {
         while (opModeIsActive()) {
             ++tlm_MainLoopCount;
             update_telemetry(gpIn1, gpIn2, drvTrain);
+
+            // TODO: Add Driver Button to Reverse Drive Perspective
+            // TODO: Extract GamePad1 and Gamepad2 Processing to seperate methods.
             gamePadInputV2.GameplayInputType inpType = gpIn1.WaitForGamepadInput(30);
             switch (inpType) {
                 case DPAD_UP:
                     yclaw.moveLevel(3);
                     break;
+
                 case DPAD_DOWN:
                     yclaw.moveLevel(1);
                     break;
+
                 case DPAD_RIGHT:
                     yclaw.moveLevel(4);
                     break;
+
                 case DPAD_LEFT:
                     yclaw.moveLevel(2);
                     break;
+
                 case BUTTON_L_BUMPER:
                     suplex = !suplex;
                     if (!suplex) {
@@ -80,6 +88,7 @@ public class DriveFirstMeet extends LinearOpMode {
                         yclaw.SuplexPixel();
                     }
                     break;
+
                 case BUTTON_R_BUMPER:
                     clawOpen = !clawOpen;
                     if (clawOpen) {
@@ -92,15 +101,19 @@ public class DriveFirstMeet extends LinearOpMode {
                 case BUTTON_A:
                     speedMultiplier = 0.25;
                     break;
+
                 case BUTTON_X:
                     speedMultiplier = 0.75;
                     break;
+
                 case BUTTON_B:
                     speedMultiplier = 0.5;
                     break;
+
                 case BUTTON_Y:
                     speedMultiplier = 1;
                     break;
+
                 case JOYSTICK:
                     drvTrain.setDriveVectorFromJoystick(gamepad1.left_stick_x * (float) speedMultiplier,
                             gamepad1.right_stick_x * (float) speedMultiplier, gamepad1.left_stick_y * (float) speedMultiplier);
@@ -122,13 +135,14 @@ public class DriveFirstMeet extends LinearOpMode {
                     break;
             }
 
-            // TODO: Add Deferred Actions
+            // Deferred Actions
             pro.ProcessDeferredActions();
 
         }
     }
 
     private void update_telemetry(gamePadInputV2 gpi1, gamePadInputV2 gpi2, DrivetrainV2 drv) {
+        // TODO:  Review Telemetry and Remove Unneeded Data.
         telemetry.addLine().addData("Main Loop Cnt", tlm_MainLoopCount);
 
         telemetry.addLine("Game-pad Input");
