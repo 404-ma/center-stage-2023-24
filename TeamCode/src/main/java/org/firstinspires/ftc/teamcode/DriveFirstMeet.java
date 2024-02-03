@@ -161,7 +161,7 @@ public class DriveFirstMeet extends LinearOpMode {
         for(DeferredActionType actionType: action){
             switch(actionType){
                 case CLAW_FLIP_SUPLEX:
-                    yclaw.MoveArm(PARAMS.flipSuplexPos);
+                    yclaw.MoveFlip(PARAMS.flipSuplexPos);
                     break;
 
                 case CLAW_OPEN_GRIP:
