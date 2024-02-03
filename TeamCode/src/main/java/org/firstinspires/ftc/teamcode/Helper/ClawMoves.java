@@ -98,6 +98,7 @@ public class ClawMoves {
             MoveArm(PARAMS.armUpPos);
             // Allow Time for Arm to Move Off the Mat
             SystemClock.sleep(100);
+            MoveGrip(PARAMS.gripOpenPosTop);
             MoveFlip(PARAMS.flipSuplexPos);
             return false;
         };
@@ -136,7 +137,6 @@ public class ClawMoves {
 
     public void PrepForPixel () {
         // Reset Claw to Down and Open
-        grip.setPosition(PARAMS.gripOpenPos);
         arm.setPosition(PARAMS.armDownPos);
         // Wait for Arm to Separate from Bin
         DeferredActions.CreateDeferredAction(80, DeferredActionType.CLAW_FLIP_DOWN);
