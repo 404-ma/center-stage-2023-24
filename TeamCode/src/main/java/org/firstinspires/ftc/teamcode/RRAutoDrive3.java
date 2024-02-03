@@ -68,7 +68,7 @@ public class RRAutoDrive3 extends LinearOpMode {
 
         switch((int) PARAMS.propSpikeMark){
             case 3:
-                toSpikeMark(13.0,-3.0,-24);
+                toSpikeMark(17.0,-3.0,-24);
                 if(PARAMS.frontStage){
                     toFrontPanel(36.5, PARAMS.partnerDead);
                 }
@@ -77,7 +77,7 @@ public class RRAutoDrive3 extends LinearOpMode {
                 }
                 break;
             case 1:
-                toSpikeMark(13.0, 3.0, 32);
+                toSpikeMark(18.0, 3.0, 32);
                 if(PARAMS.frontStage){
                     toFrontPanel(25.5, PARAMS.partnerDead);
                 }
