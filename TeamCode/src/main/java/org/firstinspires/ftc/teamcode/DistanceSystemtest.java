@@ -19,7 +19,8 @@ public class DistanceSystemtest extends LinearOpMode {
 
     public static class Params {
         public double gainValueForward = 0.1;
-        public double rangeValue = 1.5;
+        public double rangeValue = 2;
+        public double gainValueRotation = 0.03;
     }
 
     public static Params PARAMS = new Params();
@@ -56,7 +57,7 @@ public class DistanceSystemtest extends LinearOpMode {
 
             // Use the speed and turn "gains" to calculate how we want the robot to move.
         double forward = Range.clip(-rangeError * PARAMS.gainValueForward, -0.3, 0.3);
-            double rotate = Range.clip(-pose.yaw * 0.01, -0.25, 0.25);
+            double rotate = Range.clip(-pose.yaw * PARAMS.gainValueRotation, -0.25, 0.25);
 
 
             telemetry.addData("Distance", pose.range);
