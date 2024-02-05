@@ -126,7 +126,7 @@ public class ClawMoves {
         if (level == 1) {
             armPos = PARAMS.armDownPos + 0.003 ;
         } else if (level == 2) {
-            armPos = PARAMS.armDownPos + 0.006 ;
+            armPos = PARAMS.armDownPos + 0.008 ;
         } else if (level == 3) {
             armPos = PARAMS.armDownPos + 0.010;
         } else {
