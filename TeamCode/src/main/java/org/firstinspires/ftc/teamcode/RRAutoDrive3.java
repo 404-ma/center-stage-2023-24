@@ -105,34 +105,40 @@ public class RRAutoDrive3 extends LinearOpMode {
         whiteConveyor.moveDownViper();
         sleep(1090);
 
-
-
-
     }
     //to the spike mark
     public void toSpikeMark(double X, double Y, int ang, boolean position){
+        double an;
+
+        if(position){
+            an = -180;
+        }
+        else{
+            an = 90;
+        }
+
         Action moveRb = drive.actionBuilder(drive.pose)
                 .splineTo(new Vector2d(X, Y), Math.toRadians(ang))
                 .build();
         Actions.runBlocking(new SequentialAction(moveRb, whiteClaw.PlacePixel()));
 
         if(!PARAMS.frontStage){
-
-            whiteClaw.PlacePixel();
             sleep(850);
             whiteClaw.RetractArm();
         }
 
         Action moveBack = drive.actionBuilder(drive.pose)
                 .setReversed(true)
-                .splineTo(new Vector2d(6, 0), Math.toRadians(90))
+                .splineTo(new Vector2d(6, 0), Math.toRadians(an))
                 .build();
         Actions.runBlocking(new ParallelAction(moveBack, whiteClaw.RetractArm()));
     }
 
-
     //to the panel in the front
     public void toFrontPanel( double targetX, boolean partDead) {
+
+        whiteClaw.RetractArm();
+
         Action moveBar = drive.actionBuilder(drive.pose)
                 .turnTo(Math.toRadians(-90))
                 .lineToY(40)
@@ -162,14 +168,8 @@ public class RRAutoDrive3 extends LinearOpMode {
     //to the panel in the back
     public void toBackPanel(double targetX){
 
-        Action moveBack = drive.actionBuilder(drive.pose)
-                .setReversed(true)
-                .splineTo(new Vector2d(6, 0), Math.toRadians(-90))
-                .build();
-        Actions.runBlocking(moveBack);
-
         Action moveRb3 = drive.actionBuilder(drive.pose)
-                .strafeTo(new Vector2d(targetX,-36))
+                .strafeTo(new Vector2d(targetX,36))
                 .build();
         Actions.runBlocking(moveRb3);
     }
