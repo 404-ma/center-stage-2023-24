@@ -35,7 +35,6 @@ public class RRAutoDrive3 extends LinearOpMode {
     private ClawMoves whiteClaw;
     private Conveyor whiteConveyor;
 
-
     @Override
     public void runOpMode() {
         // Load Introduction and Wait for Start
@@ -135,8 +134,6 @@ public class RRAutoDrive3 extends LinearOpMode {
 
     //to the panel in the front
     public void toFrontPanel( double targetX, boolean partDead) {
-
-        whiteClaw.RetractArm();
 
         Action moveBar = drive.actionBuilder(drive.pose)
                 .turnTo(Math.toRadians(-90))
