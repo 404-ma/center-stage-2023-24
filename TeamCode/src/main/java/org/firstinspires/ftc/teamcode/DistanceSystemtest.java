@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -11,13 +13,27 @@ import org.firstinspires.ftc.teamcode.Helper.DrivetrainV2;
 import org.firstinspires.ftc.teamcode.Helper.DistanceSystem;
 import org.firstinspires.ftc.teamcode.helper.TargetPose;
 
+@Config
 @TeleOp(name= "Distance System Test", group ="Test")
 public class DistanceSystemtest extends LinearOpMode {
+
+    public static class Params {
+        public double gainValueForward = 0.1;
+        public double rangeValue = 1.5;
+    }
+
+    public static Params PARAMS = new Params();
+    private FtcDashboard dashboard;
     private DrivetrainV2 drv;
     private DistanceSystem distSys;
 
+
     @Override
     public void runOpMode() {
+
+        dashboard = FtcDashboard.getInstance();
+        dashboard.clearTelemetry();
+
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
         telemetry.addLine("Distance System Test");
         telemetry.addLine();
@@ -35,11 +51,11 @@ public class DistanceSystemtest extends LinearOpMode {
             TargetPose pose = distSys.getTargetPose(first);
             first = false;
 
-            double rangeError = (pose.range - 5);
+        double rangeError = (pose.range-PARAMS.rangeValue);
 
 
             // Use the speed and turn "gains" to calculate how we want the robot to move.
-            double forward = Range.clip(-rangeError * 0.1, -0.3, 0.3);
+        double forward = Range.clip(-rangeError * PARAMS.gainValueForward, -0.3, 0.3);
             double rotate = Range.clip(-pose.yaw * 0.01, -0.25, 0.25);
 
 
