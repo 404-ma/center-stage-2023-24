@@ -56,6 +56,7 @@ public class DistanceSystemtest extends LinearOpMode {
         double forward = Range.clip(-rangeError * PARAMS.gainValueForward, -0.3, 0.3);
             double rotate = Range.clip(-pose.yaw * PARAMS.gainValueRotation, -0.25, 0.25);
 
+
             telemetry.addData("Distance", pose.range);
             telemetry.addData("Yaw", pose.yaw);
             telemetry.update();
@@ -65,6 +66,7 @@ public class DistanceSystemtest extends LinearOpMode {
 
 
             sleep(100);
+
         }
         }
     }

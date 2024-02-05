@@ -92,4 +92,6 @@ public class DistanceSystem {
 }
             
 
-
+//distance system object
+//vall that object
+//range
