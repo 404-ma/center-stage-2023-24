@@ -36,7 +36,6 @@ public class RRAutoDrive3 extends LinearOpMode {
     private Conveyor whiteConveyor;
 
 
-
     @Override
     public void runOpMode() {
         // Load Introduction and Wait for Start
