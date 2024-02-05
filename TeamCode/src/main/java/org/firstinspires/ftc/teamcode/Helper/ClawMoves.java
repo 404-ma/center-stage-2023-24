@@ -119,12 +119,27 @@ public class ClawMoves {
 
     public void downFlip() { MoveFlip(PARAMS.flipDownPos); }
 
-    public void moveLevel(int level){
-        double pos = PARAMS.armDownPos + (level * 0.005);
-        double flipPos = PARAMS.flipDownPos - (level * 0.005);
-        arm.setPosition(pos);
-        flip.setPosition(flipPos);
+    public void moveLevel(int level) {
+        double armPos;
+        double flipPos;
+        flipPos = PARAMS.flipDownPos - 0.006;
+        if (level == 1) {
+            armPos = PARAMS.armDownPos + 0.007 ;
+        } else if (level == 2) {
+            armPos = PARAMS.armDownPos + 0.12 ;
+        } else if (level == 3) {
+            armPos = PARAMS.armDownPos + 0.15;
+        } else {
+            armPos = PARAMS.armDownPos + 0.18;
+        }
+
+        MoveArm(armPos);
+        MoveFlip(flipPos);
     }
+
+
+
+
 
     public void SuplexPixel () {
         // Pickup and Suplex Pixel
