@@ -22,12 +22,10 @@ public class DistanceSystemtest extends LinearOpMode {
         public double rangeValue = 2;
         public double gainValueRotation = 0.03;
     }
-
     public static Params PARAMS = new Params();
     private FtcDashboard dashboard;
     private DrivetrainV2 drv;
     private DistanceSystem distSys;
-
 
     @Override
     public void runOpMode() {
