@@ -124,13 +124,13 @@ public class ClawMoves {
         double flipPos;
         flipPos = PARAMS.flipDownPos - 0.006;
         if (level == 1) {
-            armPos = PARAMS.armDownPos + 0.005 ;
+            armPos = PARAMS.armDownPos + 0.003 ;
         } else if (level == 2) {
-            armPos = PARAMS.armDownPos + 0.010 ;
+            armPos = PARAMS.armDownPos + 0.006 ;
         } else if (level == 3) {
-            armPos = PARAMS.armDownPos + 0.013;
+            armPos = PARAMS.armDownPos + 0.010;
         } else {
-            armPos = PARAMS.armDownPos + 0.015;
+            armPos = PARAMS.armDownPos + 0.013;
         }
 
         MoveArm(armPos);
