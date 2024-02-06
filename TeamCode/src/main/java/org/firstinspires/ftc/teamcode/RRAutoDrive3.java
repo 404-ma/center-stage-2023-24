@@ -108,33 +108,10 @@ public class RRAutoDrive3 extends LinearOpMode {
         }
 
         //gets the position of the robot before dropping the pixel
-       /* drive.updatePoseEstimate();
+        //SensorApproach();
 
-        boolean first = true;
-        TargetPose pose = distSys.getTargetPose(first);
 
-   long timeout = System.currentTimeMillis()+PARAMS.rangeTime;
-
-        while (pose.range > (pose.range-PARAMS.rangeValue) && System.currentTimeMillis() < timeout){
-            first = false;
-
-            double rangeError = (pose.range-PARAMS.rangeValue);
-
-            // Use the speed and turn "gains" to calculate how we want the robot to move.
-            double forward = Range.clip(-rangeError * PARAMS.gainValueForward, -0.3, 0.3);
-            double rotate = Range.clip(-pose.yaw * PARAMS.gainValueRotation, -0.25, 0.25);
-
-            telemetry.addData("Distance", pose.range);
-            telemetry.addData("Yaw", pose.yaw);
-            telemetry.update();
-
-            drv.setDriveVector(forward, 0, rotate);
-
-            sleep(100);
-
-        } */
-
-        whiteClaw.PrepForPixel();
+        whiteClaw.PrepForPixel(false);
         whiteConveyor.moveViper();
         sleep(1100);
         whiteConveyor.stopViper();
@@ -145,11 +122,30 @@ public class RRAutoDrive3 extends LinearOpMode {
         sleep(1100);
 
     }
+
+    private void SensorApproach() {
+        long timeout = System.currentTimeMillis()+PARAMS.rangeTime;
+        TargetPose pose = distSys.getTargetPose(true);  //Get Initial Values
+
+        while (pose.range > (pose.range-PARAMS.rangeValue) && System.currentTimeMillis() < timeout){
+            pose = distSys.getTargetPose(false);
+            double rangeError = (pose.range-PARAMS.rangeValue);
+
+            // Use the speed and turn "gains" to calculate how we want the robot to move.
+            double forward = Range.clip(-rangeError * PARAMS.gainValueForward, -0.3, 0.3);
+            double rotate = Range.clip(-pose.yaw * PARAMS.gainValueRotation, -0.25, 0.25);
+
+            drv.setDriveVector(forward, 0, rotate);
+            drive.updatePoseEstimate();
+            sleep(30);
+        }
+    }
+
     //to the spike mark
     public void toSpikeMark(double X, double Y, int ang, boolean position){
         double an;
 
-        if(position){
+        if (position) {
             an = -180;
         }
         else{
@@ -167,7 +163,6 @@ public class RRAutoDrive3 extends LinearOpMode {
         }
 
         Action moveBack = drive.actionBuilder(drive.pose)
-
                 .setReversed(true)
                 .splineTo(new Vector2d(6, 0), Math.toRadians(an))
                 .build();
@@ -176,7 +171,6 @@ public class RRAutoDrive3 extends LinearOpMode {
 
     //to the panel in the front
     public void toFrontPanel( double targetX, boolean partDead) {
-
         whiteClaw.RetractArm();
 
         Action moveBar = drive.actionBuilder(drive.pose)
