@@ -29,7 +29,7 @@ public class RRAutoDrive3 extends LinearOpMode {
     public static class Params {
         public double propSpikeMark = 2;    //  Which Spike Mark is the Prop Located on
         public boolean partnerDead = true;
-        public boolean frontStage = true;
+        public boolean frontStage = false;
         public int dTime = 500;
         public double rangeNum = 2.0;
         public int rangeTime = 500;
@@ -116,7 +116,7 @@ public class RRAutoDrive3 extends LinearOpMode {
         sleep(1100);
         whiteConveyor.stopViper();
         whiteConveyor.moveConvForward();
-        sleep(900);
+        sleep(1000);
         whiteConveyor.stopConv();
         whiteConveyor.moveDownViper();
         sleep(1100);
@@ -203,6 +203,7 @@ public class RRAutoDrive3 extends LinearOpMode {
     public void toBackPanel(double targetX){
 
         Action moveRb3 = drive.actionBuilder(drive.pose)
+                .setReversed(true)
                 .splineTo(new Vector2d(targetX,36), Math.toRadians(90))
                 .build();
         Actions.runBlocking(moveRb3);
