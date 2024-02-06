@@ -90,7 +90,6 @@ public class RRAutoDriveRed extends LinearOpMode {
                     break;
             }
         }
-
         whiteClaw.PrepForPixel(false);
         whiteConveyor.moveViper();
 
@@ -105,7 +104,6 @@ public class RRAutoDriveRed extends LinearOpMode {
         sleep(1500);
 
     }
-
     public void toSpikeMarkFront(double X, double Y, double targetX, int ang, boolean partDead) {
         Action moveRb = drive.actionBuilder(drive.pose)
                 .splineTo(new Vector2d(X, Y), Math.toRadians(ang))
