@@ -108,7 +108,7 @@ public class RRAutoDrive3 extends LinearOpMode {
         }
 
         //gets the position of the robot before dropping the pixel
-        drive.updatePoseEstimate();
+       /* drive.updatePoseEstimate();
 
         boolean first = true;
         TargetPose pose = distSys.getTargetPose(first);
@@ -132,7 +132,7 @@ public class RRAutoDrive3 extends LinearOpMode {
 
             sleep(100);
 
-        }
+        } */
 
         whiteClaw.PrepForPixel();
         whiteConveyor.moveViper();
