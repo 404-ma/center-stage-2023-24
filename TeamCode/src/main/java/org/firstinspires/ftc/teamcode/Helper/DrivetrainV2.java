@@ -16,11 +16,6 @@ import java.util.Date;
 
 
 public class DrivetrainV2 {
-
-
-
-
-
     private static final float STRAFING_ADJUSTMENT = 1.08f;
     private static final float JOYSTICK_Y_INPUT_ADJUSTMENT = -1f;
     private static final double BRAKING_STOP_THRESHOLD = 0.25;
@@ -44,21 +39,15 @@ public class DrivetrainV2 {
     private int telemetryBrakeCount = 0;
     private int telemetryBrakeTimeoutCount = 0;
 
-    private boolean reverseMode = false;
-
     public DrivetrainV2 (@NonNull HardwareMap hdwMap) {
         drvMotorFrontLeft = hdwMap.dcMotor.get("frontLeft");
         drvMotorBackLeft = hdwMap.dcMotor.get("backLeft");
         drvMotorFrontRight = hdwMap.dcMotor.get("frontRight");
         drvMotorBackRight = hdwMap.dcMotor.get("backRight");
 
-
-
         // Account for motor mounting direction in our robot design
         drvMotorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         drvMotorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        drvMotorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-
 
         drvMotorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         drvMotorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -112,17 +101,10 @@ public class DrivetrainV2 {
         double pwrFrontRight = (forward - strafe - rotate) / denominator;
         double pwrBackRight = (forward + strafe - rotate) / denominator;
 
-        if (reverseMode) {
-            forward = -forward;
-            strafe = -strafe;
-        }
-
-
         drvMotorFrontLeft.setPower(pwrFrontLeft);
         drvMotorBackLeft.setPower(pwrBackLeft);
         drvMotorFrontRight.setPower(pwrFrontRight);
         drvMotorBackRight.setPower(pwrBackRight);
-
 
         telemetryLastCalledTimestamp = new Date();
         telemetryLastPowerFrontLeft = pwrFrontLeft;
@@ -135,19 +117,14 @@ public class DrivetrainV2 {
     public void setDriveVectorFromJoystick(float stickLeftX, float stickRightX, float stickLeftY,boolean setReversed) {
         if (brakingOn) return;
 
-
-
+        double rotate = stickRightX;
         double forward = stickLeftY * JOYSTICK_Y_INPUT_ADJUSTMENT;
         double strafe = stickLeftX * STRAFING_ADJUSTMENT;
-
 
         if (setReversed) {
             forward = stickLeftY * JOYSTICK_Y_INPUT_ADJUSTMENT * -1;
             strafe = stickLeftX * STRAFING_ADJUSTMENT * -1;
         }
-
-            double rotate = stickRightX;
-
 
         setDriveVector(forward, strafe, rotate);
     }
@@ -157,23 +134,8 @@ public class DrivetrainV2 {
     public void setBrakeStatus(boolean braking)  {
         brakingOn = braking;
 
-
         telemetryLastCalledTimestamp = new Date();
         ++telemetryBrakeCount;
-
-
-        DcMotor.ZeroPowerBehavior newZeroBehavior = braking ? DcMotor.ZeroPowerBehavior.BRAKE : DcMotor.ZeroPowerBehavior.FLOAT;
-
-
-        if (drvMotorFrontLeft.getZeroPowerBehavior() != newZeroBehavior)
-            drvMotorFrontLeft.setZeroPowerBehavior(newZeroBehavior);
-        if (drvMotorBackLeft.getZeroPowerBehavior() != newZeroBehavior)
-            drvMotorBackLeft.setZeroPowerBehavior(newZeroBehavior);
-        if (drvMotorFrontRight.getZeroPowerBehavior() != newZeroBehavior)
-            drvMotorFrontRight.setZeroPowerBehavior(newZeroBehavior);
-        if (drvMotorBackRight.getZeroPowerBehavior() != newZeroBehavior)
-            drvMotorBackRight.setZeroPowerBehavior(newZeroBehavior);
-
 
         if (braking) {
             boolean allStop = false;
