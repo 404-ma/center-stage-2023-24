@@ -36,8 +36,6 @@ public class DriveFirstMeet extends LinearOpMode {
         DcMotor viperMotor = hardwareMap.dcMotor.get("viperMotor");
         CRServo conveyor = hardwareMap.crservo.get("conveyor");
 
-        // TODO: Remove direct calls to servos and use ClawMoves
-
 
         waitForStart();
         if (isStopRequested()) return;
@@ -58,13 +56,8 @@ public class DriveFirstMeet extends LinearOpMode {
             ++tlm_MainLoopCount;
             update_telemetry(gpIn1, gpIn2, drvTrain);
 
-            // TODO: Add Driver Button to Reverse Drive Perspective
-
 
             // TODO: Add Driver Button for Breaking
-
-
-            // TODO: Extract GamePad1 and Gamepad2 Processing to seperate methods.
 
 
 
