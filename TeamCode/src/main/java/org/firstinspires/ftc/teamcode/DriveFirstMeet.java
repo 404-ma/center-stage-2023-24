@@ -115,11 +115,11 @@ public class DriveFirstMeet extends LinearOpMode {
             gamePadInputV2.GameplayInputType inpType2 = gpIn2.WaitForGamepadInput(30);
             switch (inpType2) {
                 case LEFT_TRIGGER:
-                    double power = Math.min(gamepad2.left_trigger, 0.5);
+                    double power = Math.min(gamepad2.left_trigger, 0.75);
                     conveyor.setPower(power);
                     break;
                 case RIGHT_TRIGGER:
-                    double powerBack = Math.min(gamepad2.right_trigger, 0.5);
+                    double powerBack = Math.min(gamepad2.right_trigger, 0.75);
                     conveyor.setPower(-powerBack);
                     break;
                 case JOYSTICK:
@@ -127,7 +127,6 @@ public class DriveFirstMeet extends LinearOpMode {
                     craneMotor.setPower(gamepad2.left_stick_y * -0.8);
                     break;
             }
-
             // Deferred Actions
             ProcessDeferredActions();
         }
