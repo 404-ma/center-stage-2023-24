@@ -65,7 +65,7 @@ public class ClawPickupTest extends LinearOpMode {
                     break;
 
                 case BUTTON_B:
-                    whiteClaw.PrepForPixel();
+                    whiteClaw.PrepForPixel(false);
                     break;
 
                 case BUTTON_L_BUMPER:
