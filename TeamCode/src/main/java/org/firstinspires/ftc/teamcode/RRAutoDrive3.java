@@ -189,7 +189,7 @@ public class RRAutoDrive3 extends LinearOpMode {
             Action backdrop = drive.actionBuilder(drive.pose)
                     .setReversed(true)
                     .splineTo(new Vector2d(targetX, 60), Math.toRadians(90))
-                    .splineTo(new Vector2d(targetX, 83), Math.toRadians(90))
+                    .splineTo(new Vector2d(targetX, 86), Math.toRadians(90))
                     .build();
             Actions.runBlocking(backdrop);
         }
@@ -199,7 +199,7 @@ public class RRAutoDrive3 extends LinearOpMode {
 
             Action backdrop = drive.actionBuilder(drive.pose)
                     .setReversed(true)
-                    .splineTo(new Vector2d(targetX, 83), Math.toRadians(90))
+                    .splineTo(new Vector2d(targetX, 86), Math.toRadians(90))
                     .build();
             Actions.runBlocking(backdrop);
         }
