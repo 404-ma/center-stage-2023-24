@@ -33,7 +33,6 @@ public class RRAutoDrive3 extends LinearOpMode {
         public int dTime = 500;
         public double rangeNum = 2.0;
         public int rangeTime = 500;
-
         public double gainValueForward = 0.1;
         public double rangeValue = 2;
         public double gainValueRotation = 0.03;
@@ -46,10 +45,7 @@ public class RRAutoDrive3 extends LinearOpMode {
     private ClawMoves whiteClaw;
     private Conveyor whiteConveyor;
     private DistanceSystem distSys;
-
     private DrivetrainV2 drv;
-
-
 
     @Override
     public void runOpMode() {
@@ -94,10 +90,10 @@ public class RRAutoDrive3 extends LinearOpMode {
             case 1:
                 toSpikeMark(18.0, 3.0, 32, PARAMS.frontStage);
                 if(PARAMS.frontStage){
-                    toFrontPanel(25.5, PARAMS.partnerDead);
+                    toFrontPanel(28.0, PARAMS.partnerDead);
                 }
                 else{
-                    toBackPanel(25.5);
+                    toBackPanel(28.0);
                 }
                 break;
             default:
@@ -117,7 +113,9 @@ public class RRAutoDrive3 extends LinearOpMode {
         boolean first = true;
         TargetPose pose = distSys.getTargetPose(first);
 
-        while (pose.range != PARAMS.rangeNum && System.currentTimeMillis() != PARAMS.rangeTime){
+   long timeout = System.currentTimeMillis()+PARAMS.rangeTime;
+
+        while (pose.range > (pose.range-PARAMS.rangeValue) && System.currentTimeMillis() < timeout){
             first = false;
 
             double rangeError = (pose.range-PARAMS.rangeValue);
@@ -145,8 +143,6 @@ public class RRAutoDrive3 extends LinearOpMode {
         whiteConveyor.stopConv();
         whiteConveyor.moveDownViper();
         sleep(1090);
-
-
 
     }
     //to the spike mark
