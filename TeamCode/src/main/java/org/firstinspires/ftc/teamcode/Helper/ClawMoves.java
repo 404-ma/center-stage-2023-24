@@ -16,15 +16,18 @@ public class ClawMoves {
     // FTC Dashboard Parameters
     public static class Params {
         public double armUpPos = 0.287;
-        public double armDownPos = 0.215;
+        public double armDownPos = 0.213;
+        public double armLevel1 = 0.221;
+        public double armLevel2 = 0.224;
+        public double armLevel3 = 0.227;
+        public double armLevel4 = 0.230;
 
         public double flipSuplexPos = 0.395;
-        public double flipDownPos = 0.537;
+        public double flipDownPos = 0.538;
 
         public double gripOpenPos = 0.655;
-        public double gripClosedPos = 0.380;
-
-        public double gripOpenPosTop = 0.49;
+        public double gripClosedPos = 0.365;
+        public double gripOpenPosTop = 0.48;
     }
 
     public static Params PARAMS = new Params();
@@ -36,7 +39,6 @@ public class ClawMoves {
     private Servo arm;
     private Servo flip;
     private Servo grip;
-
 
 
     // Class Constructor
@@ -123,43 +125,45 @@ public class ClawMoves {
         double armPos;
         double flipPos;
         flipPos = PARAMS.flipDownPos - 0.006;
-        if (level == 1) {
-            armPos = PARAMS.armDownPos + 0.003 ;
-        } else if (level == 2) {
-            armPos = PARAMS.armDownPos + 0.008 ;
-        } else if (level == 3) {
-            armPos = PARAMS.armDownPos + 0.010;
-        } else {
-            armPos = PARAMS.armDownPos + 0.013;
-        }
-
+        if (level == 1)
+            armPos = PARAMS.armLevel1;
+        else if (level == 2)
+            armPos = PARAMS.armLevel2;
+        else if (level == 3)
+            armPos = PARAMS.armLevel3;
+        else
+            armPos = PARAMS.armLevel4;
         MoveArm(armPos);
         MoveFlip(flipPos);
     }
 
 
-
-
-
     public void SuplexPixel () {
         // Pickup and Suplex Pixel
-        if (tlmGripPosition != PARAMS.gripClosedPos)
-            DeferredActions.CreateDeferredAction(100, DeferredActionType.CLAW_ARM_SUPLEX);
-        else
-            grip.setPosition(PARAMS.gripClosedPos);
-
-        arm.setPosition(PARAMS.armUpPos);
-        DeferredActions.CreateDeferredAction(100, DeferredActionType.CLAW_FLIP_SUPLEX);
+        if (tlmGripPosition != PARAMS.gripClosedPos) {
+            MoveGrip(PARAMS.gripClosedPos);
+            DeferredActions.CreateDeferredAction(150, DeferredActionType.CLAW_ARM_SUPLEX);
+        } else {
+            MoveArm(PARAMS.armUpPos);
+        }
+        DeferredActions.CreateDeferredAction(180, DeferredActionType.CLAW_FLIP_SUPLEX);
         // Wait for Pixel over Bin
-        DeferredActions.CreateDeferredAction(700, DeferredActionType.CLAW_OPEN_GRIP);
+        DeferredActions.CreateDeferredAction(600, DeferredActionType.CLAW_OPEN_GRIP);
     }
 
 
-    public void PrepForPixel () {
+    public void PrepForPixel (boolean deferFlip) {
         // Reset Claw to Down and Open
-        arm.setPosition(PARAMS.armDownPos);
+        MoveArm(PARAMS.armDownPos);
         // Wait for Arm to Separate from Bin
-        DeferredActions.CreateDeferredAction(80, DeferredActionType.CLAW_FLIP_DOWN);
+        if (deferFlip)
+            DeferredActions.CreateDeferredAction(80, DeferredActionType.CLAW_FLIP_DOWN);
+        else {
+            MoveFlip(PARAMS.flipDownPos);
+            // Allow Time for Arm to Move to Mat
+            SystemClock.sleep(500);
+            MoveGrip(PARAMS.gripOpenPos);
+        }
     }
  }
 
