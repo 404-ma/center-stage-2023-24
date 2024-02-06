@@ -39,7 +39,6 @@ public class Conveyor {
 
         conv.setPower(-0.7);
     }
-
     public void stopConv(){
 
         conv.setPower(0);
