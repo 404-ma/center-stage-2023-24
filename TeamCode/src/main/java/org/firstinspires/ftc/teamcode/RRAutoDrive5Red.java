@@ -107,7 +107,7 @@ public class RRAutoDrive5Red extends LinearOpMode {
                 break;
         }
 
-        whiteClaw.PrepForPixel();
+        whiteClaw.PrepForPixel(false);
         whiteConveyor.moveViper();
         sleep(1100);
         whiteConveyor.stopViper();
