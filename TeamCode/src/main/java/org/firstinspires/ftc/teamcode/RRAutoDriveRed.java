@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.Helper.Conveyor;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 
 @Config
-@Autonomous (name = "RR Auto Drive 3 - Red", group = "RoadRunner")
+@Autonomous (name = "RR Auto Drive Red", group = "RoadRunner")
 public class RRAutoDriveRed extends LinearOpMode {
     /*
      *  FTC Dashboard Parameters

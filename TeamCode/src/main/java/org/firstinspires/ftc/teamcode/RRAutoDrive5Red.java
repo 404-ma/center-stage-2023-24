@@ -21,8 +21,8 @@ import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.helper.TargetPose;
 
 @Config
-@Autonomous (name = "RR Auto Drive Blue", group = "RoadRunner")
-public class RRAutoDrive3 extends LinearOpMode {
+@Autonomous (name = "RR Auto Drive Red", group = "RoadRunner")
+public class RRAutoDrive5Red extends LinearOpMode {
     /*
      *  FTC Dashboard Parameters
      */
@@ -79,7 +79,7 @@ public class RRAutoDrive3 extends LinearOpMode {
 
         switch((int) PARAMS.propSpikeMark){
             case 3:
-                toSpikeMark(17.0,-3.0,-24, PARAMS.frontStage);
+                toSpikeMark(17.0,3.0,27, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(36.5, PARAMS.partnerDead);
                 }
@@ -88,7 +88,7 @@ public class RRAutoDrive3 extends LinearOpMode {
                 }
                 break;
             case 1:
-                toSpikeMark(18.0, 3.0, 32, PARAMS.frontStage);
+                toSpikeMark(18.0, -3.0, -30, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(28.0, PARAMS.partnerDead);
                 }
@@ -97,7 +97,7 @@ public class RRAutoDrive3 extends LinearOpMode {
                 }
                 break;
             default:
-                toSpikeMark(21.0, -3.0,0, PARAMS.frontStage);
+                toSpikeMark(21.0, 0.0,0, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(28.0, PARAMS.partnerDead);
                 }
@@ -106,33 +106,6 @@ public class RRAutoDrive3 extends LinearOpMode {
                 }
                 break;
         }
-
-        //gets the position of the robot before dropping the pixel
-       /* drive.updatePoseEstimate();
-
-        boolean first = true;
-        TargetPose pose = distSys.getTargetPose(first);
-
-   long timeout = System.currentTimeMillis()+PARAMS.rangeTime;
-
-        while (pose.range > (pose.range-PARAMS.rangeValue) && System.currentTimeMillis() < timeout){
-            first = false;
-
-            double rangeError = (pose.range-PARAMS.rangeValue);
-
-            // Use the speed and turn "gains" to calculate how we want the robot to move.
-            double forward = Range.clip(-rangeError * PARAMS.gainValueForward, -0.3, 0.3);
-            double rotate = Range.clip(-pose.yaw * PARAMS.gainValueRotation, -0.25, 0.25);
-
-            telemetry.addData("Distance", pose.range);
-            telemetry.addData("Yaw", pose.yaw);
-            telemetry.update();
-
-            drv.setDriveVector(forward, 0, rotate);
-
-            sleep(100);
-
-        } */
 
         whiteClaw.PrepForPixel();
         whiteConveyor.moveViper();
@@ -150,10 +123,10 @@ public class RRAutoDrive3 extends LinearOpMode {
         double an;
 
         if(position){
-            an = -180;
+            an = 180;
         }
         else{
-            an = 90;
+            an = -90;
         }
 
         Action moveRb = drive.actionBuilder(drive.pose)
@@ -180,16 +153,16 @@ public class RRAutoDrive3 extends LinearOpMode {
         whiteClaw.RetractArm();
 
         Action moveBar = drive.actionBuilder(drive.pose)
-                .turnTo(Math.toRadians(-90))
-                .lineToY(40)
+                .turnTo(Math.toRadians(90))
+                .lineToY(-40)
                 .build();
         Actions.runBlocking(moveBar);
 
         if(partDead){
             Action backdrop = drive.actionBuilder(drive.pose)
                     .setReversed(true)
-                    .splineTo(new Vector2d(targetX, 60), Math.toRadians(90))
-                    .splineTo(new Vector2d(targetX, 86), Math.toRadians(90))
+                    .splineTo(new Vector2d(targetX, -60), Math.toRadians(-90))
+                    .splineTo(new Vector2d(targetX, -86), Math.toRadians(-90))
                     .build();
             Actions.runBlocking(backdrop);
         }
@@ -199,7 +172,7 @@ public class RRAutoDrive3 extends LinearOpMode {
 
             Action backdrop = drive.actionBuilder(drive.pose)
                     .setReversed(true)
-                    .splineTo(new Vector2d(targetX, 86), Math.toRadians(90))
+                    .splineTo(new Vector2d(targetX, -86), Math.toRadians(-90))
                     .build();
             Actions.runBlocking(backdrop);
         }
@@ -209,8 +182,7 @@ public class RRAutoDrive3 extends LinearOpMode {
     public void toBackPanel(double targetX){
 
         Action moveRb3 = drive.actionBuilder(drive.pose)
-                .strafeTo(new Vector2d(targetX,36))
+                .strafeTo(new Vector2d(targetX,-36))
                 .build();
         Actions.runBlocking(moveRb3);
-    }
-}
+    }}
