@@ -106,7 +106,6 @@ public class RRAutoDrive3 extends LinearOpMode {
                 }
                 break;
         }
-
         //gets the position of the robot before dropping the pixel
         //SensorApproach();
 
