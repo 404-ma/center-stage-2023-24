@@ -15,6 +15,8 @@ import org.firstinspires.ftc.teamcode.Helper.ClawMoves;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 
 
+
+@Disabled
 @Config
 @Autonomous(name = "RR Auto Drive 4 - Box", group = "RoadRunner")
 public class RRAutoDrive4 extends LinearOpMode {

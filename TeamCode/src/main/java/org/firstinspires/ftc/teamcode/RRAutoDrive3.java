@@ -97,7 +97,7 @@ public class RRAutoDrive3 extends LinearOpMode {
                 }
                 break;
             default:
-                toSpikeMark(21.0, -4.0,0, PARAMS.frontStage);
+                toSpikeMark(21.0, 3.2,0, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(28.0, PARAMS.partnerDead);
                 }
