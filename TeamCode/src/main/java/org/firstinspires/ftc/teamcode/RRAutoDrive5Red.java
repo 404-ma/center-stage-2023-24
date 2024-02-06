@@ -182,7 +182,7 @@ public class RRAutoDrive5Red extends LinearOpMode {
     public void toBackPanel(double targetX){
 
         Action moveRb3 = drive.actionBuilder(drive.pose)
-                .strafeTo(new Vector2d(targetX,-36))
+                .splineTo(new Vector2d(targetX,-36), Math.toRadians(-90))
                 .build();
         Actions.runBlocking(moveRb3);
     }}
