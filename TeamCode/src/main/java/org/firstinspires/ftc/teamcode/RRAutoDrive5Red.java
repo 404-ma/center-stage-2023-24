@@ -97,7 +97,7 @@ public class RRAutoDrive5Red extends LinearOpMode {
                 }
                 break;
             default:
-                toSpikeMark(21.0, 0.0,0, PARAMS.frontStage);
+                toSpikeMark(21.0, -3.2,0, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(28.0, PARAMS.partnerDead);
                 }
@@ -109,14 +109,13 @@ public class RRAutoDrive5Red extends LinearOpMode {
 
         whiteClaw.PrepForPixel(false);
         whiteConveyor.moveViper();
-        sleep(1100);
+        sleep(1800);
         whiteConveyor.stopViper();
         whiteConveyor.moveConvForward();
-        sleep(1000);
+        sleep(2000);
         whiteConveyor.stopConv();
         whiteConveyor.moveDownViper();
-        sleep(1100);
-
+        sleep(1800);
     }
     //to the spike mark
     public void toSpikeMark(double X, double Y, int ang, boolean position){
@@ -183,7 +182,7 @@ public class RRAutoDrive5Red extends LinearOpMode {
 
         Action moveRb3 = drive.actionBuilder(drive.pose)
                 .setReversed(true)
-                .splineTo(new Vector2d(targetX,-36), Math.toRadians(-90))
+                .splineTo(new Vector2d(targetX,-38.5), Math.toRadians(-90))
                 .build();
         Actions.runBlocking(moveRb3);
     }}
