@@ -6,11 +6,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helper.ClawMoves;
-import org.firstinspires.ftc.teamcode.Helper.Conveyor;
 import org.firstinspires.ftc.teamcode.Helper.DeferredActions;
 import org.firstinspires.ftc.teamcode.Helper.DeferredActions.DeferredActionType;
 import org.firstinspires.ftc.teamcode.Helper.DrivetrainV2;
@@ -33,33 +31,25 @@ public class DriveFirstMeet extends LinearOpMode {
         telemetry.addLine();
         telemetry.addData(">", "Press Start to Launch");
         telemetry.update();
+
         DcMotor viperMotor = hardwareMap.dcMotor.get("viperMotor");
         CRServo conveyor = hardwareMap.crservo.get("conveyor");
-
+        DcMotor craneMotor = hardwareMap.dcMotor.get("craneMotor");
+        gamePadInputV2 gpIn1 = new gamePadInputV2(gamepad1);
+        gamePadInputV2 gpIn2 = new gamePadInputV2(gamepad2);
+        DrivetrainV2 drvTrain = new DrivetrainV2(hardwareMap);
+        yclaw = new ClawMoves(hardwareMap);
 
         waitForStart();
         if (isStopRequested()) return;
         telemetry.clear();
 
-        gamePadInputV2 gpIn1 = new gamePadInputV2(gamepad1);
-        gamePadInputV2 gpIn2 = new gamePadInputV2(gamepad2);
-        DrivetrainV2 drvTrain = new DrivetrainV2(hardwareMap);
-        yclaw = new ClawMoves(hardwareMap);
-        Conveyor cyr = new Conveyor(hardwareMap);
-        update_telemetry(gpIn1, gpIn2, drvTrain);
-
         boolean suplex = false;
-        boolean clawOpen = false;
         double speedMultiplier = 1;
 
         while (opModeIsActive()) {
             ++tlm_MainLoopCount;
             update_telemetry(gpIn1, gpIn2, drvTrain);
-
-
-            // TODO: Add Driver Button for Breaking
-
-
 
             gamePadInputV2.GameplayInputType inpType = gpIn1.WaitForGamepadInput(30);
             switch (inpType) {
@@ -82,19 +72,17 @@ public class DriveFirstMeet extends LinearOpMode {
                 case BUTTON_L_BUMPER:
                     suplex = !suplex;
                     if (!suplex) {
-                        yclaw.PrepForPixel();
+                        yclaw.PrepForPixel(true);
                     } else {
                         yclaw.SuplexPixel();
                     }
                     break;
 
                 case BUTTON_R_BUMPER:
-                    clawOpen = !clawOpen;
-                    if (clawOpen) {
+                    if (yclaw.tlmGripPosition != PARAMS.gripOpenPos)
                         yclaw.openGrip();
-                    } else {
+                    else
                         yclaw.closeGrip();
-                    }
                     break;
 
                 case BUTTON_A:
@@ -115,8 +103,6 @@ public class DriveFirstMeet extends LinearOpMode {
 
                 case BUTTON_BACK:
                     setReversed = !setReversed;
-
-
                     break;
 
                 case JOYSTICK:
@@ -138,6 +124,7 @@ public class DriveFirstMeet extends LinearOpMode {
                     break;
                 case JOYSTICK:
                     viperMotor.setPower(gamepad2.right_stick_y * -0.5);
+                    craneMotor.setPower(gamepad2.left_stick_y * -0.8);
                     break;
             }
 
@@ -164,6 +151,11 @@ public class DriveFirstMeet extends LinearOpMode {
                 case CLAW_FLIP_DOWN:
                     yclaw.MoveGrip(PARAMS.gripOpenPos);
                     yclaw.MoveFlip(PARAMS.flipDownPos);
+                    break;
+
+                case CLAW_ARM_SUPLEX:
+                    yclaw.MoveArm(PARAMS.armUpPos);
+                    break;
             }
         }
     }
