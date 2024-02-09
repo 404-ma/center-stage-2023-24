@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
@@ -27,6 +28,7 @@ public class RRAutoDrive3 extends LinearOpMode {
      *  FTC Dashboard Parameters
      */
     public static class Params {
+        // TODO: Add a Version Number Parameter
         public double propSpikeMark = 2;    //  Which Spike Mark is the Prop Located on
         public boolean partnerDead = true;
         public boolean frontStage = false;
@@ -45,12 +47,12 @@ public class RRAutoDrive3 extends LinearOpMode {
     private ClawMoves whiteClaw;
     private Conveyor whiteConveyor;
     private DistanceSystem distSys;
-    private DrivetrainV2 drv;
 
     @Override
     public void runOpMode() {
         // Load Introduction and Wait for Start
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
+        // TODO: Add Version Number Display
         telemetry.addLine("RoadRunner Auto Drive 3");
         telemetry.addLine();
         telemetry.addData(">", "Press Start to Launch");
@@ -68,7 +70,6 @@ public class RRAutoDrive3 extends LinearOpMode {
         drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         whiteClaw = new ClawMoves(hardwareMap);
         whiteConveyor = new Conveyor(hardwareMap);
-        drv = new DrivetrainV2(hardwareMap);
         distSys = new DistanceSystem(hardwareMap);
 
         waitForStart();
@@ -136,7 +137,7 @@ public class RRAutoDrive3 extends LinearOpMode {
             double forward = Range.clip(-rangeError * PARAMS.gainValueForward, -0.3, 0.3);
             double rotate = Range.clip(-pose.yaw * PARAMS.gainValueRotation, -0.25, 0.25);
 
-            drv.setDriveVector(forward, 0, rotate);
+            drive.setDrivePowers(new PoseVelocity2d(new Vector2d(forward, 0), rotate));
             drive.updatePoseEstimate();
             sleep(30);
         }

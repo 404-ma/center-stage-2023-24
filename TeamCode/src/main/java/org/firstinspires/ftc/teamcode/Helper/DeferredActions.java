@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import static java.lang.System.currentTimeMillis;
 
-import com.qualcomm.robotcore.hardware.HardwareMap;
-
 public class DeferredActions {
 
     public enum DeferredActionType {
@@ -28,6 +26,8 @@ public class DeferredActions {
         }
     }
 
+
+    // TODO : Replace Pair with a Private Static Class for Deferred Action Events
     private static volatile List<Pair<Long, DeferredActionType>> deferredActions =
             new ArrayList<>();
 

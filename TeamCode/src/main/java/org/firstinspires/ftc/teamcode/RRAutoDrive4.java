@@ -45,7 +45,6 @@ public class RRAutoDrive4 extends LinearOpMode {
 
         // Right Spike Mark
         whiteClaw.AutonomousStart();
-        // TODO: Test Action Interface w/ Sequential and Parallel Actions
         Action moveTwo = drive.actionBuilder(drive.pose)
                 .splineTo( new Vector2d(18, 3), Math.toRadians(30))
                 .build();

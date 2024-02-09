@@ -17,12 +17,17 @@ import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2;
 import java.util.List;
 import java.util.Locale;
 
+
+// TODO: Lets Make a Group for Competition - Maybe Refactor to Different Name
 @TeleOp(name = "DriveFirstMeet", group = "Test")
 public class DriveFirstMeet extends LinearOpMode {
+    // TODO: Add @Config PARAMS values for all the speed multiplier Values
+    // TODO: Add a Version Number Parameter
+
     private int tlm_MainLoopCount = 0;
     private boolean setReversed = false;
-
     private ClawMoves yclaw;
+
     @Override
     public void runOpMode() {
         // Load Introduction and Wait for Start
@@ -32,6 +37,7 @@ public class DriveFirstMeet extends LinearOpMode {
         telemetry.addData(">", "Press Start to Launch");
         telemetry.update();
 
+        // TODO:  Control viperMotor and conveyor servo via helper class.
         DcMotor viperMotor = hardwareMap.dcMotor.get("viperMotor");
         CRServo conveyor = hardwareMap.crservo.get("conveyor");
         DcMotor craneMotor = hardwareMap.dcMotor.get("craneMotor");
@@ -51,6 +57,7 @@ public class DriveFirstMeet extends LinearOpMode {
             ++tlm_MainLoopCount;
             update_telemetry(gpIn1, gpIn2, drvTrain);
 
+            // TODO:  Add Function for Temporary Speed w/ Return to Previous Speed using Right Joystick Button
             gamePadInputV2.GameplayInputType inpType = gpIn1.WaitForGamepadInput(30);
             switch (inpType) {
                 case DPAD_UP:
@@ -114,6 +121,7 @@ public class DriveFirstMeet extends LinearOpMode {
 
             gamePadInputV2.GameplayInputType inpType2 = gpIn2.WaitForGamepadInput(30);
             switch (inpType2) {
+                // TODO: Is the Minimum Speed Really 0.75 - That make the Trigger range (0.75 - 1)
                 case LEFT_TRIGGER:
                     double power = Math.min(gamepad2.left_trigger, 0.75);
                     conveyor.setPower(power);
@@ -159,24 +167,21 @@ public class DriveFirstMeet extends LinearOpMode {
     }
 
     private void update_telemetry(gamePadInputV2 gpi1, gamePadInputV2 gpi2, DrivetrainV2 drv) {
-        // TODO:  Review Telemetry and Remove Unneeded Data.
-        telemetry.addLine().addData("Main Loop Cnt", tlm_MainLoopCount);
+        telemetry.addLine("Gamepad #1");
+        String inpTime1 = new java.text.SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS", Locale.US).format(gpi1.getTelemetry_InputLastTimestamp());
+        telemetry.addLine().addData("GP1 Time", inpTime1);
+        telemetry.addLine().addData("GP1 Cnt", gpi1.getTelemetry_InputCount());
+        telemetry.addLine().addData("GP1 Input", gpi1.getTelemetry_InputLastType().toString());
+        telemetry.addLine().addData("L Joy  X", "%6.3f", gamepad1.left_stick_x).addData("Y", "%6.3f", gamepad1.left_stick_y);
+        telemetry.addLine().addData("R Joy  X", "%6.3f", gamepad1.right_stick_x).addData("Y", "%6.3f", gamepad1.right_stick_y);
 
-        telemetry.addLine("Game-pad Input");
-        telemetry.addLine().addData("Input Ct", gpi2.getTelemetry_InputCount());
-        telemetry.addLine().addData("Inp Last", gpi2.getTelemetry_InputLastType().toString());
-        String inpTime = new java.text.SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS", Locale.US).format(gpi2.getTelemetry_InputLastTimestamp());
-        telemetry.addLine().addData("Inp Time", inpTime);
+        telemetry.addLine("Gamepad #2");
+        String inpTime2 = new java.text.SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS", Locale.US).format(gpi2.getTelemetry_InputLastTimestamp());
+        telemetry.addLine().addData("GP2 Time", inpTime2);
+        telemetry.addLine().addData("GP2 Cnt", gpi2.getTelemetry_InputCount());
+        telemetry.addLine().addData("GP2 Input", gpi2.getTelemetry_InputLastType().toString());
         telemetry.addLine().addData("L Joy  X", "%6.3f", gamepad2.left_stick_x).addData("Y", "%6.3f", gamepad2.left_stick_y);
         telemetry.addLine().addData("R Joy  X", "%6.3f", gamepad2.right_stick_x).addData("Y", "%6.3f", gamepad2.right_stick_y);
-        telemetry.addLine("Drive Train");
-        telemetry.addLine().addData("Pwr  L F", drv.getTelemetryLastPowerFrontLeft());
-        telemetry.addLine().addData("Pwr  L B", drv.getTelemetryLastPowerBackLeft());
-        telemetry.addLine().addData("Pwr  R F", drv.getTelemetryLastPowerFrontRight());
-        telemetry.addLine().addData("Pwr  R B", drv.getTelemetryLastPowerBackRight());
-        telemetry.addLine().addData("Brake Ct", drv.getTelemetryBrakeCount());
-        telemetry.addLine().addData("BTimeout", drv.getTelemetryBrakeTimeoutCount());
-
         telemetry.update();
     }
 }

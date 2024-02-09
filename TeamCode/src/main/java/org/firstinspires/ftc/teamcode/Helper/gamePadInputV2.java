@@ -45,6 +45,7 @@ import java.util.Date;
 
 public class gamePadInputV2 {
 
+    // TODO: Add Support for Joystick Buttons
     public enum GameplayInputType {
         NONE("No Input"),
         BUTTON_A("A Button"),
@@ -62,9 +63,6 @@ public class gamePadInputV2 {
         DPAD_RIGHT("DPad: RIGHT"),
         JOYSTICK("Joystick");
 
-
-
-
         private final String description;
 
         GameplayInputType(String description) {
@@ -81,7 +79,8 @@ public class gamePadInputV2 {
     //--------------------------------------------------------------
     //                        CONSTANTS
     // -------------------------------------------------------------
-    //  TO DO: Move these constants to a configuration file
+
+    // TODO: Move these constants to FTC @Config parameters
 
     // Timeouts Needed to Debounce Gamepad Inputs (Milliseconds)
     static final long WAIT_LOOP_SlEEP_INTERVAL = 20;  // This Interval should be Small
@@ -222,7 +221,6 @@ public class gamePadInputV2 {
         if (inputGPad.left_bumper) intype = GameplayInputType.BUTTON_L_BUMPER;
         if (inputGPad.right_bumper) intype = GameplayInputType.BUTTON_R_BUMPER;
         if (inputGPad.back) intype= GameplayInputType.BUTTON_BACK;
-
 
         // Check For Duplicate Button Input and Disregard Same Button During Lockout Period
         boolean lockedOut = ((LastButtonInputTime + BUTTON_LOCKOUT_INTERVAL) - System.currentTimeMillis()) > 0;

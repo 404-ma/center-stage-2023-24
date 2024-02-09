@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+// TODO:  Disable
+
 public class eversonxc extends LinearOpMode {
 
     @Override
