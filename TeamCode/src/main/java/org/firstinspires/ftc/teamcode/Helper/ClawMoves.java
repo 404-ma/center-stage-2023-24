@@ -121,6 +121,8 @@ public class ClawMoves {
 
     public void downFlip() { MoveFlip(PARAMS.flipDownPos); }
 
+    // TODO:  Test Height Levels
+
     public void moveLevel(int level) {
         double armPos;
         double flipPos;

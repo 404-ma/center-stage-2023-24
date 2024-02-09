@@ -12,6 +12,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
+// TODO: Can we Delete This Code
+
 @TeleOp
 public class errorgyro extends LinearOpMode {
     //balls :)

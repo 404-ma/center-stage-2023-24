@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2;
 
+// TODO:  Let's Refactor This to Servo Test & Use the FTC Dashboard parameters like Servo Name
+// TODO:  Make part of a Diagnostics Group
 @TeleOp
 public class ArmTest extends LinearOpMode {
 
