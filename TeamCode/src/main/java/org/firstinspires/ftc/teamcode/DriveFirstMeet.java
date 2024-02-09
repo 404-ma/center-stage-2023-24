@@ -19,7 +19,7 @@ import java.util.Locale;
 
 
 // TODO: Lets Make a Group for Competition - Maybe Refactor to Different Name
-@TeleOp(name = "DriveFirstMeet", group = "Test")
+@TeleOp(name = "DriveFirstMeet", group = "Competition!!")
 public class DriveFirstMeet extends LinearOpMode {
     // TODO: Add @Config PARAMS values for all the speed multiplier Values
     // TODO: Add a Version Number Parameter
@@ -35,6 +35,8 @@ public class DriveFirstMeet extends LinearOpMode {
         telemetry.addLine("TeleOp Drive Test");
         telemetry.addLine();
         telemetry.addData(">", "Press Start to Launch");
+        telemetry.update();
+        telemetry.addData("Version Number", "1:3");
         telemetry.update();
 
         // TODO:  Control viperMotor and conveyor servo via helper class.
@@ -52,6 +54,7 @@ public class DriveFirstMeet extends LinearOpMode {
 
         boolean suplex = false;
         double speedMultiplier = 1;
+        double lastSpeed = 1;
 
         while (opModeIsActive()) {
             ++tlm_MainLoopCount;
@@ -60,6 +63,16 @@ public class DriveFirstMeet extends LinearOpMode {
             // TODO:  Add Function for Temporary Speed w/ Return to Previous Speed using Right Joystick Button
             gamePadInputV2.GameplayInputType inpType = gpIn1.WaitForGamepadInput(30);
             switch (inpType) {
+                case RIGHT_STICK_BUTTON:
+                    if (speedMultiplier != 1) {
+                            lastSpeed = speedMultiplier;
+                            speedMultiplier = 1;
+                    } else if (lastSpeed != 1) {
+                        speedMultiplier = lastSpeed;
+                        lastSpeed = 1;
+                    }
+
+
                 case DPAD_UP:
                     yclaw.moveLevel(3);
                     break;

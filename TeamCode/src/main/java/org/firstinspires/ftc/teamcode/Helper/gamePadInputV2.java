@@ -61,7 +61,9 @@ public class gamePadInputV2 {
         DPAD_DOWN("DPad: DOWN"),
         DPAD_LEFT("DPad: LEFT"),
         DPAD_RIGHT("DPad: RIGHT"),
-        JOYSTICK("Joystick");
+        JOYSTICK("Joystick"),
+        LEFT_STICK_BUTTON("Left Joystick Button"),
+        RIGHT_STICK_BUTTON("Right Joystick Button");
 
         private final String description;
 
@@ -221,6 +223,8 @@ public class gamePadInputV2 {
         if (inputGPad.left_bumper) intype = GameplayInputType.BUTTON_L_BUMPER;
         if (inputGPad.right_bumper) intype = GameplayInputType.BUTTON_R_BUMPER;
         if (inputGPad.back) intype= GameplayInputType.BUTTON_BACK;
+        if (inputGPad.right_stick_button) intype = GameplayInputType.RIGHT_STICK_BUTTON;
+        if (inputGPad.left_stick_button) intype = GameplayInputType.LEFT_STICK_BUTTON;
 
         // Check For Duplicate Button Input and Disregard Same Button During Lockout Period
         boolean lockedOut = ((LastButtonInputTime + BUTTON_LOCKOUT_INTERVAL) - System.currentTimeMillis()) > 0;
