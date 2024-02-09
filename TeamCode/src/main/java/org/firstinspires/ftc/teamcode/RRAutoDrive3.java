@@ -121,7 +121,15 @@ public class RRAutoDrive3 extends LinearOpMode {
         whiteConveyor.moveDownViper();
         sleep(1800);
 
+        whiteClaw.SuplexPixel();
         secondHalf();
+
+        //pick up
+        //whiteClaw.PrepForPixel()
+       // whiteClaw.closeGrip();
+        //whiteClaw.SuplexPixel();
+        //whiteClaw.openGrip();
+        //whiteClaw.RetractArm()
 
     }
 
@@ -215,8 +223,7 @@ public class RRAutoDrive3 extends LinearOpMode {
         Action moveSecHalf = drive.actionBuilder(drive.pose)
                 .splineTo(new Vector2d(28,-64), Math.toRadians(90))
                 .build();
-
-        Actions.runBlocking(moveSecHalf);
+        Actions.runBlocking(new ParallelAction(moveSecHalf, whiteClaw.RetractArm()));
         }
 
      public void pickUp(){
