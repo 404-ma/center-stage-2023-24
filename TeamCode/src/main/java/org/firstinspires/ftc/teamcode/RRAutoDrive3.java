@@ -211,7 +211,6 @@ public class RRAutoDrive3 extends LinearOpMode {
         Actions.runBlocking(moveRb3);
     }
 
-
     public void secondHalf(){
         Action moveSecHalf = drive.actionBuilder(drive.pose)
                 .splineTo(new Vector2d(28,-64), Math.toRadians(90))
