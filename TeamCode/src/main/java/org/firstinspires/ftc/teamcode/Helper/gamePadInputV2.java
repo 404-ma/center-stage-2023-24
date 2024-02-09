@@ -79,7 +79,8 @@ public class gamePadInputV2 {
     //--------------------------------------------------------------
     //                        CONSTANTS
     // -------------------------------------------------------------
-    //  TO DO: Move these constants to a configuration file
+
+    // TODO: Move these constants to FTC @Config parameters
 
     // Timeouts Needed to Debounce Gamepad Inputs (Milliseconds)
     static final long WAIT_LOOP_SlEEP_INTERVAL = 20;  // This Interval should be Small
