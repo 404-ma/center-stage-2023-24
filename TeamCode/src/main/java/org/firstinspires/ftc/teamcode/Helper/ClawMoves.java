@@ -117,10 +117,6 @@ public class ClawMoves {
         MoveGrip(PARAMS.gripOpenPos);
     }
 
-    public void suplexFlip() { MoveFlip(PARAMS.flipSuplexPos); }
-
-    public void downFlip() { MoveFlip(PARAMS.flipDownPos); }
-
     // TODO:  Test Height Levels
 
     public void moveLevel(int level) {
@@ -149,6 +145,7 @@ public class ClawMoves {
             MoveArm(PARAMS.armUpPos);
         }
         DeferredActions.CreateDeferredAction(180, DeferredActionType.CLAW_FLIP_SUPLEX);
+        // TODO:  Test Claw Motion - 600 ms is too fast, we are throwing the pixel
         // Wait for Pixel over Bin
         DeferredActions.CreateDeferredAction(600, DeferredActionType.CLAW_OPEN_GRIP);
     }
