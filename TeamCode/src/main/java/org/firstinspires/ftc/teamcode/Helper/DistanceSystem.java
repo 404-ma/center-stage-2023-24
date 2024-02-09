@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.helper.TargetPose;
 
+import java.util.Date;
+
 public class DistanceSystem {
     public static DistanceSensor distanceR;
     public static DistanceSensor distanceL;
@@ -17,6 +19,14 @@ public class DistanceSystem {
     private double filterDistLEstimate = 0;
     private double filterDistREstimate = 0;
     private double filterRotationEstimate = 0;
+
+    // ----------------------------- Telemetry Data
+    public Date tlm_LastCheckedTimestamp = new Date();
+    public int tlm_CheckCount = 0;
+    public double tlm_LeftDistance = 0;  // in Inches
+    public double tlm_RightDistance = 0;  // in Inches
+    public double tlm_CurrentRotation = 0;  // in Inches
+    public TargetPose tlm_LastPose = new TargetPose(0,0,0);
 
     // ----------------------------- Constants
     private static final double MAXIMUM_SENSOR_RANGE = 16; // inches - Sensor Limit
@@ -41,23 +51,28 @@ public class DistanceSystem {
         }
 
     public TargetPose getTargetPose(boolean reset) {
-        double distLIn = Math.min(distanceL.getDistance(DistanceUnit.INCH), MAXIMUM_SENSOR_RANGE);
-        double distRIn =  Math.min(distanceR.getDistance(DistanceUnit.INCH), MAXIMUM_SENSOR_RANGE);
+        // Capture Telemetry
+        tlm_LastCheckedTimestamp = new Date();
+        ++tlm_CheckCount;
+        tlm_LeftDistance = Math.min(distanceL.getDistance(DistanceUnit.INCH), MAXIMUM_SENSOR_RANGE);
+        tlm_RightDistance = Math.min(distanceR.getDistance(DistanceUnit.INCH), MAXIMUM_SENSOR_RANGE);
 
         // Ignore Sensor Error Readings (0) If Other Sensor has a Good Reading
-        if ((distLIn <= 0) && (distRIn > 0))
-            distLIn = distRIn;
-        if ((distRIn <= 0) && (distLIn > 0))
-            distRIn = distLIn;
+        if ((tlm_LeftDistance <= 0) && (tlm_RightDistance > 0))
+            tlm_LeftDistance = tlm_RightDistance;
+        if ((tlm_RightDistance <= 0) && (tlm_LeftDistance > 0))
+            tlm_RightDistance = tlm_LeftDistance;
 
         // Compute Kalman Filter on Distance Sensors
         if (reset) {
-            filterDistLEstimate = distLIn;
-            filterDistREstimate = distRIn;
+            filterDistLEstimate = tlm_LeftDistance;
+            filterDistREstimate = tlm_RightDistance;
         } else {
             // Ignore Sensor Reading Errors (0)
-            filterDistLEstimate = (KALMAN_DISTANCE_FILTER * filterDistLEstimate) + ((1 - KALMAN_DISTANCE_FILTER) * distLIn);
-            filterDistREstimate = (KALMAN_DISTANCE_FILTER * filterDistREstimate) + ((1 - KALMAN_DISTANCE_FILTER) * distRIn);
+            filterDistLEstimate = (KALMAN_DISTANCE_FILTER * filterDistLEstimate)
+                                    + ((1 - KALMAN_DISTANCE_FILTER) * tlm_LeftDistance);
+            filterDistREstimate = (KALMAN_DISTANCE_FILTER * filterDistREstimate)
+                                    + ((1 - KALMAN_DISTANCE_FILTER) * tlm_RightDistance);
         }
 
         double avgdist = (filterDistLEstimate + filterDistREstimate) / 2;
@@ -66,19 +81,20 @@ public class DistanceSystem {
         // Check If Within Sensor Range Limits for Rotation
         if (avgdist <= MAXIMUM_ROTATION_RANGE) {
             // Calculate in Degrees
-            double CurrRotation = Math.toDegrees(Math.atan( (filterDistREstimate - filterDistLEstimate) / SENSOR_SEPARATION));
-            CurrRotation = Range.clip(CurrRotation, -MAXIMUM_ROTATION_ANGLE, MAXIMUM_ROTATION_ANGLE);
+            tlm_CurrentRotation = Math.toDegrees(Math.atan( (filterDistREstimate - filterDistLEstimate) / SENSOR_SEPARATION));
+            tlm_CurrentRotation = Range.clip(tlm_CurrentRotation, -MAXIMUM_ROTATION_ANGLE, MAXIMUM_ROTATION_ANGLE);
 
             // Compute Kalman Filter on Rotation
             if (reset)
-                filterRotationEstimate = CurrRotation;
+                filterRotationEstimate = tlm_CurrentRotation;
             else
-                filterRotationEstimate = (KALMAN_ROTATION_FILTER * filterRotationEstimate) + ((1 - KALMAN_ROTATION_FILTER) * CurrRotation);
+                filterRotationEstimate = (KALMAN_ROTATION_FILTER * filterRotationEstimate) + ((1 - KALMAN_ROTATION_FILTER) * tlm_CurrentRotation);
 
             pose.yaw = filterRotationEstimate;
         }
 
-       return pose;
+        tlm_LastPose = pose;
+        return pose;
     }
 
 
@@ -90,8 +106,4 @@ public class DistanceSystem {
         return avgdist;
     }
 }
-            
 
-//distance system object
-//vall that object
-//range
