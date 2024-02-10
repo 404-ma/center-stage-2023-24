@@ -17,13 +17,12 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helper.ClawMoves;
 import org.firstinspires.ftc.teamcode.Helper.Conveyor;
 import org.firstinspires.ftc.teamcode.Helper.DistanceSystem;
-import org.firstinspires.ftc.teamcode.Helper.DrivetrainV2;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.helper.TargetPose;
 
 @Config
 @Autonomous (name = "RR Auto Drive Blue", group = "RoadRunner")
-public class RRAutoDrive3 extends LinearOpMode {
+public class Blue extends LinearOpMode {
     /*
      *  FTC Dashboard Parameters
      */
@@ -38,6 +37,7 @@ public class RRAutoDrive3 extends LinearOpMode {
         public double gainValueForward = 0.1;
         public double rangeValue = 2;
         public double gainValueRotation = 0.03;
+        public double angleAtEnd = -90;
 
     }
 
@@ -120,6 +120,30 @@ public class RRAutoDrive3 extends LinearOpMode {
         whiteConveyor.stopConv();
         whiteConveyor.moveDownViper();
         sleep(1800);
+
+        whiteClaw.SuplexPixel();
+        secondHalf(PARAMS.angleAtEnd);
+
+        //pick up
+        whiteClaw.PrepForPixel(true);
+        whiteClaw.closeGrip();
+        whiteClaw.SuplexPixel();
+        whiteClaw.openGrip();
+        whiteClaw.RetractArm();
+
+        backSecondHalf();
+
+        whiteClaw.PrepForPixel(false);
+        whiteConveyor.moveViper();
+        sleep(1800);
+        whiteConveyor.stopViper();
+        whiteConveyor.moveConvForward();
+        sleep(2000);
+        whiteConveyor.stopConv();
+        whiteConveyor.moveDownViper();
+        sleep(1800);
+
+
 
     }
 
@@ -207,5 +231,27 @@ public class RRAutoDrive3 extends LinearOpMode {
                 .splineTo(new Vector2d(targetX,38.5), Math.toRadians(90))
                 .build();
         Actions.runBlocking(moveRb3);
+    }
+
+    public void secondHalf(double ang){
+        Action moveSecHalf = drive.actionBuilder(drive.pose)
+                //ending position y: -60
+                //start off at 28, 38.5
+                .splineTo(new Vector2d(9,12), Math.toRadians(90))
+                .splineTo(new Vector2d(9, -36), Math.toRadians(90))
+                .splineTo(new Vector2d(28, -60), Math.toRadians(90))
+                .build();
+        Actions.runBlocking(new ParallelAction(moveSecHalf, whiteClaw.RetractArm()));
+        }
+
+    public void backSecondHalf(){
+        Action moveBackSecHalf = drive.actionBuilder(drive.pose)
+                .setReversed(true)
+                .splineTo(new Vector2d(9,-36), Math.toRadians(90))
+                .splineTo(new Vector2d(9,12), Math.toRadians(90))
+                .splineTo(new Vector2d(28,38.5), Math.toRadians(90)) //changes depending on the april tag & where the robot stars(front/back stage)
+                .build();
+        Actions.runBlocking(new ParallelAction(moveBackSecHalf, whiteClaw.RetractArm()));
+
     }
 }
