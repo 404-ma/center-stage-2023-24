@@ -112,13 +112,12 @@ public class Blue extends LinearOpMode {
 
 
         whiteClaw.PrepForPixel(false);
-        whiteConveyor.moveViper();
-        sleep(1800);
-        whiteConveyor.stopViper();
+
+        whiteConveyor.moveViperToPosition(1200);
         whiteConveyor.moveConvForward();
         sleep(2000);
         whiteConveyor.stopConv();
-        whiteConveyor.moveDownViper();
+        whiteConveyor.moveViperToPosition(0);
         sleep(1800);
 
         whiteClaw.SuplexPixel();
@@ -134,13 +133,11 @@ public class Blue extends LinearOpMode {
         backSecondHalf();
 
         whiteClaw.PrepForPixel(false);
-        whiteConveyor.moveViper();
-        sleep(1800);
-        whiteConveyor.stopViper();
+        whiteConveyor.moveViperToPosition(1200);
         whiteConveyor.moveConvForward();
         sleep(2000);
         whiteConveyor.stopConv();
-        whiteConveyor.moveDownViper();
+        whiteConveyor.moveViperToPosition(0);
         sleep(1800);
 
 
