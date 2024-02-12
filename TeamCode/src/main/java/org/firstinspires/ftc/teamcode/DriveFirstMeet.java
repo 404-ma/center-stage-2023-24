@@ -41,7 +41,7 @@ public class DriveFirstMeet extends LinearOpMode {
 
         // TODO:  Control viperMotor and conveyor servo via helper class.
         DcMotor viperMotor = hardwareMap.dcMotor.get("viperMotor");
-        CRServo conveyor = hardwareMap.crservo.get("conveyor");
+        CRServo conveyor = hardwareMap.crservo.get("ConveyorServo");
         DcMotor craneMotor = hardwareMap.dcMotor.get("craneMotor");
         gamePadInputV2 gpIn1 = new gamePadInputV2(gamepad1);
         gamePadInputV2 gpIn2 = new gamePadInputV2(gamepad2);
