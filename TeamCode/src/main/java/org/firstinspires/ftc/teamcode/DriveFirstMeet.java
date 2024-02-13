@@ -24,7 +24,6 @@ public class DriveFirstMeet extends LinearOpMode {
     // TODO: Add @Config PARAMS values for all the speed multiplier Values
     // TODO: Add a Version Number Parameter
 
-    private int tlm_MainLoopCount = 0;
     private boolean setReversed = false;
     private ClawMoves yclaw;
 
@@ -57,7 +56,6 @@ public class DriveFirstMeet extends LinearOpMode {
         double lastSpeed = 1;
 
         while (opModeIsActive()) {
-            ++tlm_MainLoopCount;
             update_telemetry(gpIn1, gpIn2, drvTrain);
 
             // TODO:  Add Function for Temporary Speed w/ Return to Previous Speed using Right Joystick Button
@@ -65,13 +63,13 @@ public class DriveFirstMeet extends LinearOpMode {
             switch (inpType) {
                 case RIGHT_STICK_BUTTON:
                     if (speedMultiplier != 1) {
-                            lastSpeed = speedMultiplier;
-                            speedMultiplier = 1;
+                        lastSpeed = speedMultiplier;
+                        speedMultiplier = 1;
                     } else if (lastSpeed != 1) {
                         speedMultiplier = lastSpeed;
                         lastSpeed = 1;
                     }
-
+                    break;
 
                 case DPAD_UP:
                     yclaw.moveLevel(3);
