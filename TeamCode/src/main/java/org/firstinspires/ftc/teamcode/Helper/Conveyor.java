@@ -54,6 +54,7 @@ public class Conveyor {
     public void moveViperToPosition(int position) {
         int absolutePosition = viperMotorStart + Range.clip(position, 0, PARAMS.viperMotorMaxPositionRelative);
         viperMotor.setTargetPosition(absolutePosition);
+        viperMotor.setPower(0.5);
         viperMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
