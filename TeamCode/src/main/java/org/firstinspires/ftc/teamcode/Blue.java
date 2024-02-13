@@ -53,11 +53,12 @@ public class Blue extends LinearOpMode {
         // Load Introduction and Wait for Start
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
         // TODO: Add Version Number Display
-        telemetry.addLine("RoadRunner Auto Drive 3");
+        telemetry.addLine("RoadRunner Auto Drive BLUE");
         telemetry.addLine();
         telemetry.addData(">", "Press Start to Launch");
         telemetry.update();
 
+        //TODO: Replace References to Servo with ClawMoves
         Servo arm = hardwareMap.servo.get("ArmServo");
         arm.setDirection(Servo.Direction.FORWARD);
         Servo flip = hardwareMap.servo.get("FlipServo");
@@ -75,6 +76,8 @@ public class Blue extends LinearOpMode {
         waitForStart();
         if (isStopRequested()) return;
         telemetry.clear();
+
+        //TODO:  Try Moving Claw Initialization Before Start
         whiteClaw.AutonomousStart();
 
 
@@ -112,13 +115,13 @@ public class Blue extends LinearOpMode {
 
 
         whiteClaw.PrepForPixel(false);
-        whiteConveyor.moveViper();
-        sleep(1800);
-        whiteConveyor.stopViper();
+
+        // TODO: Test Viper Motor Positom
+        whiteConveyor.moveViperToPosition(1200);
         whiteConveyor.moveConvForward();
         sleep(2000);
         whiteConveyor.stopConv();
-        whiteConveyor.moveDownViper();
+        whiteConveyor.moveViperToPosition(0);
         sleep(1800);
 
         whiteClaw.SuplexPixel();
@@ -134,13 +137,11 @@ public class Blue extends LinearOpMode {
         backSecondHalf();
 
         whiteClaw.PrepForPixel(false);
-        whiteConveyor.moveViper();
-        sleep(1800);
-        whiteConveyor.stopViper();
+        whiteConveyor.moveViperToPosition(1200);
         whiteConveyor.moveConvForward();
         sleep(2000);
         whiteConveyor.stopConv();
-        whiteConveyor.moveDownViper();
+        whiteConveyor.moveViperToPosition(0);
         sleep(1800);
 
 

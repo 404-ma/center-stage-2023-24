@@ -4,8 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.ftc.Encoder;
-import com.acmerobotics.roadrunner.ftc.OverflowEncoder;
-import com.acmerobotics.roadrunner.ftc.RawEncoder;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -34,7 +32,8 @@ public class Conveyor {
     public Conveyor(@NonNull HardwareMap hdwMap) {
         viperMotor = hdwMap.get(DcMotorEx.class, "viperMotor");
         viperMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        conv = hdwMap.crservo.get("conveyor");
+        // TODO: Add Motor Encoder Reset on Initialize
+        conv = hdwMap.crservo.get("ConveyorServo");
         viperMotorStart = viperMotor.getCurrentPosition();
     }
 
@@ -47,11 +46,11 @@ public class Conveyor {
     }
 
     public void stopConv() {
-
         conv.setPower(0);
     }
 
     public void moveViperToPosition(int position) {
+        // TODO:  Fix code for DC Motor Power
         int absolutePosition = viperMotorStart + Range.clip(position, 0, PARAMS.viperMotorMaxPositionRelative);
         viperMotor.setTargetPosition(absolutePosition);
         viperMotor.setPower(0.5);
@@ -59,6 +58,7 @@ public class Conveyor {
     }
 
     public void moveViperWithPower(int power){
+        // TODO:  Add Limits for Power based on Motor Position to prevent damage to equipment
         int viperPosition = viperMotor.getCurrentPosition();
         if ((viperPosition <= viperMotorStart) | (viperPosition >= viperMotorStart +PARAMS.viperMotorMaxPositionRelative))
             viperMotor.setPower(0);

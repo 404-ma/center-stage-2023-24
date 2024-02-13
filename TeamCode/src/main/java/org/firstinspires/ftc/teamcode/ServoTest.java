@@ -17,6 +17,8 @@ public class ServoTest extends LinearOpMode {
         public String servoName = "FlipServo";
         public double servoForward = 1;
         public double servoStartPos = 0.532;
+        public double servoPresetPosX = 0.532;
+        public double ServoPresetPosB = 0.532;
     }
 
     public static Params PARAMS = new Params();
@@ -63,7 +65,13 @@ public class ServoTest extends LinearOpMode {
                     break;
 
                 case BUTTON_X:
-                    newPosition = 0;
+                    newPosition = PARAMS.servoPresetPosX;
+                    servo.setPosition(newPosition);
+                    break;
+
+                case BUTTON_B:
+                    newPosition = PARAMS.ServoPresetPosB;
+                    servo.setPosition(newPosition);
                     break;
 
                 case DPAD_UP:
@@ -113,9 +121,11 @@ public class ServoTest extends LinearOpMode {
 
     private void update_telemetry() {
         telemetry.addLine("Servo Test");
-        telemetry.addLine("Use Dpad Up/Down for +++/--- Position");
-        telemetry.addLine("Use Dpad Left/Right  +/- Position");
-        telemetry.addLine("Use Left Bumper to Change direction/n");
+        telemetry.addLine("Use Dpad to Set Position");
+        telemetry.addLine("  Up/Down    +/- 0.1");
+        telemetry.addLine("  Left/Right +/- 0.005");
+        telemetry.addLine("Button A --> GoTo New Position");
+        telemetry.addLine("Left Bumper --> Change Direction/n");
         telemetry.addLine().addData("Name     ", PARAMS.servoName );
         telemetry.addLine().addData("Direction", (tlmServoForward ? "Forward" : "Reverse") );
         telemetry.addLine().addData("Curr Pos ", tlmServoPosition );
