@@ -49,11 +49,13 @@ public class Red extends LinearOpMode {
     public void runOpMode() {
         // Load Introduction and Wait for Start
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
-        telemetry.addLine("RoadRunner Auto Drive 3");
+        // TODO: Add Version Number Display
+        telemetry.addLine("RoadRunner Auto Drive RED");
         telemetry.addLine();
         telemetry.addData(">", "Press Start to Launch");
         telemetry.update();
 
+        //TODO: Replace References to Servo with ClawMoves
         Servo arm = hardwareMap.servo.get("ArmServo");
         arm.setDirection(Servo.Direction.FORWARD);
         Servo flip = hardwareMap.servo.get("FlipServo");
@@ -72,6 +74,8 @@ public class Red extends LinearOpMode {
         waitForStart();
         if (isStopRequested()) return;
         telemetry.clear();
+
+        //TODO:  Try Moving Claw Initialization Before Start
         whiteClaw.AutonomousStart();
 
 
@@ -106,6 +110,7 @@ public class Red extends LinearOpMode {
         }
 
         whiteClaw.PrepForPixel(false);
+        // TODO: Test Viper Motor Positom
         whiteConveyor.moveViperToPosition(1200);
         whiteConveyor.moveConvForward();
         sleep(2000);
@@ -113,6 +118,7 @@ public class Red extends LinearOpMode {
         whiteConveyor.moveViperToPosition(0);
         sleep(1800);
     }
+
     //to the spike mark
     public void toSpikeMark(double X, double Y, int ang, boolean position){
         double an;
@@ -181,4 +187,5 @@ public class Red extends LinearOpMode {
                 .splineTo(new Vector2d(targetX,-38.5), Math.toRadians(-90))
                 .build();
         Actions.runBlocking(moveRb3);
-    }}
+    }
+}

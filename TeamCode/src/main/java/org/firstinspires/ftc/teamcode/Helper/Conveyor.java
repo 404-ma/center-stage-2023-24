@@ -32,6 +32,7 @@ public class Conveyor {
     public Conveyor(@NonNull HardwareMap hdwMap) {
         viperMotor = hdwMap.get(DcMotorEx.class, "viperMotor");
         viperMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        // TODO: Add Motor Encoder Reset on Initialize
         conv = hdwMap.crservo.get("ConveyorServo");
         viperMotorStart = viperMotor.getCurrentPosition();
     }
@@ -45,17 +46,18 @@ public class Conveyor {
     }
 
     public void stopConv() {
-
         conv.setPower(0);
     }
 
     public void moveViperToPosition(int position) {
+        // TODO:  Fix code for DC Motor Power
         int absolutePosition = viperMotorStart + Range.clip(position, 0, PARAMS.viperMotorMaxPositionRelative);
         viperMotor.setTargetPosition(absolutePosition);
         viperMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void moveViperWithPower(int power){
+        // TODO:  Add Limits for Power based on Motor Position to prevent damage to equipment
         int viperPosition = viperMotor.getCurrentPosition();
         if ((viperPosition <= viperMotorStart) | (viperPosition >= viperMotorStart +PARAMS.viperMotorMaxPositionRelative))
             viperMotor.setPower(0);
