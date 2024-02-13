@@ -27,7 +27,6 @@ public class Blue extends LinearOpMode {
      *  FTC Dashboard Parameters
      */
     public static class Params {
-        // TODO: Add a Version Number Parameter
         public double propSpikeMark = 2;    //  Which Spike Mark is the Prop Located on
         public boolean partnerDead = true;
         public boolean frontStage = false;
@@ -38,6 +37,7 @@ public class Blue extends LinearOpMode {
         public double rangeValue = 2;
         public double gainValueRotation = 0.03;
         public double angleAtEnd = -90;
+        public String versionNum = "3.1";
 
     }
 
@@ -52,9 +52,9 @@ public class Blue extends LinearOpMode {
     public void runOpMode() {
         // Load Introduction and Wait for Start
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
-        // TODO: Add Version Number Display
-        telemetry.addLine("RoadRunner Auto Drive 3");
+        telemetry.addLine("AutoDrive Blue: Version");
         telemetry.addLine();
+        telemetry.addLine().addData("Version", PARAMS.versionNum);
         telemetry.addData(">", "Press Start to Launch");
         telemetry.update();
 
@@ -70,12 +70,13 @@ public class Blue extends LinearOpMode {
         drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         whiteClaw = new ClawMoves(hardwareMap);
         whiteConveyor = new Conveyor(hardwareMap);
+        whiteClaw.AutonomousStart();
+
         distSys = new DistanceSystem(hardwareMap);
 
         waitForStart();
         if (isStopRequested()) return;
         telemetry.clear();
-        whiteClaw.AutonomousStart();
 
 
         switch((int) PARAMS.propSpikeMark){
@@ -110,7 +111,6 @@ public class Blue extends LinearOpMode {
         //gets the position of the robot before dropping the pixel
         //SensorApproach();
 
-
         whiteClaw.PrepForPixel(false);
         whiteConveyor.moveViper();
         sleep(1800);
@@ -142,9 +142,6 @@ public class Blue extends LinearOpMode {
         whiteConveyor.stopConv();
         whiteConveyor.moveDownViper();
         sleep(1800);
-
-
-
     }
 
     private void SensorApproach() {
