@@ -26,34 +26,41 @@ public class DeferredActions {
         }
     }
 
+    private static class DeferredActionEvent {
+        public long triggerTime;
+        public DeferredActionType action;
 
-    // TODO : Replace Pair with a Private Static Class for Deferred Action Events
-    private static volatile List<Pair<Long, DeferredActionType>> deferredActions =
-            new ArrayList<>();
+        public DeferredActionEvent(long triggerTime, DeferredActionType action) {
+            this.triggerTime = triggerTime;
+            this.action = action;
+        }
+    }
+
+    private static volatile List<DeferredActionEvent> deferredActions = new ArrayList<>();
 
 
     // Add Deferred Action
     public static void CreateDeferredAction(long deltaMS, DeferredActionType event) {
         long triggerTime = currentTimeMillis() + deltaMS;
-        deferredActions.add(new Pair<>(triggerTime, event));
+        deferredActions.add(new DeferredActionEvent(triggerTime, event));
     }
 
     // Check for Deferred Actions that are Ready to be Processed;
     public static List<DeferredActionType> GetReadyActions() {
-        List<DeferredActionType>  readyActions = new ArrayList<>();
-        List<Pair<Long, DeferredActionType>> removals = new ArrayList<>();
+        List<DeferredActionType> readyActions = new ArrayList<>();
+        List<DeferredActionEvent> removals = new ArrayList<>();
 
         // Build List of Actions Ready to Execute
-        for (Pair act : deferredActions) {
-            if (currentTimeMillis() >= (long) act.first) {
+        for (DeferredActionEvent act : deferredActions) {
+            if (currentTimeMillis() >= (long) act.triggerTime) {
                 // TODO: If action is ready to be triggered, process action and remove from queue
-                readyActions.add((DeferredActionType) act.second);
+                readyActions.add((DeferredActionType) act.action);
                 removals.add(act);
             }
         }
 
         // Remove Ready Actions from Deferred list
-        for (Pair act : removals) { deferredActions.remove(act); }
+        for (DeferredActionEvent act : removals) { deferredActions.remove(act); }
 
         return (readyActions);
     }
