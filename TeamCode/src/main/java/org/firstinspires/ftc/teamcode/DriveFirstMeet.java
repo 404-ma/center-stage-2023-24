@@ -196,3 +196,5 @@ public class DriveFirstMeet extends LinearOpMode {
         telemetry.update();
     }
 }
+
+//position 0.6 to 0.3 --> press of bumper

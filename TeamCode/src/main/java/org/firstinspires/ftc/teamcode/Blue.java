@@ -27,7 +27,6 @@ public class Blue extends LinearOpMode {
      *  FTC Dashboard Parameters
      */
     public static class Params {
-        // TODO: Add a Version Number Parameter
         public double propSpikeMark = 2;    //  Which Spike Mark is the Prop Located on
         public boolean partnerDead = true;
         public boolean frontStage = false;
@@ -53,21 +52,12 @@ public class Blue extends LinearOpMode {
     public void runOpMode() {
         // Load Introduction and Wait for Start
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
-        // TODO: Add Version Number Display
         telemetry.addLine("RoadRunner Auto Drive BLUE");
         telemetry.addLine();
         telemetry.addLine().addData("Version", PARAMS.versionNum);
         telemetry.addLine();
         telemetry.addData(">", "Press Start to Launch");
         telemetry.update();
-
-        //TODO: Replace References to Servo with ClawMoves
-        Servo arm = hardwareMap.servo.get("ArmServo");
-        arm.setDirection(Servo.Direction.FORWARD);
-        Servo flip = hardwareMap.servo.get("FlipServo");
-        flip.setDirection(Servo.Direction.FORWARD);
-        Servo grip = hardwareMap.servo.get("ClawServo");
-        grip.setDirection(Servo.Direction.FORWARD);
 
         dashboard = FtcDashboard.getInstance();
         dashboard.clearTelemetry();
@@ -118,7 +108,6 @@ public class Blue extends LinearOpMode {
 
         whiteClaw.PrepForPixel(false);
 
-        // TODO: Test Viper Motor Positom
         whiteConveyor.moveViperToPosition(1400);
         whiteConveyor.moveConvForward();
         sleep(2000);
@@ -251,6 +240,5 @@ public class Blue extends LinearOpMode {
                 .splineTo(new Vector2d(28,38.5), Math.toRadians(90)) //changes depending on the april tag & where the robot stars(front/back stage)
                 .build();
         Actions.runBlocking(new ParallelAction(moveBackSecHalf, whiteClaw.RetractArm()));
-
     }
 }
