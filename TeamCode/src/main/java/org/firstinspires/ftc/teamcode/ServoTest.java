@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2.GameplayInputType;
 @TeleOp(name="Servo Test", group ="Test")
 public class ServoTest extends LinearOpMode {
     public static class Params {
-        public String servoName = "FlipServo";
+        public String servoName = "DroneServo";
         public double servoForward = 1;
         public double servoStartPos = 0.532;
         public double servoPresetPosX = 0.532;
