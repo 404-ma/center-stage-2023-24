@@ -32,7 +32,7 @@ public class Conveyor {
     public Conveyor(@NonNull HardwareMap hdwMap) {
         viperMotor = hdwMap.get(DcMotorEx.class, "viperMotor");
         viperMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        // TODO: Add Motor Encoder Reset on Initialize
+        viperMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         conv = hdwMap.crservo.get("ConveyorServo");
         viperMotorStart = viperMotor.getCurrentPosition();
     }
@@ -53,20 +53,42 @@ public class Conveyor {
         // TODO:  Fix code for DC Motor Power
         int absolutePosition = viperMotorStart + Range.clip(position, 0, PARAMS.viperMotorMaxPositionRelative);
         viperMotor.setTargetPosition(absolutePosition);
-        viperMotor.setPower(0.5);
+        viperMotor.setPower(PARAMS.viperSpeed);
         viperMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
-    public void moveViperWithPower(int power){
+    public void moveViperWithPower(double power, boolean override) {
         // TODO:  Add Limits for Power based on Motor Position to prevent damage to equipment
-        int viperPosition = viperMotor.getCurrentPosition();
-        if ((viperPosition <= viperMotorStart) | (viperPosition >= viperMotorStart +PARAMS.viperMotorMaxPositionRelative))
-            viperMotor.setPower(0);
-        else {
-            viperMotor.setPower( Range.clip(power,-1,1));
+
+        viperMotor.getMode();
+        viperMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        if (!override) {
+            int minLimit = 0;
+            int maxLimit = PARAMS.viperMotorMaxPositionRelative;
+            int viperPosition = viperMotor.getCurrentPosition();
+
+            if (power > 0) {
+                if (viperPosition >= PARAMS.viperMotorMaxPositionRelative)
+                    power = 0;
+                else if (viperPosition >= (PARAMS.viperMotorMaxPositionRelative * 0.95))
+                    power = Math.min(power, 0.4);
+
+            } else {
+                if (viperPosition <= 0)
+                    power = 0;
+                else if (viperPosition <= (PARAMS.viperMotorMaxPositionRelative * 0.05))
+                    power = Math.max(power, -0.4);
+            }
+
+
+
+
+
+                //30 inches - 3,000 tpi
+                viperMotor.setPower(Range.clip(power, -1, 1));
+            }
+
+
         }
     }
 
-
-
-}
