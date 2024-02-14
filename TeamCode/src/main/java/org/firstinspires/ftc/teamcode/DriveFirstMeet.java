@@ -61,7 +61,7 @@ public class DriveFirstMeet extends LinearOpMode {
             // TODO:  Add Function for Temporary Speed w/ Return to Previous Speed using Right Joystick Button
             gamePadInputV2.GameplayInputType inpType = gpIn1.WaitForGamepadInput(30);
             switch (inpType) {
-                case RIGHT_STICK_BUTTON:
+                case LEFT_STICK_BUTTON:
                     if (speedMultiplier != 1) {
                         lastSpeed = speedMultiplier;
                         speedMultiplier = 1;
