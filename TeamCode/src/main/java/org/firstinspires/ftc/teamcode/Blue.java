@@ -86,7 +86,7 @@ public class Blue extends LinearOpMode {
 
         switch((int) PARAMS.propSpikeMark){
             case 3:
-                toSpikeMark(17.0,-3.0,-24, PARAMS.frontStage);
+                toSpikeMark(18.5,-3.0,-24, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(36.5, PARAMS.partnerDead);
                 }
@@ -95,7 +95,7 @@ public class Blue extends LinearOpMode {
                 }
                 break;
             case 1:
-                toSpikeMark(18.0, 3.0, 32, PARAMS.frontStage);
+                toSpikeMark(19.5, 3.0, 32, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(28.0, PARAMS.partnerDead);
                 }
@@ -104,7 +104,7 @@ public class Blue extends LinearOpMode {
                 }
                 break;
             default:
-                toSpikeMark(21.0, 3.2,0, PARAMS.frontStage);
+                toSpikeMark(22.5, 3.2,0, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(28.0, PARAMS.partnerDead);
                 }
@@ -115,7 +115,6 @@ public class Blue extends LinearOpMode {
         }
         //gets the position of the robot before dropping the pixel
         //SensorApproach();
-
 
         whiteClaw.PrepForPixel(false);
 
@@ -134,8 +133,6 @@ public class Blue extends LinearOpMode {
         whiteClaw.PrepForPixel(true);
         whiteClaw.closeGrip();
         whiteClaw.SuplexPixel();
-        whiteClaw.openGrip();
-        whiteClaw.RetractArm();
 
         backSecondHalf();
 
@@ -241,9 +238,8 @@ public class Blue extends LinearOpMode {
         Action moveSecHalf = drive.actionBuilder(drive.pose)
                 //ending position y: -60
                 //start off at 28, 38.5
-                .splineTo(new Vector2d(9,12), Math.toRadians(90))
-                .splineTo(new Vector2d(9, -36), Math.toRadians(90))
-                .splineTo(new Vector2d(28, -60), Math.toRadians(90))
+                .splineTo(new Vector2d(9, -36), Math.toRadians(-90))
+                .splineTo(new Vector2d(28, -60), Math.toRadians(-90))
                 .build();
         Actions.runBlocking(new ParallelAction(moveSecHalf, whiteClaw.RetractArm()));
         }
@@ -251,7 +247,6 @@ public class Blue extends LinearOpMode {
     public void backSecondHalf(){
         Action moveBackSecHalf = drive.actionBuilder(drive.pose)
                 .setReversed(true)
-                .splineTo(new Vector2d(9,-36), Math.toRadians(90))
                 .splineTo(new Vector2d(9,12), Math.toRadians(90))
                 .splineTo(new Vector2d(28,38.5), Math.toRadians(90)) //changes depending on the april tag & where the robot stars(front/back stage)
                 .build();
