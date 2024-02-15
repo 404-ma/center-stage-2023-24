@@ -16,14 +16,14 @@ public class ClawMoves {
     // FTC Dashboard Parameters
     public static class Params {
         public double armUpPos = 0.282;
-        public double armDownPos = 0.211;
+        public double armDownPos = 0.213;
         public double armLevel1 = 0.219;
         public double armLevel2 = 0.222;
         public double armLevel3 = 0.225;
         public double armLevel4 = 0.228;
 
         public double flipSuplexPos = 0.322;
-        public double flipDownPos = 0.440;
+        public double flipDownPos = 0.444;
 
         public double gripOpenPos = 0.637;
         public double gripClosedPos = 0.365;
@@ -147,16 +147,17 @@ public class ClawMoves {
         DeferredActions.CreateDeferredAction(180, DeferredActionType.CLAW_FLIP_SUPLEX);
         // TODO:  Test Claw Motion - 600 ms is too fast, we are throwing the pixel
         // Wait for Pixel over Bin
-        DeferredActions.CreateDeferredAction(600, DeferredActionType.CLAW_OPEN_GRIP);
+        DeferredActions.CreateDeferredAction(600, DeferredActionType.CLAW_OPEN_GRIP_UP);
     }
 
 
     public void PrepForPixel (boolean deferFlip) {
         // Reset Claw to Down and Open
+        MoveFlip(PARAMS.flipDownPos);
         MoveArm(PARAMS.armDownPos);
         // Wait for Arm to Separate from Bin
         if (deferFlip)
-            DeferredActions.CreateDeferredAction(80, DeferredActionType.CLAW_FLIP_DOWN);
+            DeferredActions.CreateDeferredAction(1, DeferredActionType.CLAW_OPEN_GRIP_DOWN);
         else {
             MoveFlip(PARAMS.flipDownPos);
             // Allow Time for Arm to Move to Mat
