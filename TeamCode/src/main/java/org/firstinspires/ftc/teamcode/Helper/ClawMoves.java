@@ -140,7 +140,7 @@ public class ClawMoves {
         // Pickup and Suplex Pixel
         if (tlmGripPosition != PARAMS.gripClosedPos) {
             MoveGrip(PARAMS.gripClosedPos);
-            DeferredActions.CreateDeferredAction(150, DeferredActionType.CLAW_ARM_SUPLEX);
+            DeferredActions.CreateDeferredAction(150, DeferredActionType.CLAW_ARM_UP);
         } else {
             MoveArm(PARAMS.armUpPos);
         }
@@ -151,17 +151,18 @@ public class ClawMoves {
     }
 
 
-    public void PrepForPixel (boolean deferFlip) {
+    public void PrepForPixel (boolean useDeferredActions) {
         // Reset Claw to Down and Open
         MoveFlip(PARAMS.flipDownPos);
-        MoveArm(PARAMS.armDownPos);
         // Wait for Arm to Separate from Bin
-        if (deferFlip)
-            DeferredActions.CreateDeferredAction(1, DeferredActionType.CLAW_OPEN_GRIP_DOWN);
-        else {
-            MoveFlip(PARAMS.flipDownPos);
+        if (useDeferredActions) {
+            DeferredActions.CreateDeferredAction(50, DeferredActionType.CLAW_ARM_DOWN);
+            DeferredActions.CreateDeferredAction(100, DeferredActionType.CLAW_OPEN_GRIP_DOWN);
+        } else {
+            SystemClock.sleep(50);
+            MoveArm(PARAMS.armDownPos);
             // Allow Time for Arm to Move to Mat
-            SystemClock.sleep(500);
+            SystemClock.sleep(100);
             MoveGrip(PARAMS.gripOpenPos);
         }
     }

@@ -56,9 +56,8 @@ public class DriveFirstMeet extends LinearOpMode {
         double lastSpeed = 1;
 
         while (opModeIsActive()) {
-            update_telemetry(gpIn1, gpIn2, drvTrain);
+            update_telemetry(gpIn1, gpIn2);
 
-            // TODO:  Add Function for Temporary Speed w/ Return to Previous Speed using Right Joystick Button
             gamePadInputV2.GameplayInputType inpType = gpIn1.WaitForGamepadInput(30);
             switch (inpType) {
                 case LEFT_STICK_BUTTON:
@@ -161,23 +160,30 @@ public class DriveFirstMeet extends LinearOpMode {
                     yclaw.MoveFlip(PARAMS.flipSuplexPos);
                     break;
 
-                case CLAW_OPEN_GRIP:
+                case CLAW_OPEN_GRIP_UP:
                     yclaw.MoveGrip(PARAMS.gripOpenPosTop);
                     break;
 
-                case CLAW_FLIP_DOWN:
+                case CLAW_OPEN_GRIP_DOWN:
                     yclaw.MoveGrip(PARAMS.gripOpenPos);
-                    yclaw.MoveFlip(PARAMS.flipDownPos);
                     break;
 
-                case CLAW_ARM_SUPLEX:
+                case CLAW_ARM_UP:
                     yclaw.MoveArm(PARAMS.armUpPos);
+                    break;
+
+                case CLAW_ARM_DOWN:
+                    yclaw.MoveArm(PARAMS.armDownPos);
+                    break;
+
+                default:
+                    telemetry.addLine("ERROR - Unsupported Deferred Action");
                     break;
             }
         }
     }
 
-    private void update_telemetry(gamePadInputV2 gpi1, gamePadInputV2 gpi2, DrivetrainV2 drv) {
+    private void update_telemetry(gamePadInputV2 gpi1, gamePadInputV2 gpi2) {
         telemetry.addLine("Gamepad #1");
         String inpTime1 = new java.text.SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS", Locale.US).format(gpi1.getTelemetry_InputLastTimestamp());
         telemetry.addLine().addData("GP1 Time", inpTime1);
@@ -186,6 +192,7 @@ public class DriveFirstMeet extends LinearOpMode {
         telemetry.addLine().addData("L Joy  X", "%6.3f", gamepad1.left_stick_x).addData("Y", "%6.3f", gamepad1.left_stick_y);
         telemetry.addLine().addData("R Joy  X", "%6.3f", gamepad1.right_stick_x).addData("Y", "%6.3f", gamepad1.right_stick_y);
 
+        telemetry.addLine();
         telemetry.addLine("Gamepad #2");
         String inpTime2 = new java.text.SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS", Locale.US).format(gpi2.getTelemetry_InputLastTimestamp());
         telemetry.addLine().addData("GP2 Time", inpTime2);
@@ -193,6 +200,13 @@ public class DriveFirstMeet extends LinearOpMode {
         telemetry.addLine().addData("GP2 Input", gpi2.getTelemetry_InputLastType().toString());
         telemetry.addLine().addData("L Joy  X", "%6.3f", gamepad2.left_stick_x).addData("Y", "%6.3f", gamepad2.left_stick_y);
         telemetry.addLine().addData("R Joy  X", "%6.3f", gamepad2.right_stick_x).addData("Y", "%6.3f", gamepad2.right_stick_y);
+
+        telemetry.addLine();
+        telemetry.addLine("Deferred Actions");
+        String actTime = new java.text.SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS", Locale.US).format(DeferredActions.tlmLastActionTimestamp);
+        telemetry.addLine().addData("Time", actTime);
+        telemetry.addLine().addData("Action", DeferredActions.tlmLastAction.toString());
+
         telemetry.update();
     }
 }
