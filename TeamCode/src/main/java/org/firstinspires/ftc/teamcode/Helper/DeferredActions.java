@@ -60,7 +60,6 @@ public class DeferredActions {
         for (DeferredActionEvent act : deferredActions) {
             if (currentTimeMillis() >= act.triggerTime) {
                 readyActions.add(act.action);
-
                 removals.add(act);
                 tlmLastAction = act.action;
                 tlmLastActionTimestamp = new Date();
