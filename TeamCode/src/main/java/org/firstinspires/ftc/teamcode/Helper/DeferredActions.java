@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Helper;
 
 import androidx.annotation.NonNull;
-import android.util.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import static java.lang.System.currentTimeMillis;
@@ -52,9 +51,8 @@ public class DeferredActions {
 
         // Build List of Actions Ready to Execute
         for (DeferredActionEvent act : deferredActions) {
-            if (currentTimeMillis() >= (long) act.triggerTime) {
-                // TODO: If action is ready to be triggered, process action and remove from queue
-                readyActions.add((DeferredActionType) act.action);
+            if (currentTimeMillis() >= act.triggerTime) {
+                readyActions.add(act.action);
                 removals.add(act);
             }
         }
