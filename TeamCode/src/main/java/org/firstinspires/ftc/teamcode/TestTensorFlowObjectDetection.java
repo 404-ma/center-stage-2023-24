@@ -23,6 +23,11 @@ import java.util.List;
 @TeleOp(name = "Test TensorFlow Object Detection")
 public class TestTensorFlowObjectDetection extends LinearOpMode {
 
+    public static class Params {
+
+    public boolean propHere;
+    }
+
     // TFOD_MODEL_ASSET points to a model file stored in the project Asset location,
     // this is only used for Android Studio when using models in Assets.
     private static final String TFOD_MODEL_ASSET = "model_Training2.tflite";
@@ -160,6 +165,13 @@ public class TestTensorFlowObjectDetection extends LinearOpMode {
     }   // end method telemetryTfod()
 
 
+    private void checkProp(){
+        List<Recognition> currentRecognitions = tfod.getRecognitions();
+        telemetry.addData("# Objects Detected", currentRecognitions.size());
+
+
+
+    }
 }
 
 /*

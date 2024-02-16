@@ -38,6 +38,7 @@ public class Blue extends LinearOpMode {
         public double gainValueRotation = 0.03;
         public double angleAtEnd = -90;
         public String versionNum = "3.1";
+        public double propAng;
 
     }
 
@@ -76,30 +77,33 @@ public class Blue extends LinearOpMode {
 
         switch((int) PARAMS.propSpikeMark){
             case 3:
+                PARAMS.propAng = 35.5;
                 toSpikeMark(18.5,-3.0,-24, PARAMS.frontStage);
                 if(PARAMS.frontStage){
-                    toFrontPanel(36.5, PARAMS.partnerDead);
+                    toFrontPanel(PARAMS.propAng, PARAMS.partnerDead);
                 }
                 else{
-                    toBackPanel(35.0);
+                    toBackPanel(PARAMS.propAng);
                 }
                 break;
             case 1:
+                PARAMS.propAng = 27.0;
                 toSpikeMark(19.5, 3.0, 32, PARAMS.frontStage);
                 if(PARAMS.frontStage){
-                    toFrontPanel(28.0, PARAMS.partnerDead);
+                    toFrontPanel(PARAMS.propAng, PARAMS.partnerDead);
                 }
                 else{
-                    toBackPanel(28.0);
+                    toBackPanel(PARAMS.propAng);
                 }
                 break;
             default:
+                PARAMS.propAng = 30.0;
                 toSpikeMark(22.5, 3.2,0, PARAMS.frontStage);
                 if(PARAMS.frontStage){
-                    toFrontPanel(28.0, PARAMS.partnerDead);
+                    toFrontPanel(PARAMS.propAng, PARAMS.partnerDead);
                 }
                 else{
-                    toBackPanel(28.0);
+                    toBackPanel(PARAMS.propAng);
                 }
                 break;
         }
@@ -116,14 +120,25 @@ public class Blue extends LinearOpMode {
         sleep(1800);
 
         whiteClaw.SuplexPixel();
-        secondHalf(PARAMS.angleAtEnd);
+
+        if(!PARAMS.frontStage){
+            secondHalfBack();
+        }
+        else{
+            secondHalfFront();
+        }
 
         //pick up
         whiteClaw.PrepForPixel(false);
         whiteClaw.closeGrip();
         whiteClaw.SuplexPixel();
 
-        backSecondHalf();
+        if(!PARAMS.frontStage){
+            backSecondHalfBack(PARAMS.propAng);
+        }
+        else{
+            backSecondHalfFront(PARAMS.propAng);
+        }
 
         whiteClaw.PrepForPixel(false);
         whiteConveyor.moveViperToPosition(1400);
@@ -133,7 +148,6 @@ public class Blue extends LinearOpMode {
         whiteConveyor.stopConv();
         whiteConveyor.moveViperToPosition(0);
         sleep(1800);
-
 
 
     }
@@ -219,7 +233,7 @@ public class Blue extends LinearOpMode {
         Actions.runBlocking(moveRb3);
     }
 
-    public void secondHalf(double ang){
+    public void secondHalfBack(){
         Action moveSecHalf = drive.actionBuilder(drive.pose)
                 //ending position y: -60
                 //start off at 28, 38.5
@@ -229,14 +243,34 @@ public class Blue extends LinearOpMode {
         Actions.runBlocking(new ParallelAction(moveSecHalf, whiteClaw.RetractArm()));
         }
 
-    public void backSecondHalf(){
+    public void backSecondHalfBack(double ang){
         Action moveBackSecHalf = drive.actionBuilder(drive.pose)
                 .setReversed(true)
                 .splineTo(new Vector2d(9,12), Math.toRadians(90))
-                .splineTo(new Vector2d(28,38.5), Math.toRadians(90)) //changes depending on the april tag & where the robot stars(front/back stage)
+                .splineTo(new Vector2d(ang,38.5), Math.toRadians(90)) //changes depending on the april tag & where the robot stars(front/back stage)
                 .build();
         Actions.runBlocking(new ParallelAction(moveBackSecHalf, whiteClaw.RetractArm()));
     }
+
+    public void secondHalfFront(){
+        Action moveSecHalf = drive.actionBuilder(drive.pose)
+                .splineTo(new Vector2d(9, 0), Math.toRadians(-90))
+                .splineTo(new Vector2d(28, -28), Math.toRadians(-90))
+                .build();
+        Actions.runBlocking(new ParallelAction(moveSecHalf, whiteClaw.RetractArm()));
+    }
+
+    public void backSecondHalfFront(double ang){
+        Action moveBackSecHalf = drive.actionBuilder(drive.pose)
+                .splineTo(new Vector2d(9,60), Math.toRadians(90))
+                .splineTo(new Vector2d(ang,86), Math.toRadians(90))
+                .build();
+        Actions.runBlocking(new ParallelAction(moveBackSecHalf, whiteClaw.RetractArm()));
+
+    }
+
+
+
 }
 /*
 private boolean isItThere;
@@ -246,7 +280,6 @@ private boolean isItThere;
 
 if(!isItThere & !middleOftheScreen){
     .turnTo(Math.toRadians(-45))
-        if()
     }
 
  */
