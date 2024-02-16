@@ -109,6 +109,7 @@ public class Blue extends LinearOpMode {
         whiteClaw.PrepForPixel(false);
 
         whiteConveyor.moveViperToPosition(1400);
+        sleep(1000);
         whiteConveyor.moveConvForward();
         sleep(2000);
         whiteConveyor.stopConv();
@@ -119,7 +120,7 @@ public class Blue extends LinearOpMode {
         secondHalf(PARAMS.angleAtEnd);
 
         //pick up
-        whiteClaw.PrepForPixel(true);
+        whiteClaw.PrepForPixel(false);
         whiteClaw.closeGrip();
         whiteClaw.SuplexPixel();
 
@@ -127,6 +128,7 @@ public class Blue extends LinearOpMode {
 
         whiteClaw.PrepForPixel(false);
         whiteConveyor.moveViperToPosition(1400);
+        sleep(1000);
         whiteConveyor.moveConvForward();
         sleep(2000);
         whiteConveyor.stopConv();
@@ -170,11 +172,6 @@ public class Blue extends LinearOpMode {
                 .splineTo(new Vector2d(X, Y), Math.toRadians(ang))
                 .build();
         Actions.runBlocking(new SequentialAction(moveRb, whiteClaw.PlacePixel()));
-
-        if(!PARAMS.frontStage){
-            sleep(850);
-            whiteClaw.RetractArm();
-        }
 
         Action moveBack = drive.actionBuilder(drive.pose)
                 .setReversed(true)
@@ -242,3 +239,15 @@ public class Blue extends LinearOpMode {
         Actions.runBlocking(new ParallelAction(moveBackSecHalf, whiteClaw.RetractArm()));
     }
 }
+/*
+private boolean isItThere;
+
+//blue
+//write if isItThere works
+
+if(!isItThere & !middleOftheScreen){
+    .turnTo(Math.toRadians(-45))
+        if()
+    }
+
+ */
