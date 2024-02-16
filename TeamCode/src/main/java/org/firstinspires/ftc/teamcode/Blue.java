@@ -105,7 +105,6 @@ public class Blue extends LinearOpMode {
         }
         //gets the position of the robot before dropping the pixel
         //SensorApproach();
-
         whiteClaw.PrepForPixel(false);
 
         whiteConveyor.moveViperToPosition(1400);
