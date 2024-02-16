@@ -60,11 +60,15 @@ public class DriveFirstMeet extends LinearOpMode {
 
             gamePadInputV2.GameplayInputType inpType = gpIn1.WaitForGamepadInput(30);
             switch (inpType) {
-                case LEFT_STICK_BUTTON:
+                case LEFT_STICK_BUTTON_ON:
                     if (speedMultiplier != 1) {
                         lastSpeed = speedMultiplier;
                         speedMultiplier = 1;
-                    } else if (lastSpeed != 1) {
+                    }
+                    break;
+
+                case LEFT_STICK_BUTTON_OFF:
+                    if (lastSpeed != 1) {
                         speedMultiplier = lastSpeed;
                         lastSpeed = 1;
                     }
