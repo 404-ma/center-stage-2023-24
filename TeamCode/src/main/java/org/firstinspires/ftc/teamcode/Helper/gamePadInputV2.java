@@ -62,8 +62,10 @@ public class gamePadInputV2 {
         DPAD_LEFT("DPad: LEFT"),
         DPAD_RIGHT("DPad: RIGHT"),
         JOYSTICK("Joystick"),
-        LEFT_STICK_BUTTON("Left Joystick Button"),
-        RIGHT_STICK_BUTTON("Right Joystick Button");
+        LEFT_STICK_BUTTON_ON("Left Joystick Button On"),
+        LEFT_STICK_BUTTON_OFF("Left Joystick Button Off"),
+        RIGHT_STICK_BUTTON_ON("Right Joystick Button On"),
+        RIGHT_STICK_BUTTON_OFF("Right Joystick Button Off");
 
         private final String description;
 
@@ -117,6 +119,10 @@ public class gamePadInputV2 {
     private float LastLeftJoystickY = 0f;
     private float LastRightJoystickX = 0f;
     private float LastRightJoystickY = 0f;
+    private boolean LeftTriggerOn = false;
+    private boolean RightTriggerOn = false;
+
+
 
 
     //--------------------------------------------------------------
@@ -223,8 +229,6 @@ public class gamePadInputV2 {
         if (inputGPad.left_bumper) intype = GameplayInputType.BUTTON_L_BUMPER;
         if (inputGPad.right_bumper) intype = GameplayInputType.BUTTON_R_BUMPER;
         if (inputGPad.back) intype= GameplayInputType.BUTTON_BACK;
-        if (inputGPad.right_stick_button) intype = GameplayInputType.RIGHT_STICK_BUTTON;
-        if (inputGPad.left_stick_button) intype = GameplayInputType.LEFT_STICK_BUTTON;
 
         // Check For Duplicate Button Input and Disregard Same Button During Lockout Period
         boolean lockedOut = ((LastButtonInputTime + BUTTON_LOCKOUT_INTERVAL) - System.currentTimeMillis()) > 0;
@@ -292,6 +296,22 @@ public class gamePadInputV2 {
                 RightTriggerLast = inputGPad.right_trigger;
                 return (GameplayInputType.RIGHT_TRIGGER);
             }
+        }
+
+        if (inputGPad.left_stick_button = true && !LeftTriggerOn) {
+            LeftTriggerOn = true;
+            return (GameplayInputType.LEFT_STICK_BUTTON_ON);
+        } else if (inputGPad.left_stick_button = true && LeftTriggerOn){
+            LeftTriggerOn = false;
+            return (GameplayInputType.LEFT_STICK_BUTTON_OFF);
+        }
+
+        if(inputGPad.right_stick_button = true && !RightTriggerOn){
+            RightTriggerOn = true;
+            return (GameplayInputType.RIGHT_STICK_BUTTON_ON);
+        } else if (inputGPad.right_stick_button = true && RightTriggerOn){
+            RightTriggerOn = false;
+            return (GameplayInputType.RIGHT_STICK_BUTTON_OFF);
         }
         return (GameplayInputType.NONE);  // Catch all for No Joystick Input
     }
