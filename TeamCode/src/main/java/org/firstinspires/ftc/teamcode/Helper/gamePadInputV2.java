@@ -62,8 +62,10 @@ public class gamePadInputV2 {
         DPAD_LEFT("DPad: LEFT"),
         DPAD_RIGHT("DPad: RIGHT"),
         JOYSTICK("Joystick"),
-        LEFT_STICK_BUTTON("Left Joystick Button"),
-        RIGHT_STICK_BUTTON("Right Joystick Button");
+        LEFT_STICK_BUTTON_ON("Left Joystick Button On"),
+        LEFT_STICK_BUTTON_OFF("Left Joystick Button Off"),
+        RIGHT_STICK_BUTTON_ON("Right Joystick Button On"),
+        RIGHT_STICK_BUTTON_OFF("Right Joystick Button Off");
 
         private final String description;
 
@@ -89,8 +91,8 @@ public class gamePadInputV2 {
     static final long BUTTON_LOCKOUT_INTERVAL = 1000;
     static final long DPAD_LOCKOUT_INTERVAL = 1000;
     static final long TRIGGER_LOCKOUT_INTERVAL = 20;
+    static final long JOYSTICK_BUTTON_LOCKOUT_INTERVAL = 300;
     static final long JOYSTICK_LOCKOUT_INTERVAL = 20;  // should be Small
-
 
 
     // Telemetry Data
@@ -105,18 +107,22 @@ public class gamePadInputV2 {
     private final Gamepad inputGPad;
     private long LastButtonInputTime = 0;
     private GameplayInputType LastButtonInput = GameplayInputType.NONE;
+
     private float LeftTriggerLast = 0f;
     private float RightTriggerLast = 0f;
-
     private long LastTriggerInputTime = 0;
+
     private long LastDPadInputTime = 0;
     private GameplayInputType LastDPadInput = GameplayInputType.NONE;
-    private long LastJoystickInputTime = 0;
 
+    private long LastJoystickInputTime = 0;
     private float LastLeftJoystickX = 0f;
     private float LastLeftJoystickY = 0f;
     private float LastRightJoystickX = 0f;
     private float LastRightJoystickY = 0f;
+
+    private boolean LeftJoystickButtonOn = false;
+    private boolean RightJoystickButtonOn = false;
 
 
     //--------------------------------------------------------------
@@ -195,17 +201,20 @@ public class gamePadInputV2 {
         intype = GetDPad();
         if (intype != GameplayInputType.NONE) return (intype);
 
+        // Check for Joystick Button
+        intype = GetJoystickButton();
+        if (intype != GameplayInputType.NONE) return (intype);
 
         // Check for Triggers
         intype = GetTrigger();
         //Triggers will be more noisy, meaning even shaking hands will provide some float value for triggers.
         if (intype != GameplayInputType.NONE) return (intype);
 
-
         // Check for Joystick
         intype = GetJoystick();  // Defaults to InputType None
         return (intype);
     }
+
 
     /*
      * GetButton: Check for Gamepad Button Inputs and Disregards Duplicates During Lockout Period.
@@ -223,8 +232,6 @@ public class gamePadInputV2 {
         if (inputGPad.left_bumper) intype = GameplayInputType.BUTTON_L_BUMPER;
         if (inputGPad.right_bumper) intype = GameplayInputType.BUTTON_R_BUMPER;
         if (inputGPad.back) intype= GameplayInputType.BUTTON_BACK;
-        if (inputGPad.right_stick_button) intype = GameplayInputType.RIGHT_STICK_BUTTON;
-        if (inputGPad.left_stick_button) intype = GameplayInputType.LEFT_STICK_BUTTON;
 
         // Check For Duplicate Button Input and Disregard Same Button During Lockout Period
         boolean lockedOut = ((LastButtonInputTime + BUTTON_LOCKOUT_INTERVAL) - System.currentTimeMillis()) > 0;
@@ -267,6 +274,36 @@ public class gamePadInputV2 {
 
 
     /*
+     * Get Joystick Button : Checks for Gamepad Joystick Button Input Changes and Disregard Changes During the
+     *              Lockout Period.  It captures transitions and generates an ON/OFF Input
+     *              Returns an input type of NONE when no change is detected.
+     */
+    private GameplayInputType GetJoystickButton() {
+        boolean lockedOut = ((LastTriggerInputTime + JOYSTICK_BUTTON_LOCKOUT_INTERVAL) - System.currentTimeMillis()) > 0;
+
+        if (!lockedOut) {
+            if (inputGPad.left_stick_button && !LeftJoystickButtonOn) {
+                LeftJoystickButtonOn = true;
+                return (GameplayInputType.LEFT_STICK_BUTTON_ON);
+            } else if (!inputGPad.left_stick_button && LeftJoystickButtonOn){
+                LeftJoystickButtonOn = false;
+                return (GameplayInputType.LEFT_STICK_BUTTON_OFF);
+            }
+
+            if(inputGPad.right_stick_button && !RightJoystickButtonOn){
+                RightJoystickButtonOn = true;
+                return (GameplayInputType.RIGHT_STICK_BUTTON_ON);
+            } else if (!inputGPad.right_stick_button && RightJoystickButtonOn){
+                RightJoystickButtonOn = false;
+                return (GameplayInputType.RIGHT_STICK_BUTTON_OFF);
+            }
+        }
+
+        return (GameplayInputType.NONE);  // Catch all for No Joystick Input
+    }
+
+
+    /*
      * Get Trigger: Checks for Gamepad Trigger Input Changes and Disregard Changes During the
      *              Lockout Period.  It converts the floating Trigger value to an ON/OFF Input
      *                 Trigger is considered ON when it transitions over 75%
@@ -293,6 +330,7 @@ public class gamePadInputV2 {
                 return (GameplayInputType.RIGHT_TRIGGER);
             }
         }
+
         return (GameplayInputType.NONE);  // Catch all for No Joystick Input
     }
 
