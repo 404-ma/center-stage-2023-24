@@ -148,7 +148,7 @@ public class TestTensorFlowObjectDetection extends LinearOpMode {
 
         // Step through the list of recognitions and display info for each one.
         for (Recognition recognition : currentRecognitions) {
-            double x = (recognition.getLeft() + recognition.getRight()) / 2 ;
+            double x = (recognition.getLeft() + recognition.getRight()) / 2 ; //getting the corrdinates for the box --> finding the middle of the box
             double y = (recognition.getTop()  + recognition.getBottom()) / 2 ;
 
             telemetry.addData(""," ");
@@ -159,5 +159,21 @@ public class TestTensorFlowObjectDetection extends LinearOpMode {
 
     }   // end method telemetryTfod()
 
+
 }
 
+/*
+ double rangeError = (DESIRED_DISTANCE - desiredTag.ftcPose.range);
+                    double headingError = desiredTag.ftcPose.bearing;
+                    double yawError = desiredTag.ftcPose.yaw;
+
+
+                    // Use the speed and turn "gains" to calculate how we want the robot to move.
+                    drive = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+                    turn = Range.clip(-headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
+                    strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+
+                    telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+ */
+
+//640x640
