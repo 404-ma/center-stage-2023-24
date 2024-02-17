@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.helper.TargetPose;
 import java.util.Locale;
 
 @Config
-@TeleOp(name= "Distance System Test", group ="Test")
+@TeleOp(name= "Distance System Test", group ="Hardware")
 public class DistanceSystemtest extends LinearOpMode {
 
     public static class Params {
