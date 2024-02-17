@@ -79,7 +79,7 @@ public class AutoBlue extends LinearOpMode {
         propSpikeMark = tenFl.telemTFOD(1000);
         updateTelemetry();
 
-        switch((int) propSpikeMark){
+        switch(propSpikeMark){
             case 3:
                 PARAMS.propAng = 35.5;
                 toSpikeMark(20.0,-3.5,-24, PARAMS.frontStage);

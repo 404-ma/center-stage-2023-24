@@ -59,7 +59,7 @@ public class AutoRed extends LinearOpMode {
         telemetry.addData(">", "Press Start to Launch");
         telemetry.update();
 
-
+//
         dashboard = FtcDashboard.getInstance();
         dashboard.clearTelemetry();
         drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
@@ -76,11 +76,10 @@ public class AutoRed extends LinearOpMode {
         if (isStopRequested()) return;
         telemetry.clear();
 
-        whiteClaw.AutonomousStart();
 
-        switch((int) PARAMS.propSpikeMark){
+        switch((int) spikeMark){
             case 3:
-                toSpikeMark(16.0,3.0,27, PARAMS.frontStage);
+                toSpikeMark(20.0,4.0,27, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(36.5, PARAMS.partnerDead);
                 }
@@ -98,7 +97,7 @@ public class AutoRed extends LinearOpMode {
                 }
                 break;
             default:
-                toSpikeMark(20.0, -3.2,0, PARAMS.frontStage);
+                toSpikeMark(21.0, -3.2,0, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(29.0, PARAMS.partnerDead);
                 }
