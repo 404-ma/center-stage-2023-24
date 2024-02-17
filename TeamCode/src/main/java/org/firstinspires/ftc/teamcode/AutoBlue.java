@@ -19,7 +19,6 @@ import org.firstinspires.ftc.teamcode.Helper.DistanceSystem;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.helper.TargetPose;
 import org.firstinspires.ftc.teamcode.Helper.TensorFlow;
-import org.firstinspires.ftc.vision.VisionPortal;
 
 @Config
 @Autonomous (name = "RR Auto Drive Blue", group = "RoadRunner")
@@ -28,7 +27,6 @@ public class AutoBlue extends LinearOpMode {
      *  FTC Dashboard Parameters
      */
     public static class Params {
-        public double propSpikeMark = 2;    //  Which Spike Mark is the Prop Located on
         public boolean partnerDead = true;
         public boolean frontStage = false;
         public int dTime = 500;
@@ -50,7 +48,7 @@ public class AutoBlue extends LinearOpMode {
     private Conveyor whiteConveyor;
     private DistanceSystem distSys;
     private TensorFlow tenFl;
-    private VisionPortal visionPortal;
+
 
     @Override
     public void runOpMode() {
@@ -69,21 +67,17 @@ public class AutoBlue extends LinearOpMode {
         whiteClaw = new ClawMoves(hardwareMap);
         whiteConveyor = new Conveyor(hardwareMap);
         tenFl = new TensorFlow(hardwareMap);
-
-
-        PARAMS.propSpikeMark = tenFl.telemTFOD(1000);
-
         distSys = new DistanceSystem(hardwareMap);
         whiteClaw.AutonomousStart();
 
         waitForStart();
 
-        visionPortal.close();
+        int spikeMark = tenFl.telemTFOD(1000);
+
         if (isStopRequested()) return;
         telemetry.clear();
 
-
-        switch((int) PARAMS.propSpikeMark){
+        switch((int) spikeMark){
             case 3:
                 PARAMS.propAng = 35.5;
                 toSpikeMark(18.5,-3.0,-24, PARAMS.frontStage);

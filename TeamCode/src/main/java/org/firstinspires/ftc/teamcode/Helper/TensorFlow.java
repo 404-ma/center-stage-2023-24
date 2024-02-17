@@ -78,4 +78,8 @@ public class TensorFlow {
 
         return propNum;
     }
+
+    public void CleanUp () {
+        visionPortal.close();
+    }
 }
