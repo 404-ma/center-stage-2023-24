@@ -15,6 +15,9 @@ public class TensorFlow {
     private TfodProcessor tfod;
     private VisionPortal visionPortal;
 
+    public int tlmObjectCnt = 0;
+    public double tlmBestObjectX = 0;
+    public double tlmBestObjectY = 0;
 
     public TensorFlow (HardwareMap hdwMap) {
         // Create the TensorFlow processor by using a builder.
@@ -42,6 +45,7 @@ public class TensorFlow {
 
         // Step through the list of recognitions and display info for each one.
         while ((waitEndTime > System.currentTimeMillis()) && (largestObj == 0)) {
+            ++tlmObjectCnt;
             List<Recognition> currentRecognitions = tfod.getRecognitions();
 
             for (Recognition recognition : currentRecognitions) {
@@ -55,6 +59,8 @@ public class TensorFlow {
                     largestObj = height * width;
                     largestX = x;
                     largestY = y;
+                    tlmBestObjectX = x;
+                    tlmBestObjectY = y;
                 }
             }
 
