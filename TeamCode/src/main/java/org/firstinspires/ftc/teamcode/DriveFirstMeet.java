@@ -136,6 +136,8 @@ public class DriveFirstMeet extends LinearOpMode {
             gamePadInputV2.GameplayInputType inpType2 = gpIn2.WaitForGamepadInput(30);
             switch (inpType2) {
                 // TODO: Is the Minimum Speed Really 0.75 - That make the Trigger range (0.75 - 1)
+
+
                 case LEFT_TRIGGER:
                     double power = Math.min(gamepad2.left_trigger, 0.75);
                     conveyor.setPower(power);
@@ -146,7 +148,15 @@ public class DriveFirstMeet extends LinearOpMode {
                     break;
                 case JOYSTICK:
                     viperMotor.setPower(gamepad2.right_stick_y * -0.5);
-                    craneMotor.setPower(gamepad2.left_stick_y * -0.8);
+                    //craneMotor.setPower(gamepad2.left_stick_y * -0.8);
+
+                    float strafe = 0;
+                    if ((gamepad1.left_stick_x >= 0.5f) && (gamepad1.left_stick_x <= -0.5f))
+                        strafe = gamepad1.left_stick_x;
+
+                    float forward = ((gamepad1.left_stick_y >= 0.5f) ? gamepad1.left_stick_x : 0f ) * 0.25f;
+
+                            drvTrain.setDriveVectorFromJoystick(0, 0, 0, false);
                     break;
             }
             // Deferred Actions

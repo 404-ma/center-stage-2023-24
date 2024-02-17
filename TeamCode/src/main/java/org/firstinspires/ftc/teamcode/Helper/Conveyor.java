@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.Helper;
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.ftc.Encoder;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -14,7 +13,6 @@ import com.qualcomm.robotcore.util.Range;
 public class Conveyor {
 
     public static class Params {
-
         public double conveyorSpeed = 0.7;
         public double viperSpeed = 0.5;
         public int viperMotorMaxPositionRelative = 3000;
@@ -23,26 +21,22 @@ public class Conveyor {
 
     public static Params PARAMS = new Params();
     public DcMotorEx viperMotor;
-    public Encoder viperEncoder;
     private CRServo conv;
 
-
-    private int viperMotorStart;
 
     public Conveyor(@NonNull HardwareMap hdwMap) {
         viperMotor = hdwMap.get(DcMotorEx.class, "viperMotor");
         viperMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         viperMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         conv = hdwMap.crservo.get("ConveyorServo");
-        viperMotorStart = viperMotor.getCurrentPosition();
     }
 
     public void moveConvForward() {
-        conv.setPower(0.7);
+        conv.setPower(PARAMS.conveyorSpeed);
     }
 
     public void moveConvBackward() {
-        conv.setPower(-0.7);
+        conv.setPower(-PARAMS.conveyorSpeed);
     }
 
     public void stopConv() {
@@ -51,7 +45,7 @@ public class Conveyor {
 
     public void moveViperToPosition(int position) {
         // TODO:  Fix code for DC Motor Power
-        int absolutePosition = viperMotorStart + Range.clip(position, 0, PARAMS.viperMotorMaxPositionRelative);
+        int absolutePosition = Range.clip(position, 0, PARAMS.viperMotorMaxPositionRelative);
         viperMotor.setTargetPosition(absolutePosition);
         viperMotor.setPower(PARAMS.viperSpeed);
         viperMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -63,8 +57,6 @@ public class Conveyor {
         viperMotor.getMode();
         viperMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         if (!override) {
-            int minLimit = 0;
-            int maxLimit = PARAMS.viperMotorMaxPositionRelative;
             int viperPosition = viperMotor.getCurrentPosition();
 
             if (power > 0) {
@@ -80,15 +72,10 @@ public class Conveyor {
                     power = Math.max(power, -0.4);
             }
 
-
-
-
-
-                //30 inches - 3,000 tpi
-                viperMotor.setPower(Range.clip(power, -1, 1));
-            }
-
-
+            //30 inches - 3,000 tpi
+            viperMotor.setPower(Range.clip(power, -1, 1));
         }
     }
+
+}
 
