@@ -71,7 +71,7 @@ public class AutoBlue extends LinearOpMode {
 
         waitForStart();
 
-        int spikeMark = tenFl.telemTFOD(1000);
+        int spikeMark = tenFl.telemTFOD(1500);
 
         if (isStopRequested()) return;
         telemetry.clear();
@@ -79,7 +79,7 @@ public class AutoBlue extends LinearOpMode {
         switch((int) spikeMark){
             case 3:
                 PARAMS.propAng = 35.5;
-                toSpikeMark(18.5,-3.0,-24, PARAMS.frontStage);
+                toSpikeMark(17.0,-4.0,-24, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(PARAMS.propAng, PARAMS.partnerDead);
                 }
@@ -89,7 +89,7 @@ public class AutoBlue extends LinearOpMode {
                 break;
             case 1:
                 PARAMS.propAng = 27.0;
-                toSpikeMark(19.5, 3.0, 32, PARAMS.frontStage);
+                toSpikeMark(18.0, 4.0, 32, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(PARAMS.propAng, PARAMS.partnerDead);
                 }
@@ -99,7 +99,7 @@ public class AutoBlue extends LinearOpMode {
                 break;
             default:
                 PARAMS.propAng = 30.0;
-                toSpikeMark(22.5, 3.2,0, PARAMS.frontStage);
+                toSpikeMark(21.0, 4.2,0, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(PARAMS.propAng, PARAMS.partnerDead);
                 }
