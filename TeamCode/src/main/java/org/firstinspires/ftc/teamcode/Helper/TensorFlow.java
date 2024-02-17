@@ -32,7 +32,6 @@ public class TensorFlow {
     }
 
     public int telemTFOD(long waitMs) {
-        int obj = 0;
         double largestObj = 0;
         double largestX = 0;
         double largestY = 0;
@@ -46,7 +45,6 @@ public class TensorFlow {
             List<Recognition> currentRecognitions = tfod.getRecognitions();
 
             for (Recognition recognition : currentRecognitions) {
-                obj++;
                 double x = (recognition.getLeft() + recognition.getRight()) / 2; //getting the coordinates for the box --> finding the middle of the box
                 double y = (recognition.getTop() + recognition.getBottom()) / 2;
 
