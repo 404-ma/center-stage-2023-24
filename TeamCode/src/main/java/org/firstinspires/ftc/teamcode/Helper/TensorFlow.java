@@ -1,13 +1,10 @@
 package org.firstinspires.ftc.teamcode.Helper;
 
 import static android.os.SystemClock.sleep;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-import static org.firstinspires.ftc.teamcode.Helper.gamePadInputV2.TRIGGER_LOCKOUT_INTERVAL;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 import java.util.List;
@@ -17,7 +14,6 @@ public class TensorFlow {
     private static final String[] LABELS = { "Prop", };
     private TfodProcessor tfod;
     private VisionPortal visionPortal;
-
 
 
     public TensorFlow (HardwareMap hdwMap) {
@@ -43,7 +39,7 @@ public class TensorFlow {
         int propNum = 0;
 
         // while no object and not timed out
-        long waitEndTime = (System.currentTimeMillis() + TRIGGER_LOCKOUT_INTERVAL);
+        long waitEndTime = (System.currentTimeMillis() + waitMs);
 
         // Step through the list of recognitions and display info for each one.
         while ((waitEndTime > System.currentTimeMillis()) && (largestObj == 0)) {
