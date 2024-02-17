@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.Helper;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+import static org.firstinspires.ftc.teamcode.Helper.gamePadInputV2.TRIGGER_LOCKOUT_INTERVAL;
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
@@ -10,8 +12,8 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 import java.util.List;
 
 public class TensorFlow {
-    public static class Params{
-        public double propSpikeMark = 2;
+    public static class Params {
+        public double propSM = 2;
     }
 
     public static Params PARAMS = new Params();
@@ -24,7 +26,7 @@ public class TensorFlow {
     List<Recognition> currentRecognitions = tfod.getRecognitions();
 
 
-    public void InitTFOD(HardwareMap hdwMap) {
+    public TensorFlow(HardwareMap hdwMap) {
         // Create the TensorFlow processor by using a builder.
         tfod = new TfodProcessor.Builder()
 
@@ -38,53 +40,44 @@ public class TensorFlow {
         visionPortal = builder.build();
     }
 
-    public void telTFOD(){
+    public int telemTFOD(long waitMs) {
         telemetry.addData("# Objects Detected", currentRecognitions.size());
         // Step through the list of recognitions and display info for each one.
-        int obj =0;
-        double largestObj =0;
+        int obj = 0;
+        double largestObj = 0;
         double largestX = 0;
         double largestY = 0;
+        int propNum = 0;
 
-        for (Recognition recognition : currentRecognitions) {
-            obj++;
-            double x = (recognition.getLeft() + recognition.getRight()) / 2 ; //getting the corrdinates for the box --> finding the middle of the box
-            double y = (recognition.getTop()  + recognition.getBottom()) / 2 ;
+        // while no object and not timed out
+        long waitEndTime = (System.currentTimeMillis() + TRIGGER_LOCKOUT_INTERVAL);
 
-            double height = recognition.getHeight();
-            double width = recognition.getWidth();
+        while ((waitEndTime > System.currentTimeMillis()) && (largestObj == 0)) {
+            for (Recognition recognition : currentRecognitions) {
+                obj++;
+                double x = (recognition.getLeft() + recognition.getRight()) / 2; //getting the corrdinates for the box --> finding the middle of the box
+                double y = (recognition.getTop() + recognition.getBottom()) / 2;
 
-            if((height * width) > largestObj ){
+                double height = recognition.getHeight();
+                double width = recognition.getWidth();
 
-                largestObj = height * width;
-                largestX = x;
-                largestY = y;
+                if ((height * width) > largestObj) {
+                    largestObj = height * width;
+                    largestX = x;
+                    largestY = y;
+                }
             }
-
-            telemetry.addData(""," ");
-            telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
-            telemetry.addData("- Position", "%.0f / %.0f", largestX, largestY);
-            telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
-        }   // end for() loop
-
-        telemetry.update();
-
-        if(110<= largestX && largestX <= 140){
-            PARAMS.propSpikeMark = 3;
-        }
-        else if (315<= largestX && largestX <= 590) {
-            PARAMS.propSpikeMark = 1;
-        }
-        else{
-            PARAMS.propSpikeMark = 2;
         }
 
+        if (largestObj > 0) {
+            if (110 <= largestX && largestX <= 140) {
+                propNum = 1;
+            } else if (315 <= largestX && largestX <= 590) {
+                propNum = 2;
+            }
+        } else {
+            propNum = 3;}
 
+        return propNum;
     }
-
-
-
-
-
-
 }

@@ -38,7 +38,7 @@ public class AutoBlue extends LinearOpMode {
         public double rangeValue = 2;
         public double gainValueRotation = 0.03;
         public double angleAtEnd = -90;
-        public String versionNum = "3.1";
+        public String versionNum = "3.2";
         public double propAng;
 
     }
@@ -68,27 +68,12 @@ public class AutoBlue extends LinearOpMode {
         drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         whiteClaw = new ClawMoves(hardwareMap);
         whiteConveyor = new Conveyor(hardwareMap);
+        //
+        tenFl = new TensorFlow(hardwareMap);
 
-        tenFl.InitTFOD(hardwareMap);
-
-        if (opModeIsActive()) {
-            while (opModeIsActive()) {
-
-                tenFl.telTFOD();
-                // Push telemetry to the Driver Station.
-                telemetry.update();
-
-                // Save CPU resources; can resume streaming when needed.
-                if (gamepad1.dpad_down) {
-                    visionPortal.stopStreaming();
-                } else if (gamepad1.dpad_up) {
-                    visionPortal.resumeStreaming();
-                }
-                // Share the CPU.
-                sleep(20);
-            }
-        }
-        // Save more CPU resources when camera is no longer needed.;
+        //
+        PARAMS.propSpikeMark = tenFl.telemTFOD(1000);
+        sleep(20);
 
         distSys = new DistanceSystem(hardwareMap);
         whiteClaw.AutonomousStart();

@@ -302,7 +302,6 @@ public class gamePadInputV2 {
         return (GameplayInputType.NONE);  // Catch all for No Joystick Input
     }
 
-
     /*
      * Get Trigger: Checks for Gamepad Trigger Input Changes and Disregard Changes During the
      *              Lockout Period.  It converts the floating Trigger value to an ON/OFF Input
