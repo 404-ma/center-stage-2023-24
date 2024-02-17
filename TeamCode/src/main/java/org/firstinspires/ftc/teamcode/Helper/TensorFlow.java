@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Helper;
 
+import static android.os.SystemClock.sleep;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 import static org.firstinspires.ftc.teamcode.Helper.gamePadInputV2.TRIGGER_LOCKOUT_INTERVAL;
 
@@ -12,37 +13,29 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 import java.util.List;
 
 public class TensorFlow {
-    public static class Params {
-        public double propSM = 2;
-    }
-
-    public static Params PARAMS = new Params();
     private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/model_Training2.tflite";
-    private static final String[] LABELS = {
-            "Prop",
-    };
+    private static final String[] LABELS = { "Prop", };
     private TfodProcessor tfod;
     private VisionPortal visionPortal;
-    List<Recognition> currentRecognitions = tfod.getRecognitions();
 
 
-    public TensorFlow(HardwareMap hdwMap) {
+
+    public TensorFlow (HardwareMap hdwMap) {
         // Create the TensorFlow processor by using a builder.
         tfod = new TfodProcessor.Builder()
-
                 .setModelFileName(TFOD_MODEL_FILE)
                 .setModelLabels(LABELS)
                 .build();
 
-        VisionPortal.Builder builder = new VisionPortal.Builder();
-        builder.setCamera(hdwMap.get(WebcamName.class, "Webcam Front"));
-        builder.addProcessor(tfod);
-        visionPortal = builder.build();
+        visionPortal = new VisionPortal.Builder()
+                .addProcessor(tfod)
+                .setCamera(hdwMap.get(WebcamName.class, "Webcam Front"))
+                .build();
+
+        visionPortal.setProcessorEnabled(tfod, true);
     }
 
     public int telemTFOD(long waitMs) {
-        telemetry.addData("# Objects Detected", currentRecognitions.size());
-        // Step through the list of recognitions and display info for each one.
         int obj = 0;
         double largestObj = 0;
         double largestX = 0;
@@ -52,10 +45,13 @@ public class TensorFlow {
         // while no object and not timed out
         long waitEndTime = (System.currentTimeMillis() + TRIGGER_LOCKOUT_INTERVAL);
 
+        // Step through the list of recognitions and display info for each one.
         while ((waitEndTime > System.currentTimeMillis()) && (largestObj == 0)) {
+            List<Recognition> currentRecognitions = tfod.getRecognitions();
+
             for (Recognition recognition : currentRecognitions) {
                 obj++;
-                double x = (recognition.getLeft() + recognition.getRight()) / 2; //getting the corrdinates for the box --> finding the middle of the box
+                double x = (recognition.getLeft() + recognition.getRight()) / 2; //getting the coordinates for the box --> finding the middle of the box
                 double y = (recognition.getTop() + recognition.getBottom()) / 2;
 
                 double height = recognition.getHeight();
@@ -67,12 +63,14 @@ public class TensorFlow {
                     largestY = y;
                 }
             }
+
+            if (largestObj == 0) sleep( 100);
         }
 
         if (largestObj > 0) {
-            if (110 <= largestX && largestX <= 140) {
+            if ((110 <= largestX) && (largestX <= 140)) {
                 propNum = 1;
-            } else if (315 <= largestX && largestX <= 590) {
+            } else if ((315 <= largestX) && (largestX <= 590)) {
                 propNum = 2;
             }
         } else {
