@@ -19,6 +19,7 @@ public class TensorFlow {
     public double tlmBestObjectX = 0;
     public double tlmBestObjectY = 0;
 
+
     public TensorFlow (HardwareMap hdwMap) {
         // Create the TensorFlow processor by using a builder.
         tfod = new TfodProcessor.Builder()
@@ -68,13 +69,12 @@ public class TensorFlow {
         }
 
         if (largestObj > 0) {
-            if ((110 <= largestX) && (largestX <= 140)) {
+            if (largestX <= 140)
                 propNum = 1;
-            } else if ((315 <= largestX) && (largestX <= 590)) {
+            else
                 propNum = 2;
-            }
-        } else {
-            propNum = 3;}
+        } else
+            propNum = 3;
 
         return propNum;
     }
