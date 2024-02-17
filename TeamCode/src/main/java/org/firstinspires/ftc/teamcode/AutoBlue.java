@@ -119,6 +119,7 @@ public class AutoBlue extends LinearOpMode {
         whiteConveyor.moveViperToPosition(0);
         sleep(1800);
 
+        /*
         whiteClaw.SuplexPixel();
 
         if(!PARAMS.frontStage){
@@ -148,6 +149,7 @@ public class AutoBlue extends LinearOpMode {
         whiteConveyor.stopConv();
         whiteConveyor.moveViperToPosition(0);
         sleep(1800);
+        */
     }
 
     //use sensor to square up to the panel
