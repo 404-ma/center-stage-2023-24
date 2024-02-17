@@ -68,10 +68,11 @@ public class AutoBlue extends LinearOpMode {
         drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         whiteClaw = new ClawMoves(hardwareMap);
         whiteConveyor = new Conveyor(hardwareMap);
-
+        //
         tenFl = new TensorFlow(hardwareMap);
 
-        PARAMS.propSpikeMark = tenFl.telTFOD(1000);
+        //
+        PARAMS.propSpikeMark = tenFl.telemTFOD(1000);
         sleep(20);
 
         distSys = new DistanceSystem(hardwareMap);

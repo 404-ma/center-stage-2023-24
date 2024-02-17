@@ -40,7 +40,7 @@ public class TensorFlow {
         visionPortal = builder.build();
     }
 
-    public int telTFOD(long waitMs) {
+    public int telemTFOD(long waitMs) {
         telemetry.addData("# Objects Detected", currentRecognitions.size());
         // Step through the list of recognitions and display info for each one.
         int obj = 0;
@@ -49,7 +49,7 @@ public class TensorFlow {
         double largestY = 0;
         int propNum = 0;
 
-        // while no ojbect and not timedout
+        // while no object and not timed out
         long waitEndTime = (System.currentTimeMillis() + TRIGGER_LOCKOUT_INTERVAL);
 
         while ((waitEndTime > System.currentTimeMillis()) && (largestObj == 0)) {
