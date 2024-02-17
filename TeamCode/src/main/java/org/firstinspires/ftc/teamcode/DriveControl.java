@@ -138,15 +138,15 @@ public class DriveControl extends LinearOpMode {
                     break;
 
                 case BUTTON_Y:
-                    crane.moveCraneToPosition(7900);
+                    crane.moveCraneToPosition(7400);
                     break;
 
                 case DPAD_DOWN:
-                    crane.moveCraneToRelativePosition(-500);
+                    crane.moveCraneToRelativePosition(-400);
                     break;
 
                 case DPAD_UP:
-                    crane.moveCraneToRelativePosition(500);
+                    crane.moveCraneToRelativePosition(400);
                     break;
 
                 case LEFT_TRIGGER:
