@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.helper.TargetPose;
 import org.firstinspires.ftc.teamcode.Helper.TensorFlow;
 
 @Config
-@Autonomous (name = "RR Auto Drive Blue", group = "RoadRunner")
+@Autonomous (name = "Auto Blue", group = "RoadRunner")
 public class AutoBlue extends LinearOpMode {
     /*
      *  FTC Dashboard Parameters

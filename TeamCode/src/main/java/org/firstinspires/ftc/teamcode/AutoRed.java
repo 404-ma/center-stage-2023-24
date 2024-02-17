@@ -16,11 +16,12 @@ import org.firstinspires.ftc.teamcode.Helper.ClawMoves;
 import org.firstinspires.ftc.teamcode.Helper.Conveyor;
 import org.firstinspires.ftc.teamcode.Helper.DistanceSystem;
 import org.firstinspires.ftc.teamcode.Helper.DrivetrainV2;
+import org.firstinspires.ftc.teamcode.Helper.TensorFlow;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 
 @Config
-@Autonomous (name = "RR Auto Drive Red", group = "RoadRunner")
-public class Red extends LinearOpMode {
+@Autonomous (name = "Auto Red", group = "RoadRunner")
+public class AutoRed extends LinearOpMode {
     /*
      *  FTC Dashboard Parameters
      */
@@ -34,6 +35,7 @@ public class Red extends LinearOpMode {
         public double gainValueForward = 0.1;
         public double rangeValue = 2;
         public double gainValueRotation = 0.03;
+        public String versionNum = "3.2";
 
     }
 
@@ -44,44 +46,41 @@ public class Red extends LinearOpMode {
     private Conveyor whiteConveyor;
     private DistanceSystem distSys;
     private DrivetrainV2 drv;
+    private TensorFlow tenFl;
 
     @Override
     public void runOpMode() {
         // Load Introduction and Wait for Start
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
-        // TODO: Add Version Number Display
         telemetry.addLine("RoadRunner Auto Drive RED");
+        telemetry.addLine();
+        telemetry.addLine().addData("Version", PARAMS.versionNum);
         telemetry.addLine();
         telemetry.addData(">", "Press Start to Launch");
         telemetry.update();
 
-        //TODO: Replace References to Servo with ClawMoves
-        Servo arm = hardwareMap.servo.get("ArmServo");
-        arm.setDirection(Servo.Direction.FORWARD);
-        Servo flip = hardwareMap.servo.get("FlipServo");
-        flip.setDirection(Servo.Direction.FORWARD);
-        Servo grip = hardwareMap.servo.get("ClawServo");
-        grip.setDirection(Servo.Direction.FORWARD);
 
         dashboard = FtcDashboard.getInstance();
         dashboard.clearTelemetry();
         drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         whiteClaw = new ClawMoves(hardwareMap);
         whiteConveyor = new Conveyor(hardwareMap);
-        drv = new DrivetrainV2(hardwareMap);
+        tenFl = new TensorFlow(hardwareMap);
         distSys = new DistanceSystem(hardwareMap);
+        whiteClaw.AutonomousStart();
 
         waitForStart();
+
+        int spikeMark = tenFl.telemTFOD(1500);
+
         if (isStopRequested()) return;
         telemetry.clear();
 
-        //TODO:  Try Moving Claw Initialization Before Start
         whiteClaw.AutonomousStart();
-
 
         switch((int) PARAMS.propSpikeMark){
             case 3:
-                toSpikeMark(17.0,3.0,27, PARAMS.frontStage);
+                toSpikeMark(15.5,3.0,27, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(36.5, PARAMS.partnerDead);
                 }
@@ -90,7 +89,7 @@ public class Red extends LinearOpMode {
                 }
                 break;
             case 1:
-                toSpikeMark(18.0, -3.0, -30, PARAMS.frontStage);
+                toSpikeMark(16.5, -3.0, -30, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(28.0, PARAMS.partnerDead);
                 }
@@ -99,7 +98,7 @@ public class Red extends LinearOpMode {
                 }
                 break;
             default:
-                toSpikeMark(21.0, -3.2,0, PARAMS.frontStage);
+                toSpikeMark(19.5, -3.2,0, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(28.0, PARAMS.partnerDead);
                 }
@@ -108,10 +107,10 @@ public class Red extends LinearOpMode {
                 }
                 break;
         }
-
         whiteClaw.PrepForPixel(false);
-        // TODO: Test Viper Motor Positom
-        whiteConveyor.moveViperToPosition(1200);
+
+        whiteConveyor.moveViperToPosition(1400);
+        sleep(1000);
         whiteConveyor.moveConvForward();
         sleep(2000);
         whiteConveyor.stopConv();
