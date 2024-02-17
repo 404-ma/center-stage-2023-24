@@ -51,13 +51,12 @@ public class TensorFlow {
 
         // Step through the list of recognitions and display info for each one.
         while ((waitEndTime > System.currentTimeMillis()) && (largestObj == 0)) {
-            ++tlmObjectCnt;
             List<Recognition> currentRecognitions = tfod.getRecognitions();
 
             for (Recognition recognition : currentRecognitions) {
+                ++tlmObjectCnt;
                 double x = (recognition.getLeft() + recognition.getRight()) / 2; //getting the coordinates for the box --> finding the middle of the box
                 double y = (recognition.getTop() + recognition.getBottom()) / 2;
-
                 double height = recognition.getHeight();
                 double width = recognition.getWidth();
 
