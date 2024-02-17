@@ -70,13 +70,13 @@ public class AutoBlue extends LinearOpMode {
         whiteClaw.AutonomousStart();
 
         waitForStart();
-
-        int spikeMark = tenFl.telemTFOD(1500);
-
-        if (isStopRequested()) return;
         telemetry.clear();
+        if (isStopRequested()) return;
 
-        switch((int) spikeMark){
+        propSpikeMark = tenFl.telemTFOD(1000);
+        updateTelemetry();
+
+        switch((int) propSpikeMark){
             case 3:
                 PARAMS.propAng = 35.5;
                 toSpikeMark(17.0,-4.0,-24, PARAMS.frontStage);
@@ -99,7 +99,7 @@ public class AutoBlue extends LinearOpMode {
                 break;
             default:
                 PARAMS.propAng = 30.0;
-                toSpikeMark(21.0, 4.2,0, PARAMS.frontStage);
+                toSpikeMark(22.5, 4.5,0, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(PARAMS.propAng, PARAMS.partnerDead);
                 }
