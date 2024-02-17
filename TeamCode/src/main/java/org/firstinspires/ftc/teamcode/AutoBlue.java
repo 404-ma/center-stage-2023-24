@@ -10,7 +10,6 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -19,10 +18,12 @@ import org.firstinspires.ftc.teamcode.Helper.Conveyor;
 import org.firstinspires.ftc.teamcode.Helper.DistanceSystem;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.helper.TargetPose;
+import org.firstinspires.ftc.teamcode.Helper.TensorFlow;
+import org.firstinspires.ftc.vision.VisionPortal;
 
 @Config
 @Autonomous (name = "RR Auto Drive Blue", group = "RoadRunner")
-public class Blue extends LinearOpMode {
+public class AutoBlue extends LinearOpMode {
     /*
      *  FTC Dashboard Parameters
      */
@@ -48,6 +49,8 @@ public class Blue extends LinearOpMode {
     private ClawMoves whiteClaw;
     private Conveyor whiteConveyor;
     private DistanceSystem distSys;
+    private TensorFlow tenFl;
+    private VisionPortal visionPortal;
 
     @Override
     public void runOpMode() {
@@ -66,11 +69,32 @@ public class Blue extends LinearOpMode {
         whiteClaw = new ClawMoves(hardwareMap);
         whiteConveyor = new Conveyor(hardwareMap);
 
+        tenFl.InitTFOD(hardwareMap);
+
+        if (opModeIsActive()) {
+            while (opModeIsActive()) {
+
+                tenFl.telTFOD();
+                // Push telemetry to the Driver Station.
+                telemetry.update();
+
+                // Save CPU resources; can resume streaming when needed.
+                if (gamepad1.dpad_down) {
+                    visionPortal.stopStreaming();
+                } else if (gamepad1.dpad_up) {
+                    visionPortal.resumeStreaming();
+                }
+                // Share the CPU.
+                sleep(20);
+            }
+        }
+        // Save more CPU resources when camera is no longer needed.;
+
         distSys = new DistanceSystem(hardwareMap);
         whiteClaw.AutonomousStart();
 
-
         waitForStart();
+        visionPortal.close();
         if (isStopRequested()) return;
         telemetry.clear();
 
@@ -107,8 +131,7 @@ public class Blue extends LinearOpMode {
                 }
                 break;
         }
-        //gets the position of the robot before dropping the pixel
-        //SensorApproach();
+
         whiteClaw.PrepForPixel(false);
 
         whiteConveyor.moveViperToPosition(1400);
@@ -148,10 +171,9 @@ public class Blue extends LinearOpMode {
         whiteConveyor.stopConv();
         whiteConveyor.moveViperToPosition(0);
         sleep(1800);
-
-
     }
 
+    //use sensor to square up to the panel
     private void SensorApproach() {
         long timeout = System.currentTimeMillis()+PARAMS.rangeTime;
         TargetPose pose = distSys.getTargetPose(true);  //Get Initial Values
@@ -233,6 +255,7 @@ public class Blue extends LinearOpMode {
         Actions.runBlocking(moveRb3);
     }
 
+    //goes front to the pixels (when it started from backStage)
     public void secondHalfBack(){
         Action moveSecHalf = drive.actionBuilder(drive.pose)
                 //ending position y: -60
@@ -243,6 +266,7 @@ public class Blue extends LinearOpMode {
         Actions.runBlocking(new ParallelAction(moveSecHalf, whiteClaw.RetractArm()));
         }
 
+    //goes back to the panel (when it started from backStage)
     public void backSecondHalfBack(double ang){
         Action moveBackSecHalf = drive.actionBuilder(drive.pose)
                 .setReversed(true)
@@ -252,6 +276,7 @@ public class Blue extends LinearOpMode {
         Actions.runBlocking(new ParallelAction(moveBackSecHalf, whiteClaw.RetractArm()));
     }
 
+    //goes front to the pixel (when it started from the frontStage)
     public void secondHalfFront(){
         Action moveSecHalf = drive.actionBuilder(drive.pose)
                 .splineTo(new Vector2d(9, 0), Math.toRadians(-90))
@@ -260,6 +285,7 @@ public class Blue extends LinearOpMode {
         Actions.runBlocking(new ParallelAction(moveSecHalf, whiteClaw.RetractArm()));
     }
 
+    //goes back to the panel (when it started from frontStage)
     public void backSecondHalfFront(double ang){
         Action moveBackSecHalf = drive.actionBuilder(drive.pose)
                 .splineTo(new Vector2d(9,60), Math.toRadians(90))
@@ -269,17 +295,4 @@ public class Blue extends LinearOpMode {
 
     }
 
-
-
 }
-/*
-private boolean isItThere;
-
-//blue
-//write if isItThere works
-
-if(!isItThere & !middleOftheScreen){
-    .turnTo(Math.toRadians(-45))
-    }
-
- */

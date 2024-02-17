@@ -164,14 +164,13 @@ public class TestTensorFlowObjectDetection extends LinearOpMode {
 
     }   // end method telemetryTfod()
 
+    /*
 
     private void checkProp(){
         List<Recognition> currentRecognitions = tfod.getRecognitions();
         telemetry.addData("# Objects Detected", currentRecognitions.size());
 
-
-
-    }
+    } */
 }
 
 /*
