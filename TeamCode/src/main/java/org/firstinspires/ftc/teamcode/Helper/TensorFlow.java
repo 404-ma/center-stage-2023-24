@@ -18,6 +18,7 @@ public class TensorFlow {
     public int tlmObjectCnt = 0;
     public double tlmBestObjectX = 0;
     public double tlmBestObjectY = 0;
+    public double tlmConfidence = 0;
 
 
     public TensorFlow (HardwareMap hdwMap) {
@@ -26,6 +27,9 @@ public class TensorFlow {
                 .setModelFileName(TFOD_MODEL_FILE)
                 .setModelLabels(LABELS)
                 .build();
+
+        // Set confidence threshold for TFOD recognitions, can change at any time.
+        tfod.setMinResultConfidence(0.80f);
 
         visionPortal = new VisionPortal.Builder()
                 .addProcessor(tfod)
@@ -43,6 +47,7 @@ public class TensorFlow {
 
         // while no object and not timed out
         long waitEndTime = (System.currentTimeMillis() + waitMs);
+        tlmObjectCnt = 0;
 
         // Step through the list of recognitions and display info for each one.
         while ((waitEndTime > System.currentTimeMillis()) && (largestObj == 0)) {
@@ -62,6 +67,7 @@ public class TensorFlow {
                     largestY = y;
                     tlmBestObjectX = x;
                     tlmBestObjectY = y;
+                    tlmConfidence = recognition.getConfidence();
                 }
             }
 
@@ -69,7 +75,7 @@ public class TensorFlow {
         }
 
         if (largestObj > 0) {
-            if (largestX <= 140)
+            if (largestX <= 180)
                 propNum = 1;
             else
                 propNum = 2;
