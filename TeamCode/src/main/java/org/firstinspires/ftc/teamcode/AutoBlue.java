@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -47,6 +48,7 @@ public class AutoBlue extends LinearOpMode {
     private Conveyor whiteConveyor;
     private DistanceSystem distSys;
     private TensorFlow tenFl;
+    private int propSpikeMark = 0;
 
 
     @Override
@@ -62,6 +64,7 @@ public class AutoBlue extends LinearOpMode {
 
         dashboard = FtcDashboard.getInstance();
         dashboard.clearTelemetry();
+
         drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         whiteClaw = new ClawMoves(hardwareMap);
         whiteConveyor = new Conveyor(hardwareMap);
@@ -272,6 +275,25 @@ public class AutoBlue extends LinearOpMode {
                 .build();
         Actions.runBlocking(new ParallelAction(moveBackSecHalf, whiteClaw.RetractArm()));
 
+    }
+
+    private void updateTelemetry() {
+        telemetry.addLine("TensorFlow");
+        telemetry.addLine().addData("Prop Mark", propSpikeMark );
+        telemetry.addLine().addData("Objects", tenFl.tlmObjectCnt);
+        telemetry.addLine().addData("Confidence", tenFl.tlmConfidence);
+        telemetry.addLine().addData("Obj X", tenFl.tlmBestObjectX );
+        telemetry.addLine().addData("Obj Y", tenFl.tlmBestObjectY );
+        telemetry.update();
+
+        // FTC Dashboard Telemetry
+        TelemetryPacket packet = new TelemetryPacket();
+        packet.put("Prop Mark",  propSpikeMark);
+        packet.put("Objects", tenFl.tlmObjectCnt);
+        packet.put("Confidence", tenFl.tlmConfidence);
+        packet.put("Obj X", tenFl.tlmBestObjectX );
+        packet.put("Obj Y", tenFl.tlmBestObjectY );
+        dashboard.sendTelemetryPacket(packet);
     }
 
 }
