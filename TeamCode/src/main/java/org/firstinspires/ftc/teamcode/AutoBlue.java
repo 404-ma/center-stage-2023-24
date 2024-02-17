@@ -38,7 +38,6 @@ public class AutoBlue extends LinearOpMode {
         public double angleAtEnd = -90;
         public String versionNum = "3.2";
         public double propAng;
-
     }
 
     public static Params PARAMS = new Params();
