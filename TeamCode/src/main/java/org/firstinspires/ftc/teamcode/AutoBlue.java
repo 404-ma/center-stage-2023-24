@@ -82,7 +82,7 @@ public class AutoBlue extends LinearOpMode {
         switch((int) propSpikeMark){
             case 3:
                 PARAMS.propAng = 35.5;
-                toSpikeMark(17.0,-4.0,-24, PARAMS.frontStage);
+                toSpikeMark(20.0,-3.5,-24, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(PARAMS.propAng, PARAMS.partnerDead);
                 }
@@ -92,7 +92,7 @@ public class AutoBlue extends LinearOpMode {
                 break;
             case 1:
                 PARAMS.propAng = 27.0;
-                toSpikeMark(18.0, 4.0, 32, PARAMS.frontStage);
+                toSpikeMark(16.5, 4.0, 32, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(PARAMS.propAng, PARAMS.partnerDead);
                 }
@@ -102,7 +102,7 @@ public class AutoBlue extends LinearOpMode {
                 break;
             default:
                 PARAMS.propAng = 30.0;
-                toSpikeMark(22.5, 4.5,0, PARAMS.frontStage);
+                toSpikeMark(22.5, 4.0,0, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(PARAMS.propAng, PARAMS.partnerDead);
                 }

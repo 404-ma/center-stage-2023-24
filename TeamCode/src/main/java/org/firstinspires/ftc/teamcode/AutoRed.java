@@ -80,7 +80,7 @@ public class AutoRed extends LinearOpMode {
 
         switch((int) PARAMS.propSpikeMark){
             case 3:
-                toSpikeMark(15.5,3.0,27, PARAMS.frontStage);
+                toSpikeMark(16.0,3.0,27, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(36.5, PARAMS.partnerDead);
                 }
@@ -89,21 +89,21 @@ public class AutoRed extends LinearOpMode {
                 }
                 break;
             case 1:
-                toSpikeMark(16.5, -3.0, -30, PARAMS.frontStage);
+                toSpikeMark(17.5, -3.0, -30, PARAMS.frontStage);
                 if(PARAMS.frontStage){
-                    toFrontPanel(28.0, PARAMS.partnerDead);
+                    toFrontPanel(27.0, PARAMS.partnerDead);
                 }
                 else{
-                    toBackPanel(28.0);
+                    toBackPanel(27.0);
                 }
                 break;
             default:
-                toSpikeMark(19.5, -3.2,0, PARAMS.frontStage);
+                toSpikeMark(20.0, -3.2,0, PARAMS.frontStage);
                 if(PARAMS.frontStage){
-                    toFrontPanel(28.0, PARAMS.partnerDead);
+                    toFrontPanel(29.0, PARAMS.partnerDead);
                 }
                 else{
-                    toBackPanel(28.0);
+                    toBackPanel(29.0);
                 }
                 break;
         }
