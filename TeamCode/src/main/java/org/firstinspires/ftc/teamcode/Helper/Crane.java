@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.Range;
 
 public class Crane {
     public static class Params{
-        public double craneSpeed = 0.5;
+        public double craneSpeed = 0.8;
         public int craneMaxPositionRelative = 8000;
 
     }
@@ -19,7 +19,7 @@ public class Crane {
     public DcMotorEx Crane;
 
     public Crane(@NonNull HardwareMap hdwMap){
-        Crane = hdwMap.get(DcMotorEx.class, "Crane");
+        Crane = hdwMap.get(DcMotorEx.class, "craneMotor");
         Crane.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         Crane.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
@@ -31,30 +31,31 @@ public class Crane {
         Crane.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
-    public void moveViperWithPower(double power, boolean override){
+    public void moveCraneToRelativePosition(int relativePos) {
+        int checkedPosition = Range.clip(relativePos + Crane.getCurrentPosition(), 0, PARAMS.craneMaxPositionRelative);
+        Crane.setTargetPosition(checkedPosition);
+        Crane.setPower(PARAMS.craneSpeed);
+        Crane.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    public void moveCraneWithPower(double power, boolean override){
         Crane.getMode();
         Crane.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         if (!override) {
             int cranePosition = Crane.getCurrentPosition();
             if (power > 0) {
-                if (cranePosition >= PARAMS.craneMaxPositionRelative){
+                if (cranePosition >= PARAMS.craneMaxPositionRelative)
                     power =0;
-                }
-                else {
+                else
                     power = Math.max(power, 0.4);
-                }
             } else {
-                if (cranePosition <= 0){
+                if (cranePosition <= 0)
                     power = 0;
-                }
-                else {
+                else
                     power = Math.max(power, -0.4);
-                }
-
             }
         }
-
         Crane.setPower(Range.clip(power, -1, 1));
     }
 }
