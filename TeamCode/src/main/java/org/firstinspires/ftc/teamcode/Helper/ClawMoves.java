@@ -146,7 +146,7 @@ public class ClawMoves {
         }
         DeferredActions.CreateDeferredAction(180, DeferredActionType.CLAW_FLIP_SUPLEX);
         // Wait for Pixel over Bin
-        DeferredActions.CreateDeferredAction(610, DeferredActionType.CLAW_OPEN_GRIP_UP);
+        DeferredActions.CreateDeferredAction(675, DeferredActionType.CLAW_OPEN_GRIP_UP);
     }
 
 
