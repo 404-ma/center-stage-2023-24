@@ -82,7 +82,7 @@ public class AutoBlue extends LinearOpMode {
         switch(propSpikeMark){
             case 3:
                 PARAMS.propAng = 35.5;
-                toSpikeMark(20.0,-3.5,-24, PARAMS.frontStage);
+                toSpikeMark(20.5,-4.0,-24, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(PARAMS.propAng, PARAMS.partnerDead);
                 }
@@ -122,14 +122,14 @@ public class AutoBlue extends LinearOpMode {
         whiteConveyor.moveViperToPosition(0);
         sleep(1800);
 
-        /*
+
         whiteClaw.SuplexPixel();
 
         if(!PARAMS.frontStage){
             secondHalfBack();
         }
         else{
-            secondHalfFront();
+            BackMid();
         }
 
         //pick up
@@ -141,7 +141,7 @@ public class AutoBlue extends LinearOpMode {
             backSecondHalfBack(PARAMS.propAng);
         }
         else{
-            backSecondHalfFront(PARAMS.propAng);
+            BackMidSec(PARAMS.propAng);
         }
 
         whiteClaw.PrepForPixel(false);
@@ -152,7 +152,7 @@ public class AutoBlue extends LinearOpMode {
         whiteConveyor.stopConv();
         whiteConveyor.moveViperToPosition(0);
         sleep(1800);
-        */
+
     }
 
     //use sensor to square up to the panel
@@ -185,11 +185,13 @@ public class AutoBlue extends LinearOpMode {
             an = 90;
         }
 
+        //goes to specified spikeMark
         Action moveRb = drive.actionBuilder(drive.pose)
                 .splineTo(new Vector2d(X, Y), Math.toRadians(ang))
                 .build();
         Actions.runBlocking(new SequentialAction(moveRb, whiteClaw.PlacePixel()));
 
+        //steps back from the spike mark
         Action moveBack = drive.actionBuilder(drive.pose)
                 .setReversed(true)
                 .splineTo(new Vector2d(6, 0), Math.toRadians(an))
@@ -277,6 +279,26 @@ public class AutoBlue extends LinearOpMode {
 
     }
 
+    //going through the middle gate (backStage)
+    public void BackMid(){
+//y = 38.5
+        Action moveBackM = drive.actionBuilder(drive.pose)
+                .splineTo(new Vector2d(40,12), Math.toRadians(-90))
+                .splineTo(new Vector2d(40,-80), Math.toRadians(-90))
+                .build();
+        Actions.runBlocking(new ParallelAction(moveBackM, whiteClaw.RetractArm()));
+
+    }
+
+    public void BackMidSec(double ang){
+        Action moveBackMidSec = drive.actionBuilder(drive.pose)
+                .splineTo(new Vector2d(40, 12),Math.toRadians(90))
+                .splineTo(new Vector2d(ang, 86), Math.toRadians(90))
+                .build();
+        Actions.runBlocking(new ParallelAction(moveBackMidSec), whiteClaw.RetractArm());
+    }
+
+    //going through the middle gate (frontStage)
     private void updateTelemetry() {
         telemetry.addLine("TensorFlow");
         telemetry.addLine().addData("Prop Mark", propSpikeMark );

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -47,6 +48,7 @@ public class AutoRed extends LinearOpMode {
     private DistanceSystem distSys;
     private DrivetrainV2 drv;
     private TensorFlow tenFl;
+    public int spikeMark = 0;
 
     @Override
     public void runOpMode() {
@@ -71,7 +73,7 @@ public class AutoRed extends LinearOpMode {
 
         waitForStart();
 
-        int spikeMark = tenFl.telemTFOD(1500);
+        spikeMark = tenFl.telemTFOD(1500);
 
         if (isStopRequested()) return;
         telemetry.clear();
@@ -79,7 +81,7 @@ public class AutoRed extends LinearOpMode {
 
         switch((int) spikeMark){
             case 3:
-                toSpikeMark(20.0,4.0,27, PARAMS.frontStage);
+                toSpikeMark(20.5,4.0,27, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(36.5, PARAMS.partnerDead);
                 }
@@ -88,7 +90,7 @@ public class AutoRed extends LinearOpMode {
                 }
                 break;
             case 1:
-                toSpikeMark(17.5, -3.0, -30, PARAMS.frontStage);
+                toSpikeMark(18.5, -3.0, -30, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(27.0, PARAMS.partnerDead);
                 }
@@ -97,7 +99,7 @@ public class AutoRed extends LinearOpMode {
                 }
                 break;
             default:
-                toSpikeMark(21.0, -3.2,0, PARAMS.frontStage);
+                toSpikeMark(22.0, -3.2,0, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(29.0, PARAMS.partnerDead);
                 }
@@ -185,5 +187,25 @@ public class AutoRed extends LinearOpMode {
                 .splineTo(new Vector2d(targetX,-38.5), Math.toRadians(-90))
                 .build();
         Actions.runBlocking(moveRb3);
+    }
+
+
+    private void updateTelemetry() {
+        telemetry.addLine("TensorFlow");
+        telemetry.addLine().addData("Prop Mark", spikeMark );
+        telemetry.addLine().addData("Objects", tenFl.tlmObjectCnt);
+        telemetry.addLine().addData("Confidence", tenFl.tlmConfidence);
+        telemetry.addLine().addData("Obj X", tenFl.tlmBestObjectX );
+        telemetry.addLine().addData("Obj Y", tenFl.tlmBestObjectY );
+        telemetry.update();
+
+        // FTC Dashboard Telemetry
+        TelemetryPacket packet = new TelemetryPacket();
+        packet.put("Prop Mark", spikeMark);
+        packet.put("Objects", tenFl.tlmObjectCnt);
+        packet.put("Confidence", tenFl.tlmConfidence);
+        packet.put("Obj X", tenFl.tlmBestObjectX );
+        packet.put("Obj Y", tenFl.tlmBestObjectY );
+        dashboard.sendTelemetryPacket(packet);
     }
 }
