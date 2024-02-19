@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.Helper;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -10,31 +8,29 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
 public class Launcher {
+    public static class Params {
+        public double launchPos = 0.25;
+        public double startPos = 0.7;
+    }
 
-    private Servo drone;
+    public static Params PARAMS = new Params();
 
-    public double position = 0;
+    private final Servo drone;
+
+    public double tlmPosition = 0;
 
     public Launcher(@NonNull HardwareMap hdwMap){
-        Servo drone = hdwMap.servo.get("DroneServo");
-
-
+        drone = hdwMap.servo.get("DroneServo");
+        drone.setDirection(Servo.Direction.FORWARD);
     }
 
     public void startPosition(){
-        drone.setDirection(Servo.Direction.FORWARD);
-        position = 0.7;
-        telemetry.addData("position:", position);
-        telemetry.update();
-        drone.setPosition(position);
+        tlmPosition = PARAMS.startPos;
+        drone.setPosition(tlmPosition);
     }
 
     public void fly(){
-        drone.setDirection(Servo.Direction.FORWARD);
-        position = 0.25;
-        telemetry.addData("position:", position);
-        telemetry.update();
-        drone.setPosition(position);
+        tlmPosition = PARAMS.launchPos;
+        drone.setPosition(tlmPosition);
     }
-
 }

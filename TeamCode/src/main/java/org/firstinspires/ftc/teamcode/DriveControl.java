@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.Helper.Crane;
 import org.firstinspires.ftc.teamcode.Helper.DeferredActions;
 import org.firstinspires.ftc.teamcode.Helper.DeferredActions.DeferredActionType;
 import org.firstinspires.ftc.teamcode.Helper.DrivetrainV2;
+import org.firstinspires.ftc.teamcode.Helper.Launcher;
 import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class DriveControl extends LinearOpMode {
     private boolean setReversed = false;
     private ClawMoves yclaw;
     private Crane crane;
+    private Launcher launch;
 
     @Override
     public void runOpMode() {
@@ -43,6 +45,8 @@ public class DriveControl extends LinearOpMode {
         DrivetrainV2 drvTrain = new DrivetrainV2(hardwareMap);
         yclaw = new ClawMoves(hardwareMap);
         crane = new Crane(hardwareMap);
+        launch = new Launcher(hardwareMap);
+        launch.startPosition();
 
         waitForStart();
         if (isStopRequested()) return;
@@ -147,6 +151,14 @@ public class DriveControl extends LinearOpMode {
 
                 case DPAD_UP:
                     crane.moveCraneToRelativePosition(400);
+                    break;
+
+                case BUTTON_B:
+                    launch.startPosition();
+                    break;
+
+                case BUTTON_X:
+                    launch.fly();
                     break;
 
                 case LEFT_TRIGGER:
