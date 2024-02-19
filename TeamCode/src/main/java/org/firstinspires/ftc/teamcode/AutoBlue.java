@@ -295,7 +295,7 @@ public class AutoBlue extends LinearOpMode {
                 .splineTo(new Vector2d(40, 12),Math.toRadians(90))
                 .splineTo(new Vector2d(ang, 86), Math.toRadians(90))
                 .build();
-        Actions.runBlocking(new ParallelAction(moveBackMidSec), whiteClaw.RetractArm());
+        Actions.runBlocking(new ParallelAction(moveBackMidSec, whiteClaw.RetractArm()));
     }
 
     //going through the middle gate (frontStage)
