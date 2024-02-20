@@ -48,7 +48,7 @@ public class Conveyor {
     }
 
     public void moveViperToPosition(int position) {
-        // TODO:  Fix code for DC Motor Power
+
         int absolutePosition = Range.clip(position, 0, PARAMS.viperMotorMaxPositionRelative);
         viperMotor.setTargetPosition(absolutePosition);
         viperMotor.setPower(PARAMS.viperSpeed);
@@ -56,7 +56,7 @@ public class Conveyor {
     }
 
     public void moveViperWithPower(double power, boolean override) {
-        // TODO:  Add Limits for Power based on Motor Position to prevent damage to equipment
+
 
         viperMotor.getMode();
         viperMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
