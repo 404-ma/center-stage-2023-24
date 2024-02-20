@@ -36,9 +36,9 @@ public class ClawMoves {
     public double tlmGripPosition = -1;
     public double tlmFlipPosition = -1;
 
-    private Servo arm;
-    private Servo flip;
-    private Servo grip;
+    private final Servo arm;
+    private final Servo flip;
+    private final Servo grip;
 
 
     // Class Constructor
