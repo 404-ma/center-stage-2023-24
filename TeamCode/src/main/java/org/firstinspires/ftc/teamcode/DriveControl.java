@@ -4,11 +4,10 @@ import static org.firstinspires.ftc.teamcode.Helper.ClawMoves.PARAMS;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helper.ClawMoves;
+import org.firstinspires.ftc.teamcode.Helper.Conveyor;
 import org.firstinspires.ftc.teamcode.Helper.Crane;
 import org.firstinspires.ftc.teamcode.Helper.DeferredActions;
 import org.firstinspires.ftc.teamcode.Helper.DeferredActions.DeferredActionType;
@@ -24,8 +23,6 @@ import java.util.Locale;
 public class DriveControl extends LinearOpMode {
     private boolean setReversed = false;
     private ClawMoves yclaw;
-    private Crane crane;
-    private Launcher launch;
 
     @Override
     public void runOpMode() {
@@ -37,15 +34,14 @@ public class DriveControl extends LinearOpMode {
         telemetry.addData(">", "Press Start to Launch");
         telemetry.update();
 
-        // TODO:  Control viperMotor and conveyor servo via helper class.
-        DcMotor viperMotor = hardwareMap.dcMotor.get("viperMotor");
-        CRServo conveyor = hardwareMap.crservo.get("ConveyorServo");
         gamePadInputV2 gpIn1 = new gamePadInputV2(gamepad1);
         gamePadInputV2 gpIn2 = new gamePadInputV2(gamepad2);
         DrivetrainV2 drvTrain = new DrivetrainV2(hardwareMap);
+        Conveyor conv = new Conveyor(hardwareMap);
+        Crane crane = new Crane(hardwareMap);
         yclaw = new ClawMoves(hardwareMap);
-        crane = new Crane(hardwareMap);
-        launch = new Launcher(hardwareMap);
+        yclaw.PrepForPixel(false);
+        Launcher launch = new Launcher(hardwareMap);
         launch.startPosition();
 
         waitForStart();
@@ -55,6 +51,7 @@ public class DriveControl extends LinearOpMode {
         boolean suplex = false;
         double speedMultiplier = 1;
         double lastSpeed = 1;
+        boolean viperOverride = false;
 
         while (opModeIsActive()) {
             update_telemetry(gpIn1, gpIn2);
@@ -101,7 +98,7 @@ public class DriveControl extends LinearOpMode {
                     break;
 
                 case BUTTON_R_BUMPER:
-                    if (yclaw.tlmGripPosition != PARAMS.gripOpenPos)
+                    if (yclaw.tlmGripPosition == PARAMS.gripClosedPos)
                         yclaw.openGrip();
                     else
                         yclaw.closeGrip();
@@ -161,18 +158,21 @@ public class DriveControl extends LinearOpMode {
                     launch.fly();
                     break;
 
+                case BUTTON_BACK:
+                    viperOverride = true;
+
                 case LEFT_TRIGGER:
                     double power = Math.min(gamepad2.left_trigger, 0.75);
-                    conveyor.setPower(power);
+                    conv.moveConvPower(power);
                     break;
 
                 case RIGHT_TRIGGER:
                     double powerBack = Math.min(gamepad2.right_trigger, 0.75);
-                    conveyor.setPower(-powerBack);
+                    conv.moveConvPower(-powerBack);
                     break;
 
                 case JOYSTICK:
-                    viperMotor.setPower(gamepad2.right_stick_y * -0.5);
+                    conv.moveViperWithPower(gamepad2.right_stick_y * -0.5, viperOverride);
                     break;
             }
             // Deferred Actions

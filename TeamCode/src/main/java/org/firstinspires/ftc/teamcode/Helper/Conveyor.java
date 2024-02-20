@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.util.Range;
 public class Conveyor {
 
     public static class Params {
-        public double conveyorSpeed = 0.7;
+        public double conveyorSpeed = 0.75;
         public double viperSpeed = 0.5;
         public int viperMotorMaxPositionRelative = 3000;
 
@@ -21,26 +21,30 @@ public class Conveyor {
 
     public static Params PARAMS = new Params();
     public DcMotorEx viperMotor;
-    private CRServo conv;
+    private final CRServo conveyor;
 
 
     public Conveyor(@NonNull HardwareMap hdwMap) {
         viperMotor = hdwMap.get(DcMotorEx.class, "viperMotor");
         viperMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         viperMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        conv = hdwMap.crservo.get("ConveyorServo");
+        conveyor = hdwMap.crservo.get("ConveyorServo");
     }
 
     public void moveConvForward() {
-        conv.setPower(PARAMS.conveyorSpeed);
+        conveyor.setPower(PARAMS.conveyorSpeed);
     }
 
     public void moveConvBackward() {
-        conv.setPower(-PARAMS.conveyorSpeed);
+        conveyor.setPower(-PARAMS.conveyorSpeed);
+    }
+
+    public void moveConvPower( double power ) {
+        conveyor.setPower(power);
     }
 
     public void stopConv() {
-        conv.setPower(0);
+        conveyor.setPower(0);
     }
 
     public void moveViperToPosition(int position) {
