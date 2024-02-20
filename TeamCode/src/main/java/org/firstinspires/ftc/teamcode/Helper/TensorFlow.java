@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.Helper;
 
 import static android.os.SystemClock.sleep;
 
+import androidx.annotation.NonNull;
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
@@ -21,7 +23,7 @@ public class TensorFlow {
     public double tlmConfidence = 0;
 
 
-    public TensorFlow (HardwareMap hdwMap) {
+    public TensorFlow (@NonNull  HardwareMap hdwMap) {
         // Create the TensorFlow processor by using a builder.
         tfod = new TfodProcessor.Builder()
                 .setModelFileName(TFOD_MODEL_FILE)
@@ -40,17 +42,18 @@ public class TensorFlow {
     }
 
     public int telemTFOD(long waitMs) {
-        double largestObj = 0;
+        double largestObjArea = 0;
         double largestX = 0;
         double largestY = 0;
         int propNum = 0;
 
         // while no object and not timed out
         long waitEndTime = (System.currentTimeMillis() + waitMs);
+        boolean timeExpired = false;
         tlmObjectCnt = 0;
 
         // Step through the list of recognitions and display info for each one.
-        while ((waitEndTime > System.currentTimeMillis()) && (largestObj == 0)) {
+        while (!timeExpired && (largestObjArea == 0)) {
             List<Recognition> currentRecognitions = tfod.getRecognitions();
 
             for (Recognition recognition : currentRecognitions) {
@@ -60,8 +63,8 @@ public class TensorFlow {
                 double height = recognition.getHeight();
                 double width = recognition.getWidth();
 
-                if ((height * width) > largestObj) {
-                    largestObj = height * width;
+                if ((height * width) > largestObjArea) {
+                    largestObjArea = height * width;
                     largestX = x;
                     largestY = y;
                     tlmBestObjectX = x;
@@ -70,10 +73,12 @@ public class TensorFlow {
                 }
             }
 
-            if (largestObj == 0) sleep( 100);
+            timeExpired = (System.currentTimeMillis() > waitEndTime);
+            if (!timeExpired && (largestObjArea == 0))
+                sleep( 50);
         }
 
-        if (largestObj > 0) {
+        if (largestObjArea > 0) {
             if (largestX <= 180)
                 propNum = 1;
             else

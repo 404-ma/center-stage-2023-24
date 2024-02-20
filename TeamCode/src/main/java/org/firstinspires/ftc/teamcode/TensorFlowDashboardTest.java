@@ -9,6 +9,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.function.Consumer;
 import org.firstinspires.ftc.robotcore.external.function.Continuation;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -34,10 +35,11 @@ public class TensorFlowDashboardTest extends LinearOpMode {
 
         // TFOD_MODEL_FILE points to a model file stored onboard the Robot Controller's storage,
         // this is used when uploading models directly to the RC using the model upload interface.
-        public String tfodModelFile = "/sdcard/FIRST/tflitemodels/model_TF_Training20240215.tflite";
+        //public String tfodModelFile = "/sdcard/FIRST/tflitemodels/model_TF_Training20240215.tflite";
+        public String tfodModelFile = "/sdcard/FIRST/tflitemodels/model_Training2.tflite";
     }
 
-    public Params PARAMS = new Params();
+    public static Params PARAMS = new Params();
 
 
     // FTC Dashboard Vision Portal Streaming
@@ -83,13 +85,11 @@ public class TensorFlowDashboardTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        initialize();
-
-        // Wait for the DS start button to be touched.
-        telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
-        telemetry.addData(">", "Touch Play to start OpMode");
-        telemetry.update();
+        boolean good_init = initialize();
         waitForStart();
+        if (isStopRequested() || !good_init)
+            return;
+        telemetry.clear();
 
         while (opModeIsActive()) {
             telemetryTfod();
@@ -102,7 +102,7 @@ public class TensorFlowDashboardTest extends LinearOpMode {
             }
 
             // Share the CPU.
-            sleep(20);
+            sleep(50);
         }
 
         // Save more CPU resources when camera is no longer needed.
@@ -111,28 +111,50 @@ public class TensorFlowDashboardTest extends LinearOpMode {
 
 
     // Initialize the TensorFlow Object Detection processor.
-    private void initialize() {
-        // Create the TensorFlow processor the easy way.
-        tfod = new TfodProcessor.Builder()
-                .setModelFileName(PARAMS.tfodModelFile)
-                .setModelLabels(LABELS)
-                .build();
+    private boolean initialize() {
+        boolean success = true;
 
-        // Set confidence threshold for TFOD recognitions, can change at any time.
-        tfod.setMinResultConfidence(0.80f);
+        telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
+        telemetry.addLine("TensorFlow FTC Dashboard Test");
+        telemetry.addLine();
 
-        // Create the vision portal with b.
-        visionPortal = new VisionPortal.Builder()
-                .addProcessor(tfod)
-                .addProcessor(streamProc)
-                .setCamera(hardwareMap.get(WebcamName.class, PARAMS.cameraName))
-                .build();
+        // Initialize Helpers
+        try {
+            // Create the TensorFlow processor the easy way.
+            tfod = new TfodProcessor.Builder()
+                    .setModelFileName(PARAMS.tfodModelFile)
+                    .setModelLabels(LABELS)
+                    .build();
 
-        visionPortal.setProcessorEnabled(tfod, true);
+            // Set confidence threshold for TFOD recognitions, can change at any time.
+            tfod.setMinResultConfidence(0.80f);
 
-        dashboard = FtcDashboard.getInstance();
-        dashboard.startCameraStream(streamProc, 0);
-        dashboard.clearTelemetry();
+            // Create the vision portal with b.
+            visionPortal = new VisionPortal.Builder()
+                    .addProcessor(tfod)
+                    .addProcessor(streamProc)
+                    .setCamera(hardwareMap.get(WebcamName.class, PARAMS.cameraName))
+                    .build();
+
+            visionPortal.setProcessorEnabled(tfod, true);
+
+            dashboard = FtcDashboard.getInstance();
+            dashboard.startCameraStream(streamProc, 0);
+            dashboard.clearTelemetry();
+        }  catch (Exception e) {
+            success = false;
+        }
+
+        if (success) {
+            telemetry.addLine("All Sensors Initialized");
+            telemetry.addLine("");
+            telemetry.addData(">", "Press Play to Start");
+        } else {
+            telemetry.addLine("");
+            telemetry.addLine("*** INITIALIZATION FAILED ***");
+        }
+        telemetry.update();
+        return (success);
     }
 
 
