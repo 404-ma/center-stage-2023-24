@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-// TODO: Disable - Consider Deletion
 @Disabled
 @TeleOp(name="babaTwoCamera", group="Hardware")
 public class babaTwoCamera extends LinearOpMode {

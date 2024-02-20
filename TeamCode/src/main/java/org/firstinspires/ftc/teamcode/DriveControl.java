@@ -133,7 +133,7 @@ public class DriveControl extends LinearOpMode {
 
             gamePadInputV2.GameplayInputType inpType2 = gpIn2.WaitForGamepadInput(30);
             switch (inpType2) {
-                // TODO: Is the Minimum Speed Really 0.75 - That make the Trigger range (0.75 - 1)
+
                 case BUTTON_A:
                     crane.moveCraneToPosition(0);
                     break;
