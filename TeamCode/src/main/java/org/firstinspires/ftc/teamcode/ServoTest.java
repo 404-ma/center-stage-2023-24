@@ -10,8 +10,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2;
 import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2.GameplayInputType;
+
 @Config
-@TeleOp(name="Servo Test", group ="Test")
+@TeleOp(name="Servo Test", group ="Hardware")
 public class ServoTest extends LinearOpMode {
     public static class Params {
         public String servoName = "DroneServo";

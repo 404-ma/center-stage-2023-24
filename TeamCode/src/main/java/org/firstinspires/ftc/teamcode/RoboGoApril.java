@@ -22,9 +22,8 @@ import org.firstinspires.ftc.teamcode.Helper.DrivetrainV2;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@TeleOp(name="Omni Drive To AprilTag") //this is the file name in hub
-
 @Disabled
+@TeleOp(name="Omni Drive To AprilTag") //this is the file name in hub
 public class RoboGoApril extends LinearOpMode
 {
     // Adjust these numbers to suit your robot.

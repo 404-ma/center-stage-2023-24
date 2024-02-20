@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Config
-@TeleOp(name="TensorFlow Dashboard Test", group = "Diag")
+@TeleOp(name="TensorFlow Dashboard Test", group = "Hardware")
 public class TensorFlowDashboardTest extends LinearOpMode {
     // FTC Dashboard Parameters
     public static class Params {

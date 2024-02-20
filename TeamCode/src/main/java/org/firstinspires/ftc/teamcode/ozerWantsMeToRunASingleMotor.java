@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@TeleOp
+@TeleOp(name="OzerWantsMeToRunASingleMotor", group="Hardware")
 public class ozerWantsMeToRunASingleMotor extends LinearOpMode {
     //balls :)
     @Override
