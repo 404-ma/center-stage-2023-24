@@ -22,11 +22,11 @@ public class ClawMoves {
         public double armLevel3 = 0.225;
         public double armLevel4 = 0.228;
 
-        public double flipSuplexPos = 0.322;
-        public double flipDownPos = 0.444;
+        public double flipSuplexPos = 0.332;
+        public double flipDownPos = 0.454;
 
         public double gripOpenPos = 0.637;
-        public double gripClosedPos = 0.365;
+        public double gripClosedPos = 0.355;
         public double gripOpenPosTop = 0.435;
     }
 
