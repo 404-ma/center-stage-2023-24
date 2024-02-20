@@ -17,10 +17,10 @@ public class ClawMoves {
     public static class Params {
         public double armUpPos = 0.312;
         public double armDownPos = 0.237;
-        public double armLevel1 = 0.219;
-        public double armLevel2 = 0.222;
-        public double armLevel3 = 0.225;
-        public double armLevel4 = 0.228;
+        public double armLevel1 = 0.244;
+        public double armLevel2 = 0.247;
+        public double armLevel3 = 0.250;
+        public double armLevel4 = 0.253;
 
         public double flipSuplexPos = 0.332;
         public double flipDownPos = 0.454;
@@ -114,7 +114,10 @@ public class ClawMoves {
     }
 
     public void openGrip(){
-        MoveGrip(PARAMS.gripOpenPos);
+        if (tlmArmPosition == PARAMS.armUpPos)
+            MoveGrip(PARAMS.gripOpenPosTop);
+        else
+            MoveGrip(PARAMS.gripOpenPos);
     }
 
     // TODO:  Test Height Levels
@@ -122,7 +125,7 @@ public class ClawMoves {
     public void moveLevel(int level) {
         double armPos;
         double flipPos;
-        flipPos = PARAMS.flipDownPos - 0.006;
+        flipPos = PARAMS.flipDownPos - 0.003;
         if (level == 1)
             armPos = PARAMS.armLevel1;
         else if (level == 2)
