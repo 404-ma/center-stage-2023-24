@@ -15,8 +15,8 @@ import android.os.SystemClock;
 public class ClawMoves {
     // FTC Dashboard Parameters
     public static class Params {
-        public double armUpPos = 0.282;
-        public double armDownPos = 0.213;
+        public double armUpPos = 0.312;
+        public double armDownPos = 0.237;
         public double armLevel1 = 0.219;
         public double armLevel2 = 0.222;
         public double armLevel3 = 0.225;
