@@ -39,6 +39,7 @@ public class AutoBlue extends LinearOpMode {
         public double angleAtEnd = -90;
         public String versionNum = "3.2";
         public double propAng;
+        public int spike = 0;
     }
 
     public static Params PARAMS = new Params();
@@ -73,13 +74,13 @@ public class AutoBlue extends LinearOpMode {
         whiteClaw.AutonomousStart();
 
         waitForStart();
-        telemetry.clear();
+        //telemetry.clear();
         if (isStopRequested()) return;
 
-        propSpikeMark = tenFl.telemTFOD(1000);
+        //propSpikeMark = tenFl.telemTFOD(1000);
         updateTelemetry();
 
-        switch(propSpikeMark){
+        switch(PARAMS.spike){
             case 3:
                 PARAMS.propAng = 35.5;
                 toSpikeMark(20.5,-4.0,-24, PARAMS.frontStage);
