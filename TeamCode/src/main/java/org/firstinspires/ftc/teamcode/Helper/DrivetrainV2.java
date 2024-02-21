@@ -19,12 +19,12 @@ import java.util.Date;
 public class DrivetrainV2 {
 
     public static class Params {
-        private static final float strafingAdjustment = 1.08f;
-        private static final float joystickYInputAdjustment  = -1f;
-        private static final double brakingStopThreshold = 0.25;
-        private static final double brakingGain = 0.15;
-        private static final long brakingInterval = 100;
-        private static final long brakingMaximumTime = (long) Math.ceil(1 / brakingGain) * brakingInterval ;
+        public double strafingAdjustment = 1.08;
+        public double joystickYInputAdjustment  = -1;
+        public  double brakingStopThreshold = 0.25;
+        public  double brakingGain = 0.15;
+        public long brakingInterval = 100;
+        public  double brakingMaximumTime = (long) Math.ceil(1 / brakingGain) * brakingInterval ;
 
     }
 
@@ -38,13 +38,8 @@ public class DrivetrainV2 {
     private volatile boolean brakingOn = false;
 
 
-    private Date telemetryLastCalledTimestamp = new Date();
-    private double telemetryLastPowerFrontLeft = 0f;
-    private double telemetryLastPowerBackLeft = 0f;
-    private double telemetryLastPowerFrontRight = 0f;
-    private double telemetryLastPowerBackRight = 0f;
-    private int telemetryBrakeCount = 0;
-    private int telemetryBrakeTimeoutCount = 0;
+
+
 
     public DrivetrainV2 (@NonNull HardwareMap hdwMap) {
         drvMotorFrontLeft = hdwMap.dcMotor.get("frontLeft");
@@ -63,39 +58,7 @@ public class DrivetrainV2 {
     }
 
 
-    public Date getTelemetryLastCalledTimestamp() {
-        return telemetryLastCalledTimestamp;
-    }
 
-
-    public double getTelemetryLastPowerFrontLeft() {
-        return telemetryLastPowerFrontLeft;
-    }
-
-
-    public double getTelemetryLastPowerBackLeft() {
-        return telemetryLastPowerBackLeft;
-    }
-
-
-    public double getTelemetryLastPowerFrontRight() {
-        return telemetryLastPowerFrontRight;
-    }
-
-
-    public double getTelemetryLastPowerBackRight() {
-        return telemetryLastPowerBackRight;
-    }
-
-
-    public int getTelemetryBrakeCount() {
-        return telemetryBrakeCount;
-    }
-
-
-    public int getTelemetryBrakeTimeoutCount() {
-        return telemetryBrakeTimeoutCount;
-    }
 
 
     public void setDriveVector(double forward, double strafe, double rotate) {
@@ -113,11 +76,8 @@ public class DrivetrainV2 {
         drvMotorFrontRight.setPower(pwrFrontRight);
         drvMotorBackRight.setPower(pwrBackRight);
 
-        telemetryLastCalledTimestamp = new Date();
-        telemetryLastPowerFrontLeft = pwrFrontLeft;
-        telemetryLastPowerBackLeft = pwrBackLeft;
-        telemetryLastPowerFrontRight = pwrFrontRight;
-        telemetryLastPowerBackRight = pwrBackRight;
+
+
     }
 
 
@@ -141,8 +101,8 @@ public class DrivetrainV2 {
     public void setBrakeStatus(boolean braking)  {
         brakingOn = braking;
 
-        telemetryLastCalledTimestamp = new Date();
-        ++telemetryBrakeCount;
+
+
 
         if (braking) {
             boolean allStop = false;
@@ -170,7 +130,7 @@ public class DrivetrainV2 {
                 }
             }
 
-            if (timerExpired) ++telemetryBrakeTimeoutCount;
+
         }
     }
 

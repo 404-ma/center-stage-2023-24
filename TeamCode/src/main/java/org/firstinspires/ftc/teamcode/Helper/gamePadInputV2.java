@@ -46,13 +46,13 @@ import java.util.Date;
 @Config
 public class gamePadInputV2{
 
-    public static class Params {
-        static final long  waitLoopSleepInterval = 20;
-        static final long buttonLockoutInterval = 1000;
-        static final long  dpadLockoutInterval = 1000;
-        static final long triggerLockoutInterval = 20;
-        static final long joystickButtonLockoutInterval = 300;
-        static final long joystickLockoutInterval = 20;  // should be Small
+    public static class  Params {
+        public int  waitLoopSleepInterval = 20;
+        public int buttonLockoutInterval = 1000;
+        public int dpadLockoutInterval = 1000;
+        public int triggerLockoutInterval = 20;
+        public int joystickButtonLockoutInterval = 300;
+        public int  joystickLockoutInterval = 20;  // should be Small
 
     }
 
@@ -179,7 +179,7 @@ public class gamePadInputV2{
 
             newInput = GetGamepadInput();
             if (newInput == GameplayInputType.NONE)
-                sleep(Params.waitLoopSleepInterval);
+                sleep(PARAMS.waitLoopSleepInterval);
             else {
                 // Return New Input
                 ++tlm_InputCount;
@@ -241,7 +241,7 @@ public class gamePadInputV2{
         if (inputGPad.back) intype= GameplayInputType.BUTTON_BACK;
 
         // Check For Duplicate Button Input and Disregard Same Button During Lockout Period
-        boolean lockedOut = ((LastButtonInputTime + Params.buttonLockoutInterval) - System.currentTimeMillis()) > 0;
+        boolean lockedOut = ((LastButtonInputTime + PARAMS.buttonLockoutInterval) - System.currentTimeMillis()) > 0;
 
         if (intype == LastButtonInput && lockedOut) {
             intype = GameplayInputType.NONE;
