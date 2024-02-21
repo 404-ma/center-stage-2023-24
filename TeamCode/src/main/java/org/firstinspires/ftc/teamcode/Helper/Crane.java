@@ -11,7 +11,6 @@ public class Crane {
     public static class Params{
         public double craneSpeed = 0.9;
         public int craneMaxPositionRelative = 8000;
-
     }
 
     public static Params PARAMS = new Params();

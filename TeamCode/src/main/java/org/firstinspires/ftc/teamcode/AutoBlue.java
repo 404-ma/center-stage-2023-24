@@ -39,6 +39,7 @@ public class AutoBlue extends LinearOpMode {
         public double angleAtEnd = -90;
         public String versionNum = "3.2";
         public double propAng;
+        public int spike = 0;
     }
 
     public static Params PARAMS = new Params();
@@ -73,13 +74,13 @@ public class AutoBlue extends LinearOpMode {
         whiteClaw.AutonomousStart();
 
         waitForStart();
-        telemetry.clear();
+        //telemetry.clear();
         if (isStopRequested()) return;
 
-        propSpikeMark = tenFl.telemTFOD(1000);
+        //propSpikeMark = tenFl.telemTFOD(1000);
         updateTelemetry();
 
-        switch(propSpikeMark){
+        switch(PARAMS.spike){
             case 3:
                 PARAMS.propAng = 35.5;
                 toSpikeMark(20.5,-4.0,-24, PARAMS.frontStage);
@@ -134,6 +135,7 @@ public class AutoBlue extends LinearOpMode {
 
         //pick up
         whiteClaw.PrepForPixel(false);
+        whiteClaw.moveLevel(5);
         whiteClaw.closeGrip();
         whiteClaw.SuplexPixel();
 
@@ -194,7 +196,7 @@ public class AutoBlue extends LinearOpMode {
         //steps back from the spike mark
         Action moveBack = drive.actionBuilder(drive.pose)
                 .setReversed(true)
-                .splineTo(new Vector2d(6, 0), Math.toRadians(an))
+                .splineTo(new Vector2d(11, 0), Math.toRadians(an))
                 .build();
         Actions.runBlocking(new ParallelAction(moveBack, whiteClaw.RetractArm()));
     }
@@ -283,8 +285,9 @@ public class AutoBlue extends LinearOpMode {
     public void BackMid(){
 //y = 38.5
         Action moveBackM = drive.actionBuilder(drive.pose)
-                .splineTo(new Vector2d(40,12), Math.toRadians(-90))
-                .splineTo(new Vector2d(40,-80), Math.toRadians(-90))
+                .setReversed(true)
+                .splineTo(new Vector2d(40,12), Math.toRadians(90))
+                .splineTo(new Vector2d(40,-80), Math.toRadians(90))
                 .build();
         Actions.runBlocking(new ParallelAction(moveBackM, whiteClaw.RetractArm()));
 
