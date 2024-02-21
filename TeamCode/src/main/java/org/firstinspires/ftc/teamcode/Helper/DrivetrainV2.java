@@ -7,6 +7,7 @@ import static java.lang.Thread.sleep;
 import androidx.annotation.NonNull;
 
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -14,14 +15,20 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import java.util.Date;
 
-
+@Config
 public class DrivetrainV2 {
-    private static final float STRAFING_ADJUSTMENT = 1.08f;
-    private static final float JOYSTICK_Y_INPUT_ADJUSTMENT = -1f;
-    private static final double BRAKING_STOP_THRESHOLD = 0.25;
-    private static final double BRAKING_GAIN = 0.15;
-    private static final long BRAKING_INTERVAL = 100;
-    private static final long BRAKING_MAXIMUM_TIME = (long) Math.ceil(1 / BRAKING_GAIN) * BRAKING_INTERVAL;
+
+    public static class Params {
+        private static final float strafingAdjustment = 1.08f;
+        private static final float joystickYInputAdjustment  = -1f;
+        private static final double brakingStopThreshold = 0.25;
+        private static final double brakingGain = 0.15;
+        private static final long brakingInterval = 100;
+        private static final long brakingMaximumTime = (long) Math.ceil(1 / brakingGain) * brakingInterval ;
+
+    }
+
+    public static DrivetrainV2.Params PARAMS = new DrivetrainV2.Params();
 
 
     private final DcMotor drvMotorFrontLeft;
@@ -118,12 +125,12 @@ public class DrivetrainV2 {
         if (brakingOn) return;
 
         double rotate = stickRightX;
-        double forward = stickLeftY * JOYSTICK_Y_INPUT_ADJUSTMENT;
-        double strafe = stickLeftX * STRAFING_ADJUSTMENT;
+        double forward = stickLeftY * PARAMS.joystickYInputAdjustment;
+        double strafe = stickLeftX * PARAMS.strafingAdjustment;
 
         if (setReversed) {
-            forward = stickLeftY * JOYSTICK_Y_INPUT_ADJUSTMENT * -1;
-            strafe = stickLeftX * STRAFING_ADJUSTMENT * -1;
+            forward = stickLeftY * PARAMS.joystickYInputAdjustment * -1;
+            strafe = stickLeftX * PARAMS.strafingAdjustment * -1;
         }
 
         setDriveVector(forward, strafe, rotate);
@@ -151,12 +158,12 @@ public class DrivetrainV2 {
 
 
                 allStop = flStop && blStop && frStop && brStop;
-                timerExpired = (System.currentTimeMillis() >= (brakeStart + BRAKING_MAXIMUM_TIME));
+                timerExpired = (System.currentTimeMillis() >= (brakeStart + PARAMS.brakingMaximumTime));
 
 
                 if (!allStop && !timerExpired) {
                     try {
-                        sleep(BRAKING_INTERVAL);
+                        sleep(PARAMS.brakingInterval);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -174,8 +181,8 @@ public class DrivetrainV2 {
 
 
         if (!stopped) {
-            double newPower = curPower - (Math.signum(curPower) * BRAKING_GAIN);
-            if (Math.abs(newPower) < BRAKING_STOP_THRESHOLD) newPower = 0;
+            double newPower = curPower - (Math.signum(curPower) * PARAMS.brakingInterval);
+            if (Math.abs(newPower) < PARAMS.brakingStopThreshold) newPower = 0;
             motor.setPower(newPower);
         }
 
