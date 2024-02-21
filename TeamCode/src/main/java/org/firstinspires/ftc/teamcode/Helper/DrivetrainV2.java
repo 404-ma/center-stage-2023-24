@@ -21,11 +21,10 @@ public class DrivetrainV2 {
     public static class Params {
         public double strafingAdjustment = 1.08;
         public double joystickYInputAdjustment  = -1;
-        public  double brakingStopThreshold = 0.25;
-        public  double brakingGain = 0.15;
+        public double brakingStopThreshold = 0.25;
+        public double brakingGain = 0.15;
         public long brakingInterval = 100;
-        public  double brakingMaximumTime = (long) Math.ceil(1 / brakingGain) * brakingInterval ;
-
+        public double brakingMaximumTime = (long) Math.ceil(1 / brakingGain) * brakingInterval ;
     }
 
     public static DrivetrainV2.Params PARAMS = new DrivetrainV2.Params();
@@ -36,9 +35,6 @@ public class DrivetrainV2 {
     private final DcMotor drvMotorFrontRight;
     private final DcMotor drvMotorBackRight;
     private volatile boolean brakingOn = false;
-
-
-
 
 
     public DrivetrainV2 (@NonNull HardwareMap hdwMap) {
@@ -58,9 +54,6 @@ public class DrivetrainV2 {
     }
 
 
-
-
-
     public void setDriveVector(double forward, double strafe, double rotate) {
         if (brakingOn) return;
 
@@ -75,9 +68,6 @@ public class DrivetrainV2 {
         drvMotorBackLeft.setPower(pwrBackLeft);
         drvMotorFrontRight.setPower(pwrFrontRight);
         drvMotorBackRight.setPower(pwrBackRight);
-
-
-
     }
 
 
@@ -100,10 +90,6 @@ public class DrivetrainV2 {
 
     public void setBrakeStatus(boolean braking)  {
         brakingOn = braking;
-
-
-
-
         if (braking) {
             boolean allStop = false;
             boolean timerExpired = false;
@@ -129,8 +115,6 @@ public class DrivetrainV2 {
                     }
                 }
             }
-
-
         }
     }
 
@@ -139,13 +123,11 @@ public class DrivetrainV2 {
         double curPower = motor.getPower();
         boolean stopped = (curPower == 0);
 
-
         if (!stopped) {
             double newPower = curPower - (Math.signum(curPower) * PARAMS.brakingInterval);
             if (Math.abs(newPower) < PARAMS.brakingStopThreshold) newPower = 0;
             motor.setPower(newPower);
         }
-
 
         return stopped;
     }

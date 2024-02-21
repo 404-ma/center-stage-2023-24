@@ -47,12 +47,12 @@ import java.util.Date;
 public class gamePadInputV2{
 
     public static class  Params {
-        public int  waitLoopSleepInterval = 20;
+        public int waitLoopSleepInterval = 20;
         public int buttonLockoutInterval = 1000;
         public int dpadLockoutInterval = 1000;
         public int triggerLockoutInterval = 20;
         public int joystickButtonLockoutInterval = 300;
-        public int  joystickLockoutInterval = 20;  // should be Small
+        public int joystickLockoutInterval = 20;  // should be Small
 
     }
 
