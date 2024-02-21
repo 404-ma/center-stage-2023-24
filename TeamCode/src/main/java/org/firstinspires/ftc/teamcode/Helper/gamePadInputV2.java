@@ -17,6 +17,7 @@ package org.firstinspires.ftc.teamcode.Helper;
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import static android.os.SystemClock.sleep;
 import androidx.annotation.NonNull;
@@ -42,10 +43,23 @@ import java.util.Date;
  *  This class collects telemetry data about its most recent values and exposes
  *  that data via (getTelemetry_...) methods.
  */
+@Config
+public class gamePadInputV2{
 
-public class gamePadInputV2 {
+    public static class Params {
+        static final long  waitLoopSleepInterval = 20;
+        static final long buttonLockoutInterval = 1000;
+        static final long  dpadLockoutInterval = 1000;
+        static final long triggerLockoutInterval = 20;
+        static final long joystickButtonLockoutInterval = 300;
+        static final long joystickLockoutInterval = 20;  // should be Small
 
-    // TODO: Add Support for Joystick Buttons
+    }
+
+    public static Params PARAMS = new Params();
+
+
+
     public enum GameplayInputType {
         NONE("No Input"),
         BUTTON_A("A Button"),
@@ -87,13 +101,6 @@ public class gamePadInputV2 {
     // TODO: Move these constants to FTC @Config parameters
 
     // Timeouts Needed to Debounce Gamepad Inputs (Milliseconds)
-    static final long WAIT_LOOP_SlEEP_INTERVAL = 20;  // This Interval should be Small
-    static final long BUTTON_LOCKOUT_INTERVAL = 1000;
-    static final long DPAD_LOCKOUT_INTERVAL = 1000;
-    static final long TRIGGER_LOCKOUT_INTERVAL = 20;
-    static final long JOYSTICK_BUTTON_LOCKOUT_INTERVAL = 300;
-    static final long JOYSTICK_LOCKOUT_INTERVAL = 20;  // should be Small
-
 
     // Telemetry Data
     private int tlm_WaitLoopCount = 0;
@@ -172,7 +179,7 @@ public class gamePadInputV2 {
 
             newInput = GetGamepadInput();
             if (newInput == GameplayInputType.NONE)
-                sleep(WAIT_LOOP_SlEEP_INTERVAL);
+                sleep(Params.waitLoopSleepInterval);
             else {
                 // Return New Input
                 ++tlm_InputCount;
@@ -234,7 +241,7 @@ public class gamePadInputV2 {
         if (inputGPad.back) intype= GameplayInputType.BUTTON_BACK;
 
         // Check For Duplicate Button Input and Disregard Same Button During Lockout Period
-        boolean lockedOut = ((LastButtonInputTime + BUTTON_LOCKOUT_INTERVAL) - System.currentTimeMillis()) > 0;
+        boolean lockedOut = ((LastButtonInputTime + Params.buttonLockoutInterval) - System.currentTimeMillis()) > 0;
 
         if (intype == LastButtonInput && lockedOut) {
             intype = GameplayInputType.NONE;
@@ -261,7 +268,7 @@ public class gamePadInputV2 {
         if (inputGPad.dpad_right) intype = GameplayInputType.DPAD_RIGHT;
 
         // Check For Duplicate DPad Input and Disregard Same Input During Lockout Period
-        boolean lockedOut = ((LastDPadInputTime + DPAD_LOCKOUT_INTERVAL) - System.currentTimeMillis()) > 0;
+        boolean lockedOut = ((LastDPadInputTime + PARAMS.dpadLockoutInterval) - System.currentTimeMillis()) > 0;
 
         if (intype == LastDPadInput && lockedOut) {
             intype = GameplayInputType.NONE;
@@ -279,7 +286,7 @@ public class gamePadInputV2 {
      *              Returns an input type of NONE when no change is detected.
      */
     private GameplayInputType GetJoystickButton() {
-        boolean lockedOut = ((LastTriggerInputTime + JOYSTICK_BUTTON_LOCKOUT_INTERVAL) - System.currentTimeMillis()) > 0;
+        boolean lockedOut = ((LastTriggerInputTime + PARAMS.joystickButtonLockoutInterval) - System.currentTimeMillis()) > 0;
 
         if (!lockedOut) {
             if (inputGPad.left_stick_button && !LeftJoystickButtonOn) {
@@ -311,7 +318,7 @@ public class gamePadInputV2 {
      */
     private GameplayInputType GetTrigger() {
 
-        boolean lockedOut = ((LastTriggerInputTime + TRIGGER_LOCKOUT_INTERVAL) - System.currentTimeMillis()) > 0;
+        boolean lockedOut = ((LastTriggerInputTime + PARAMS.triggerLockoutInterval) - System.currentTimeMillis()) > 0;
 
         // Trigger Moved or Remaining in Same (Non Resting) Position Past Lockout Interval
         if (!lockedOut) {
@@ -351,7 +358,7 @@ public class gamePadInputV2 {
         boolean atRest = (inputGPad.left_stick_x == 0f) && (inputGPad.left_stick_y == 0f) &&
                 (inputGPad.right_stick_x == 0f) && (inputGPad.right_stick_y == 0f);
 
-        boolean lockedOut = ((LastJoystickInputTime + JOYSTICK_LOCKOUT_INTERVAL) - System.currentTimeMillis()) > 0;
+        boolean lockedOut = ((LastJoystickInputTime + PARAMS.joystickLockoutInterval) - System.currentTimeMillis()) > 0;
 
         // Joystick Moved or Remaining in Same (Non Resting) Position Past Lockout Interval
         if (!lockedOut) {
