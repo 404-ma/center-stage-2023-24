@@ -39,7 +39,7 @@ public class AutoBlue extends LinearOpMode {
         public double angleAtEnd = -90;
         public String versionNum = "3.2";
         public double propAng;
-        public int spike = 0;
+       // public int spike = 0;
     }
 
     public static Params PARAMS = new Params();
@@ -74,16 +74,16 @@ public class AutoBlue extends LinearOpMode {
         whiteClaw.AutonomousStart();
 
         waitForStart();
-        //telemetry.clear();
+        telemetry.clear();
         if (isStopRequested()) return;
 
-        //propSpikeMark = tenFl.telemTFOD(1000);
+        propSpikeMark = tenFl.telemTFOD(1000);
         updateTelemetry();
 
-        switch(PARAMS.spike){
+        switch(propSpikeMark){
             case 3:
                 PARAMS.propAng = 35.5;
-                toSpikeMark(20.5,-4.0,-24, PARAMS.frontStage);
+                thirdSMPlan();
                 if(PARAMS.frontStage){
                     toFrontPanel(PARAMS.propAng, PARAMS.partnerDead);
                 }
@@ -92,8 +92,8 @@ public class AutoBlue extends LinearOpMode {
                 }
                 break;
             case 1:
-                PARAMS.propAng = 27.0;
-                toSpikeMark(16.5, 4.0, 32, PARAMS.frontStage);
+                PARAMS.propAng = 25.0;
+                toSpikeMark(13.5, 3.0, 32, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(PARAMS.propAng, PARAMS.partnerDead);
                 }
@@ -102,8 +102,8 @@ public class AutoBlue extends LinearOpMode {
                 }
                 break;
             default:
-                PARAMS.propAng = 30.0;
-                toSpikeMark(22.5, 4.0,0, PARAMS.frontStage);
+                PARAMS.propAng = 29.0;
+                toSpikeMark(22.0, 6.2,0, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(PARAMS.propAng, PARAMS.partnerDead);
                 }
@@ -115,17 +115,18 @@ public class AutoBlue extends LinearOpMode {
 
         whiteClaw.PrepForPixel(false);
 
-        whiteConveyor.moveViperToPosition(1400);
+        whiteConveyor.moveViperToPosition(600);
         sleep(1000);
         whiteConveyor.moveConvForward();
-        sleep(2000);
+        sleep(1500);
         whiteConveyor.stopConv();
         whiteConveyor.moveViperToPosition(0);
-        sleep(1800);
-
+        sleep(1000);
 
         whiteClaw.SuplexPixel();
 
+        toSafety();
+/*
         if(!PARAMS.frontStage){
             secondHalfBack();
         }
@@ -139,6 +140,7 @@ public class AutoBlue extends LinearOpMode {
         whiteClaw.closeGrip();
         whiteClaw.SuplexPixel();
 
+        /*
         if(!PARAMS.frontStage){
             backSecondHalfBack(PARAMS.propAng);
         }
@@ -154,9 +156,24 @@ public class AutoBlue extends LinearOpMode {
         whiteConveyor.stopConv();
         whiteConveyor.moveViperToPosition(0);
         sleep(1800);
-
+*/
     }
 
+    public void thirdSMPlan(){
+        Action movethirdSMPlan = drive.actionBuilder(drive.pose)
+                .splineTo(new Vector2d(12, 3.5),Math.toRadians(90)  )
+                .splineTo(new Vector2d(18, -4), Math.toRadians(90))
+                .build();
+        Actions.runBlocking(new SequentialAction(movethirdSMPlan, whiteClaw.PlacePixel()));
+
+        Action moveback = drive.actionBuilder(drive.pose)
+                .setReversed(true)
+                .splineTo(new Vector2d(12,3.5), Math.toRadians(-90))
+                .splineTo(new Vector2d(11,6), Math.toRadians(-90))
+                .build();
+        Actions.runBlocking(new ParallelAction(moveback, whiteClaw.RetractArm()));
+
+    }
     //use sensor to square up to the panel
     private void SensorApproach() {
         long timeout = System.currentTimeMillis()+PARAMS.rangeTime;
@@ -196,7 +213,7 @@ public class AutoBlue extends LinearOpMode {
         //steps back from the spike mark
         Action moveBack = drive.actionBuilder(drive.pose)
                 .setReversed(true)
-                .splineTo(new Vector2d(11, 0), Math.toRadians(an))
+                .splineTo(new Vector2d(11, 6), Math.toRadians(an))
                 .build();
         Actions.runBlocking(new ParallelAction(moveBack, whiteClaw.RetractArm()));
     }
@@ -239,6 +256,14 @@ public class AutoBlue extends LinearOpMode {
                 .splineTo(new Vector2d(targetX,38.5), Math.toRadians(90))
                 .build();
         Actions.runBlocking(moveRb3);
+    }
+
+    public void toSafety(){
+        Action moveToSafety = drive.actionBuilder(drive.pose)
+                .lineToY(35.0)
+                .strafeTo(new Vector2d(46, 35.0))
+                .build();
+        Actions.runBlocking(new ParallelAction(moveToSafety, whiteClaw.RetractArm()));
     }
 
     //goes front to the pixels (when it started from backStage)
