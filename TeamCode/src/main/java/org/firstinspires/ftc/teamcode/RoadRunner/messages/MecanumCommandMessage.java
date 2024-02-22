@@ -17,3 +17,4 @@ public final class MecanumCommandMessage {
         this.rightFrontPower = rightFrontPower;
     }
 }
+

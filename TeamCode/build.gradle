@@ -17,8 +17,12 @@ apply from: '../build.dependencies.gradle'
 
 android {
     namespace = 'org.firstinspires.ftc.teamcode'
+    androidResources {'tflite'}
 
     packagingOptions {
+        jniLibs {
+            pickFirsts += ['**/*.so']
+        }
         jniLibs.useLegacyPackaging true
     }
 }
@@ -35,6 +39,6 @@ dependencies {
 
     implementation 'org.ftclib.ftclib:core:2.1.1'
     implementation 'org.ftclib.ftclib:vision:2.1.0'
-    implementation "com.acmerobotics.roadrunner:ftc:0.1.11"
+    implementation "com.acmerobotics.roadrunner:ftc:0.1.13"
     implementation "com.acmerobotics.dashboard:dashboard:0.4.14"
 }
