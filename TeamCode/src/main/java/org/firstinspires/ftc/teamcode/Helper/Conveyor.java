@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.util.Range;
 public class Conveyor {
 
     public static class Params {
-        public double conveyorSpeed = 0.75;
+        public double conveyorSpeed = 0.90;
         public double viperSpeed = 0.5;
         public int viperMotorMaxPositionRelative = 3000;
 
