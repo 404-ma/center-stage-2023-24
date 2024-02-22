@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.os.SystemClock;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -13,6 +14,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.function.Consumer;
 import org.firstinspires.ftc.robotcore.external.function.Continuation;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
@@ -23,6 +26,7 @@ import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Config
@@ -32,6 +36,10 @@ public class TensorFlowDashboardTest extends LinearOpMode {
     public static class Params {
         // Camera Name in Robot Config
         public String cameraName = "Webcam Front";
+        public int cameraStreamingWait = 1000;
+        public boolean cameraManualExposure = false;
+        public long cameraExposureMS = 6;
+        public int cameraExposureGain = 250;
 
         // TFOD_MODEL_FILE points to a model file stored onboard the Robot Controller's storage,
         // this is used when uploading models directly to the RC using the model upload interface.
@@ -120,6 +128,10 @@ public class TensorFlowDashboardTest extends LinearOpMode {
 
         // Initialize Helpers
         try {
+            dashboard = FtcDashboard.getInstance();
+            dashboard.startCameraStream(streamProc, 0);
+            dashboard.clearTelemetry();
+
             // Create the TensorFlow processor the easy way.
             tfod = new TfodProcessor.Builder()
                     .setModelFileName(PARAMS.tfodModelFile)
@@ -136,11 +148,31 @@ public class TensorFlowDashboardTest extends LinearOpMode {
                     .setCamera(hardwareMap.get(WebcamName.class, PARAMS.cameraName))
                     .build();
 
-            visionPortal.setProcessorEnabled(tfod, true);
+            boolean cameraStreaming = false;
+            long startCameraWait = System.currentTimeMillis();
+            boolean timedOut = false;
 
-            dashboard = FtcDashboard.getInstance();
-            dashboard.startCameraStream(streamProc, 0);
-            dashboard.clearTelemetry();
+            while (!cameraStreaming && !timedOut)  {
+                cameraStreaming = (visionPortal.getCameraState() == VisionPortal.CameraState.STREAMING);
+                timedOut = (System.currentTimeMillis() - (startCameraWait + PARAMS.cameraStreamingWait)) > 0;
+                SystemClock.sleep(20);
+            }
+
+            if (!cameraStreaming)
+                success = false;
+            else {
+                if (PARAMS.cameraManualExposure) {
+                    ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+                    if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
+                        exposureControl.setMode(ExposureControl.Mode.Manual);
+                    }
+
+                    GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
+                    gainControl.setGain(PARAMS.cameraExposureGain);
+                }
+
+                visionPortal.setProcessorEnabled(tfod, true);
+            }
         }  catch (Exception e) {
             success = false;
         }
