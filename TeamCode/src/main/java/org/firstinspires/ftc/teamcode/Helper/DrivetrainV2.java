@@ -7,6 +7,7 @@ import static java.lang.Thread.sleep;
 import androidx.annotation.NonNull;
 
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -14,14 +15,19 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import java.util.Date;
 
-
+@Config
 public class DrivetrainV2 {
-    private static final float STRAFING_ADJUSTMENT = 1.08f;
-    private static final float JOYSTICK_Y_INPUT_ADJUSTMENT = -1f;
-    private static final double BRAKING_STOP_THRESHOLD = 0.25;
-    private static final double BRAKING_GAIN = 0.15;
-    private static final long BRAKING_INTERVAL = 100;
-    private static final long BRAKING_MAXIMUM_TIME = (long) Math.ceil(1 / BRAKING_GAIN) * BRAKING_INTERVAL;
+
+    public static class Params {
+        public double strafingAdjustment = 1.08;
+        public double joystickYInputAdjustment  = -1;
+        public double brakingStopThreshold = 0.25;
+        public double brakingGain = 0.15;
+        public long brakingInterval = 100;
+        public double brakingMaximumTime = (long) Math.ceil(1 / brakingGain) * brakingInterval ;
+    }
+
+    public static DrivetrainV2.Params PARAMS = new DrivetrainV2.Params();
 
 
     private final DcMotor drvMotorFrontLeft;
@@ -30,14 +36,6 @@ public class DrivetrainV2 {
     private final DcMotor drvMotorBackRight;
     private volatile boolean brakingOn = false;
 
-
-    private Date telemetryLastCalledTimestamp = new Date();
-    private double telemetryLastPowerFrontLeft = 0f;
-    private double telemetryLastPowerBackLeft = 0f;
-    private double telemetryLastPowerFrontRight = 0f;
-    private double telemetryLastPowerBackRight = 0f;
-    private int telemetryBrakeCount = 0;
-    private int telemetryBrakeTimeoutCount = 0;
 
     public DrivetrainV2 (@NonNull HardwareMap hdwMap) {
         drvMotorFrontLeft = hdwMap.dcMotor.get("frontLeft");
@@ -56,41 +54,6 @@ public class DrivetrainV2 {
     }
 
 
-    public Date getTelemetryLastCalledTimestamp() {
-        return telemetryLastCalledTimestamp;
-    }
-
-
-    public double getTelemetryLastPowerFrontLeft() {
-        return telemetryLastPowerFrontLeft;
-    }
-
-
-    public double getTelemetryLastPowerBackLeft() {
-        return telemetryLastPowerBackLeft;
-    }
-
-
-    public double getTelemetryLastPowerFrontRight() {
-        return telemetryLastPowerFrontRight;
-    }
-
-
-    public double getTelemetryLastPowerBackRight() {
-        return telemetryLastPowerBackRight;
-    }
-
-
-    public int getTelemetryBrakeCount() {
-        return telemetryBrakeCount;
-    }
-
-
-    public int getTelemetryBrakeTimeoutCount() {
-        return telemetryBrakeTimeoutCount;
-    }
-
-
     public void setDriveVector(double forward, double strafe, double rotate) {
         if (brakingOn) return;
 
@@ -105,12 +68,6 @@ public class DrivetrainV2 {
         drvMotorBackLeft.setPower(pwrBackLeft);
         drvMotorFrontRight.setPower(pwrFrontRight);
         drvMotorBackRight.setPower(pwrBackRight);
-
-        telemetryLastCalledTimestamp = new Date();
-        telemetryLastPowerFrontLeft = pwrFrontLeft;
-        telemetryLastPowerBackLeft = pwrBackLeft;
-        telemetryLastPowerFrontRight = pwrFrontRight;
-        telemetryLastPowerBackRight = pwrBackRight;
     }
 
 
@@ -118,12 +75,12 @@ public class DrivetrainV2 {
         if (brakingOn) return;
 
         double rotate = stickRightX;
-        double forward = stickLeftY * JOYSTICK_Y_INPUT_ADJUSTMENT;
-        double strafe = stickLeftX * STRAFING_ADJUSTMENT;
+        double forward = stickLeftY * PARAMS.joystickYInputAdjustment;
+        double strafe = stickLeftX * PARAMS.strafingAdjustment;
 
         if (setReversed) {
-            forward = stickLeftY * JOYSTICK_Y_INPUT_ADJUSTMENT * -1;
-            strafe = stickLeftX * STRAFING_ADJUSTMENT * -1;
+            forward = stickLeftY * PARAMS.joystickYInputAdjustment * -1;
+            strafe = stickLeftX * PARAMS.strafingAdjustment * -1;
         }
 
         setDriveVector(forward, strafe, rotate);
@@ -133,10 +90,6 @@ public class DrivetrainV2 {
 
     public void setBrakeStatus(boolean braking)  {
         brakingOn = braking;
-
-        telemetryLastCalledTimestamp = new Date();
-        ++telemetryBrakeCount;
-
         if (braking) {
             boolean allStop = false;
             boolean timerExpired = false;
@@ -151,19 +104,17 @@ public class DrivetrainV2 {
 
 
                 allStop = flStop && blStop && frStop && brStop;
-                timerExpired = (System.currentTimeMillis() >= (brakeStart + BRAKING_MAXIMUM_TIME));
+                timerExpired = (System.currentTimeMillis() >= (brakeStart + PARAMS.brakingMaximumTime));
 
 
                 if (!allStop && !timerExpired) {
                     try {
-                        sleep(BRAKING_INTERVAL);
+                        sleep(PARAMS.brakingInterval);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
                 }
             }
-
-            if (timerExpired) ++telemetryBrakeTimeoutCount;
         }
     }
 
@@ -172,13 +123,11 @@ public class DrivetrainV2 {
         double curPower = motor.getPower();
         boolean stopped = (curPower == 0);
 
-
         if (!stopped) {
-            double newPower = curPower - (Math.signum(curPower) * BRAKING_GAIN);
-            if (Math.abs(newPower) < BRAKING_STOP_THRESHOLD) newPower = 0;
+            double newPower = curPower - (Math.signum(curPower) * PARAMS.brakingInterval);
+            if (Math.abs(newPower) < PARAMS.brakingStopThreshold) newPower = 0;
             motor.setPower(newPower);
         }
-
 
         return stopped;
     }
