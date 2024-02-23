@@ -112,7 +112,6 @@ public class TensorFlowDashboardTest extends LinearOpMode {
             // Share the CPU.
             sleep(200);
         }
-
         // Save more CPU resources when camera is no longer needed.
         visionPortal.close();
     }

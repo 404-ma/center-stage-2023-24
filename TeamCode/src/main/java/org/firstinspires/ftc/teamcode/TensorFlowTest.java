@@ -30,7 +30,6 @@ public class TensorFlowTest extends LinearOpMode {
     private TensorFlow tenFl;
     private FtcDashboard dashboard;
     private int propSpikeMark = 0;
-
     @Override
     public void runOpMode() {
         boolean good_init = initialize();
