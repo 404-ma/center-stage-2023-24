@@ -115,7 +115,7 @@ public class AutoBlue extends LinearOpMode {
 
         whiteClaw.PrepForPixel(false);
 
-        whiteConveyor.moveViperToPosition(600);
+        whiteConveyor.moveViperToPosition(700);
         sleep(1000);
         whiteConveyor.moveConvForward();
         sleep(1500);
@@ -168,8 +168,8 @@ public class AutoBlue extends LinearOpMode {
 
         Action moveback = drive.actionBuilder(drive.pose)
                 .setReversed(true)
-                .splineTo(new Vector2d(12,3.5), Math.toRadians(-90))
-                .splineTo(new Vector2d(11,6), Math.toRadians(-90))
+                .splineTo(new Vector2d(12,3.5), Math.toRadians(90))
+                //.splineTo(new Vector2d(11,6), Math.toRadians(90))
                 .build();
         Actions.runBlocking(new ParallelAction(moveback, whiteClaw.RetractArm()));
 
@@ -276,7 +276,6 @@ public class AutoBlue extends LinearOpMode {
                 .build();
         Actions.runBlocking(new ParallelAction(moveSecHalf, whiteClaw.RetractArm()));
         }
-
     //goes back to the panel (when it started from backStage)
     public void backSecondHalfBack(double ang){
         Action moveBackSecHalf = drive.actionBuilder(drive.pose)
