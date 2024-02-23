@@ -38,13 +38,17 @@ public class TensorFlowDashboardTest extends LinearOpMode {
         public String cameraName = "Webcam Front";
         public int cameraStreamingWait = 1000;
         public boolean cameraManualExposure = false;
-        public long cameraExposureMS = 6;
         public int cameraExposureGain = 250;
 
         // TFOD_MODEL_FILE points to a model file stored onboard the Robot Controller's storage,
         // this is used when uploading models directly to the RC using the model upload interface.
-        //public String tfodModelFile = "/sdcard/FIRST/tflitemodels/model_TF_Training20240215.tflite";
         public String tfodModelFile = "/sdcard/FIRST/tflitemodels/model_Training2.tflite";
+        public double tfodMinConfidence = 0.80;
+
+        public double spikeOne_Max_X_Position = 170;
+
+        public double propMinWidth = 95;
+        public double propMaxWidth = 180;
     }
 
     public static Params PARAMS = new Params();
@@ -138,7 +142,7 @@ public class TensorFlowDashboardTest extends LinearOpMode {
                     .build();
 
             // Set confidence threshold for TFOD recognitions, can change at any time.
-            tfod.setMinResultConfidence(0.80f);
+            tfod.setMinResultConfidence((float) PARAMS.tfodMinConfidence);
 
             // Create the vision portal with b.
             visionPortal = new VisionPortal.Builder()
@@ -203,6 +207,7 @@ public class TensorFlowDashboardTest extends LinearOpMode {
 
         // Step through the list of recognitions and display info for each one.
         int objCnt = 0;
+        int propCnt = 0;
 
         double largestObjectArea = 0;
         double largestObjectX = 0;
@@ -210,31 +215,48 @@ public class TensorFlowDashboardTest extends LinearOpMode {
 
         for (Recognition recognition : currentRecognitions) {
             ++objCnt;
-
             double x = (recognition.getLeft() + recognition.getRight()) / 2 ;
             double y = (recognition.getTop()  + recognition.getBottom()) / 2 ;
-
             double height = recognition.getHeight();
             double width = recognition.getWidth();
+            double ratio = height / width;
 
-            if ((height * width) > largestObjectArea) {
-                largestObjectArea = height * width;
-                largestObjectX = x;
-                largestObjectY = y;
+            // Check for Shape Parameters
+            if ((width >= PARAMS.propMinWidth) && (width <= PARAMS.propMaxWidth)) {
+                ++propCnt;
+                if ((height * width) > largestObjectArea) {
+                    largestObjectArea = height * width;
+                    largestObjectX = x;
+                    largestObjectY = y;
+                }
             }
 
-            telemetry.addData(""," ");
+            telemetry.addLine("");
             telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
             telemetry.addData("- Position", "%.0f / %.0f", x, y);
             telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
+            telemetry.addData("- Ratio", "%.0f", ((height / width) * 100));
+
         }
 
+        int spike = 3;
+        if (largestObjectArea > 0) {
+            if (largestObjectX <= PARAMS.spikeOne_Max_X_Position)
+                spike = 1;
+            else
+                spike = 2;
+        }
+        telemetry.addData("Objects/Props", "%01d / %01d", objCnt, propCnt);
+        telemetry.addData("Best Prop Pos", "%.0f / %.0f", largestObjectX, largestObjectY);
+        telemetry.addData( "Spike Mark", spike);
         telemetry.update();
 
         TelemetryPacket packet = new TelemetryPacket();
         packet.put("Objects", objCnt);
+        packet.put("Props", propCnt);
         packet.put("Best Obj X", largestObjectX);
         packet.put("Best Obj Y", largestObjectY);
+        packet.put("SPIKE", spike);
         dashboard.sendTelemetryPacket(packet);
     }
 }
