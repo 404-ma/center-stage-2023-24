@@ -15,17 +15,17 @@ public class ozerWantsMeToRunASingleMotor extends LinearOpMode {
     //balls :)
     @Override
     public void runOpMode() {
-        DcMotor frontLeft = hardwareMap.dcMotor.get("craneMotor");
+        DcMotor motor = hardwareMap.dcMotor.get("viperMotor");
+        motor.setDirection(DcMotorSimple.Direction.FORWARD);
+        motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         waitForStart();
         while (opModeIsActive()) {
-            double power = gamepad1.right_stick_y;
+            double power = gamepad1.right_stick_y * -1;
             int num = (int)power;
-            //frontLeft.setTargetPosition(num);
-            //frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            frontLeft.setPower(power);
-            telemetry.addData("position", frontLeft.getCurrentPosition());
-            telemetry.addData("FOR OZER ELBEYLI", frontLeft.getPower());
+            motor.setPower(power);
+            telemetry.addData("position", motor.getCurrentPosition());
+            telemetry.addData("FOR OZER ELBEYLI", motor.getPower());
             telemetry.update();
         }
     }
