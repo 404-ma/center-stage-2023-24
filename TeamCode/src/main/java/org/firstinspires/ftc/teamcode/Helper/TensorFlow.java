@@ -79,7 +79,7 @@ public class TensorFlow {
         }
 
         if (largestObjArea > 0) {
-            if (largestX <= 180)
+            if (largestX <= 170)
                 propNum = 1;
             else
                 propNum = 2;
