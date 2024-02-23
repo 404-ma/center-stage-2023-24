@@ -42,7 +42,7 @@ public class TensorFlowTest extends LinearOpMode {
         while (opModeIsActive()) {
             propSpikeMark = tenFl.telemTFOD(1500);
             updateTelemetry();
-            sleep(20);
+            sleep(200);
         }
         tenFl.CleanUp();
     }
