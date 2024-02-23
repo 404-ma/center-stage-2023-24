@@ -6,15 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.teamcode.Helper.ClawMoves;
 import org.firstinspires.ftc.teamcode.Helper.TensorFlow;
-import org.firstinspires.ftc.teamcode.Helper.gamePadInputV2;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.tfod.TfodProcessor;
-
-import java.util.List;
 
 /*
  * This code was derived from FIRST External Sample ConceptTensorFlowObjectDetection.java
@@ -39,7 +31,7 @@ public class TensorFlowTest extends LinearOpMode {
         telemetry.clear();
 
         while (opModeIsActive()) {
-            propSpikeMark = tenFl.telemTFOD(1500);
+            propSpikeMark = tenFl.DetectProp(1500);
             updateTelemetry();
             sleep(200);
         }
@@ -82,8 +74,8 @@ public class TensorFlowTest extends LinearOpMode {
         telemetry.addLine().addData("Prop Mark", propSpikeMark);
         telemetry.addLine().addData("Objects", tenFl.tlmObjectCnt);
         telemetry.addLine().addData("Confidence", tenFl.tlmConfidence);
-        telemetry.addLine().addData("Obj X", tenFl.tlmBestObjectX);
-        telemetry.addLine().addData("Obj Y", tenFl.tlmBestObjectY);
+        telemetry.addLine().addData("Obj X", tenFl.tlmBestPropXPos);
+        telemetry.addLine().addData("Obj Y", tenFl.tlmBestPropYPos);
         telemetry.update();
 
         // FTC Dashboard Telemetry
@@ -91,8 +83,8 @@ public class TensorFlowTest extends LinearOpMode {
         packet.put("Prop Mark", propSpikeMark);
         packet.put("Objects", tenFl.tlmObjectCnt);
         packet.put("Confidence", tenFl.tlmConfidence);
-        packet.put("Obj X", tenFl.tlmBestObjectX);
-        packet.put("Obj Y", tenFl.tlmBestObjectY);
+        packet.put("Obj X", tenFl.tlmBestPropXPos);
+        packet.put("Obj Y", tenFl.tlmBestPropYPos);
         dashboard.sendTelemetryPacket(packet);
     }
 }

@@ -10,7 +10,6 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helper.ClawMoves;
@@ -72,12 +71,11 @@ public class AutoRed extends LinearOpMode {
         whiteClaw.AutonomousStart();
 
         waitForStart();
-
-        spikeMark = tenFl.telemTFOD(1500);
-
         if (isStopRequested()) return;
-        telemetry.clear();
 
+        spikeMark = tenFl.DetectProp(1500);
+        telemetry.clear();
+        tenFl.CleanUp();
 
         switch((int) spikeMark){
             case 3:
@@ -195,8 +193,8 @@ public class AutoRed extends LinearOpMode {
         telemetry.addLine().addData("Prop Mark", spikeMark );
         telemetry.addLine().addData("Objects", tenFl.tlmObjectCnt);
         telemetry.addLine().addData("Confidence", tenFl.tlmConfidence);
-        telemetry.addLine().addData("Obj X", tenFl.tlmBestObjectX );
-        telemetry.addLine().addData("Obj Y", tenFl.tlmBestObjectY );
+        telemetry.addLine().addData("Obj X", tenFl.tlmBestPropXPos);
+        telemetry.addLine().addData("Obj Y", tenFl.tlmBestPropYPos);
         telemetry.update();
 
         // FTC Dashboard Telemetry
@@ -204,8 +202,8 @@ public class AutoRed extends LinearOpMode {
         packet.put("Prop Mark", spikeMark);
         packet.put("Objects", tenFl.tlmObjectCnt);
         packet.put("Confidence", tenFl.tlmConfidence);
-        packet.put("Obj X", tenFl.tlmBestObjectX );
-        packet.put("Obj Y", tenFl.tlmBestObjectY );
+        packet.put("Obj X", tenFl.tlmBestPropXPos);
+        packet.put("Obj Y", tenFl.tlmBestPropYPos);
         dashboard.sendTelemetryPacket(packet);
     }
 }
