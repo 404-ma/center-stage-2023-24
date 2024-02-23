@@ -33,7 +33,7 @@ public class TensorFlowTest extends LinearOpMode {
         while (opModeIsActive()) {
             propSpikeMark = tenFl.DetectProp(1500);
             updateTelemetry();
-            sleep(200);
+            sleep(100);
         }
         tenFl.CleanUp();
     }
@@ -49,9 +49,10 @@ public class TensorFlowTest extends LinearOpMode {
 
         // Initialize Helpers
         try {
-            tenFl = new TensorFlow(hardwareMap);
             dashboard = FtcDashboard.getInstance();
             dashboard.clearTelemetry();
+            tenFl = new TensorFlow(hardwareMap);
+            success = tenFl.isCameraStreaming();
         } catch (Exception e) {
             success = false;
         }
@@ -71,11 +72,10 @@ public class TensorFlowTest extends LinearOpMode {
 
     private void updateTelemetry() {
         telemetry.addLine("TensorFlow");
-        telemetry.addLine().addData("Prop Mark", propSpikeMark);
-        telemetry.addLine().addData("Objects", tenFl.tlmObjectCnt);
+        telemetry.addLine().addData("Spike Mark", propSpikeMark);
+        telemetry.addData("Objects/Props", "%01d / %01d", tenFl.tlmObjectCnt, tenFl.tlmPropCnt);
         telemetry.addLine().addData("Confidence", tenFl.tlmConfidence);
-        telemetry.addLine().addData("Obj X", tenFl.tlmBestPropXPos);
-        telemetry.addLine().addData("Obj Y", tenFl.tlmBestPropYPos);
+        telemetry.addData("Best Prop Pos", "%.0f / %.0f", tenFl.tlmBestPropXPos, tenFl.tlmBestPropYPos);
         telemetry.update();
 
         // FTC Dashboard Telemetry
