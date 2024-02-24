@@ -110,7 +110,7 @@ public class AutoRed extends LinearOpMode {
         }
         whiteClaw.PrepForPixel(false);
 
-        whiteConveyor.moveViperToPosition(1400);
+        whiteConveyor.moveViperToPosition(1600);
         sleep(1000);
         whiteConveyor.moveConvForward();
         sleep(2000);
@@ -181,6 +181,7 @@ public class AutoRed extends LinearOpMode {
 
     //to the panel in the back
     public void toBackPanel(double targetX){
+
 
         Action moveRb3 = drive.actionBuilder(drive.pose)
                 .setReversed(true)
