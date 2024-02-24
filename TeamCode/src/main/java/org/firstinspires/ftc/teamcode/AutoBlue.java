@@ -205,7 +205,7 @@ public class AutoBlue extends LinearOpMode {
         else{
             X = 15;
             Y = 1;
-            ang = -5;
+            ang = -3;
         }
 
         //goes to specified spikeMark
