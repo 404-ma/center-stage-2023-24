@@ -203,28 +203,27 @@ public class AutoBlue extends LinearOpMode {
             ang = 0.0;
         }
         else{
-            X = 16;
-            Y = 2;
+            X = 27;
+            Y = 5;
             ang = 0;
         }
 
         //goes to specified spikeMark
 
-        if(spike == 1 || spike == 2){
-        Action moveRb = drive.actionBuilder(drive.pose)
-                .splineTo(new Vector2d(X, Y), Math.toRadians(ang))
-                .build();
-        Actions.runBlocking(new SequentialAction(moveRb, whiteClaw.PlacePixel()));}
+        if (spike == 1 || spike == 2) {
+            Action moveRb = drive.actionBuilder(drive.pose)
+                    .splineTo(new Vector2d(X, Y), Math.toRadians(ang))
+                    .build();
+            Actions.runBlocking(new SequentialAction(moveRb, whiteClaw.PlacePixel()));}
 
         else {
-                Action movethirdSMPlan = drive.actionBuilder(drive.pose)
-                        .splineTo(new Vector2d(X, Y),Math.toRadians(ang)  )
-                        .waitSeconds(2)
-                        //.splineTo(new Vector2d(20, -4), Math.toRadians(-27))
-                        .turnTo(-27)
-                        .build();
-                Actions.runBlocking(new SequentialAction(movethirdSMPlan, whiteClaw.PlacePixel()));
-            }
+            Action movethirdSMPlan = drive.actionBuilder(drive.pose)
+                    .splineTo(new Vector2d(X, Y),Math.toRadians(ang)  )
+                    .waitSeconds(1)
+                    .splineTo(new Vector2d(27, 5), Math.toRadians(-90))
+                    .build();
+            Actions.runBlocking(new SequentialAction(movethirdSMPlan, whiteClaw.PlacePixel()));
+        }
 
         //steps back from the spike mark
         Action moveBack = drive.actionBuilder(drive.pose)
