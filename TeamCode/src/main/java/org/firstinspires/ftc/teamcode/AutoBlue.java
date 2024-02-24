@@ -203,8 +203,8 @@ public class AutoBlue extends LinearOpMode {
             ang = 0.0;
         }
         else{
-            X = 15;
-            Y = 1;
+            X = 16;
+            Y = 2;
             ang = 0;
         }
 
