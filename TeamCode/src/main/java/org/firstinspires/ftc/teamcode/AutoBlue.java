@@ -267,7 +267,7 @@ public class AutoBlue extends LinearOpMode {
 
         Action moveRb3 = drive.actionBuilder(drive.pose)
                 .setReversed(true)
-                .splineTo(new Vector2d(targetX,38.5), Math.toRadians(90))
+                .splineTo(new Vector2d(targetX,39.5), Math.toRadians(90))
                 .build();
         Actions.runBlocking(moveRb3);
     }
