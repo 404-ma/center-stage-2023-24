@@ -204,10 +204,9 @@ public class AutoBlue extends LinearOpMode {
         }
         else{
             X = 18;
-            Y = 3.5;
-            ang = -10;
+            Y = 1;
+            ang = -5;
         }
-
 
         //goes to specified spikeMark
 
@@ -217,10 +216,10 @@ public class AutoBlue extends LinearOpMode {
                 .build();
         Actions.runBlocking(new SequentialAction(moveRb, whiteClaw.PlacePixel()));}
 
-        else{
+        else {
                 Action movethirdSMPlan = drive.actionBuilder(drive.pose)
-                        .splineTo(new Vector2d(X, Y),Math.toRadians(-10)  )
-                        .splineTo(new Vector2d(24, -4), Math.toRadians(90))
+                        .splineTo(new Vector2d(X, Y),Math.toRadians(ang)  )
+                        .splineTo(new Vector2d(24, -4), Math.toRadians(-27))
                         .build();
                 Actions.runBlocking(new SequentialAction(movethirdSMPlan, whiteClaw.PlacePixel()));
             }
