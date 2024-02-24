@@ -83,7 +83,7 @@ public class AutoBlue extends LinearOpMode {
         switch(propSpikeMark){
             case 3:
                 PARAMS.propAng = 35.5;
-                thirdSMPlan();
+                toSpikeMark(3, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(PARAMS.propAng, PARAMS.partnerDead);
                 }
@@ -93,7 +93,7 @@ public class AutoBlue extends LinearOpMode {
                 break;
             case 1:
                 PARAMS.propAng = 25.0;
-                toSpikeMark(13.5, 3.0, 32, PARAMS.frontStage);
+                toSpikeMark(   1, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(PARAMS.propAng, PARAMS.partnerDead);
                 }
@@ -103,7 +103,7 @@ public class AutoBlue extends LinearOpMode {
                 break;
             default:
                 PARAMS.propAng = 29.0;
-                toSpikeMark(22.0, 6.2,0, PARAMS.frontStage);
+                toSpikeMark(2, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(PARAMS.propAng, PARAMS.partnerDead);
                 }
@@ -159,21 +159,6 @@ public class AutoBlue extends LinearOpMode {
 */
     }
 
-    public void thirdSMPlan(){
-        Action movethirdSMPlan = drive.actionBuilder(drive.pose)
-                .splineTo(new Vector2d(12, 3.5),Math.toRadians(90)  )
-                .splineTo(new Vector2d(18, -4), Math.toRadians(90))
-                .build();
-        Actions.runBlocking(new SequentialAction(movethirdSMPlan, whiteClaw.PlacePixel()));
-
-        Action moveback = drive.actionBuilder(drive.pose)
-                .setReversed(true)
-                .splineTo(new Vector2d(12,3.5), Math.toRadians(90))
-                //.splineTo(new Vector2d(11,6), Math.toRadians(90))
-                .build();
-        Actions.runBlocking(new ParallelAction(moveback, whiteClaw.RetractArm()));
-
-    }
     //use sensor to square up to the panel
     private void SensorApproach() {
         long timeout = System.currentTimeMillis()+PARAMS.rangeTime;
@@ -194,8 +179,11 @@ public class AutoBlue extends LinearOpMode {
     }
 
     //to the spike mark
-    public void toSpikeMark(double X, double Y, int ang, boolean position){
+    public void toSpikeMark(int spike, boolean position){
         double an;
+        double X;
+        double Y;
+        double ang;
 
         if (position) {
             an = -180;
@@ -204,11 +192,38 @@ public class AutoBlue extends LinearOpMode {
             an = 90;
         }
 
+        if(spike == 1){
+            X = 13.5;
+            Y = 3.0;
+            ang = 32.0;
+        }
+        else if(spike == 2){
+            X = 22.0;
+            Y = 6.2;
+            ang = 0.0;
+        }
+        else{
+            X = 18;
+            Y = 3.5;
+            ang = -10;
+        }
+
+
         //goes to specified spikeMark
+
+        if(spike == 1 || spike == 2){
         Action moveRb = drive.actionBuilder(drive.pose)
                 .splineTo(new Vector2d(X, Y), Math.toRadians(ang))
                 .build();
-        Actions.runBlocking(new SequentialAction(moveRb, whiteClaw.PlacePixel()));
+        Actions.runBlocking(new SequentialAction(moveRb, whiteClaw.PlacePixel()));}
+
+        else{
+                Action movethirdSMPlan = drive.actionBuilder(drive.pose)
+                        .splineTo(new Vector2d(X, Y),Math.toRadians(-10)  )
+                        .splineTo(new Vector2d(24, -4), Math.toRadians(90))
+                        .build();
+                Actions.runBlocking(new SequentialAction(movethirdSMPlan, whiteClaw.PlacePixel()));
+            }
 
         //steps back from the spike mark
         Action moveBack = drive.actionBuilder(drive.pose)
@@ -261,7 +276,7 @@ public class AutoBlue extends LinearOpMode {
     public void toSafety(){
         Action moveToSafety = drive.actionBuilder(drive.pose)
                 .lineToY(35.0)
-                .strafeTo(new Vector2d(46, 35.0))
+                .strafeTo(new Vector2d(6, 35.0))
                 .build();
         Actions.runBlocking(new ParallelAction(moveToSafety, whiteClaw.RetractArm()));
     }

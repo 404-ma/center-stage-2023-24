@@ -120,11 +120,9 @@ public class RoboGoApril extends LinearOpMode
 
             // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
 
-
             if(iN == GameplayInputType.BUTTON_B){
                 bNum++;
             }
-
             if(bNum % 2 == 1){
                 autoPilot = true;
             }
