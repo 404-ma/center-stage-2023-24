@@ -220,7 +220,7 @@ public class AutoBlue extends LinearOpMode {
             Action movethirdSMPlan = drive.actionBuilder(drive.pose)
                     .splineTo(new Vector2d(X, Y),Math.toRadians(ang)  )
                     .waitSeconds(1)
-                    .splineTo(new Vector2d(27, 5), Math.toRadians(-90))
+                    .splineTo(new Vector2d(27, 6.5), Math.toRadians(-90))
                     .build();
             Actions.runBlocking(new SequentialAction(movethirdSMPlan, whiteClaw.PlacePixel()));
         }
