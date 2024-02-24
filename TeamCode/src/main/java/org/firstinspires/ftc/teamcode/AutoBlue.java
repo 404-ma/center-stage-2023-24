@@ -82,7 +82,7 @@ public class AutoBlue extends LinearOpMode {
 
         switch(propSpikeMark){
             case 3:
-                PARAMS.propAng = 35.5;
+                PARAMS.propAng = 37.5;
                 toSpikeMark(3, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(PARAMS.propAng, PARAMS.partnerDead);
