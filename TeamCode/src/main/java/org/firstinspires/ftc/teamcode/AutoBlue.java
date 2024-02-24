@@ -203,7 +203,7 @@ public class AutoBlue extends LinearOpMode {
             ang = 0.0;
         }
         else{
-            X = 18;
+            X = 15;
             Y = 1;
             ang = -5;
         }
@@ -219,7 +219,7 @@ public class AutoBlue extends LinearOpMode {
         else {
                 Action movethirdSMPlan = drive.actionBuilder(drive.pose)
                         .splineTo(new Vector2d(X, Y),Math.toRadians(ang)  )
-                        .splineTo(new Vector2d(24, -4), Math.toRadians(-27))
+                        .splineTo(new Vector2d(20, -4), Math.toRadians(-27))
                         .build();
                 Actions.runBlocking(new SequentialAction(movethirdSMPlan, whiteClaw.PlacePixel()));
             }
