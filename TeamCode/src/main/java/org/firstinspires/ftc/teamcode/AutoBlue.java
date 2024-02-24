@@ -275,7 +275,7 @@ public class AutoBlue extends LinearOpMode {
     public void toSafety(){
         Action moveToSafety = drive.actionBuilder(drive.pose)
                 .lineToY(35.0)
-                .strafeTo(new Vector2d(6, 35.0))
+                .strafeTo(new Vector2d(6, 36.0))
                 .build();
         Actions.runBlocking(new ParallelAction(moveToSafety, whiteClaw.RetractArm()));
     }
