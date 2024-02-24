@@ -205,7 +205,7 @@ public class AutoBlue extends LinearOpMode {
         else{
             X = 15;
             Y = 1;
-            ang = -3;
+            ang = 0;
         }
 
         //goes to specified spikeMark
@@ -267,7 +267,7 @@ public class AutoBlue extends LinearOpMode {
 
         Action moveRb3 = drive.actionBuilder(drive.pose)
                 .setReversed(true)
-                .splineTo(new Vector2d(targetX,39.5), Math.toRadians(90))
+                .splineTo(new Vector2d(targetX,40.0), Math.toRadians(89))
                 .build();
         Actions.runBlocking(moveRb3);
     }
