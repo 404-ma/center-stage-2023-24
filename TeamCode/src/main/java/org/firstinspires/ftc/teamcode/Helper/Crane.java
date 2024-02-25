@@ -2,15 +2,17 @@ package org.firstinspires.ftc.teamcode.Helper;
 
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
+@Config
 public class Crane {
     public static class Params{
         public double craneSpeed = 0.9;
-        public int craneMaxPositionRelative = 8000;
+        public int craneMaxPositionRelative = 7700;
     }
 
     public static Params PARAMS = new Params();
