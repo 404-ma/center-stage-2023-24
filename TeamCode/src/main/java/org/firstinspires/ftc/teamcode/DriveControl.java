@@ -46,6 +46,10 @@ public class DriveControl extends LinearOpMode {
 
         waitForStart();
         if (isStopRequested()) return;
+
+        // TODO: Move yClaw and Launch initialization after Start Button Press
+        // No Servo's can move on program launch.
+
         telemetry.clear();
 
         boolean suplex = false;
