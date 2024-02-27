@@ -21,7 +21,7 @@ public class TensorFlow {
         public int OVERRIDE_SPIKEMARK_POS = 2;
 
         public int cameraStreamingWait = 1000;
-        public String tfodModelFile = "/sdcard/FIRST/tflitemodels/model_TF_Training20240225.tflite";
+        public String tfodModelFile = "/sdcard/FIRST/tflitemodels/model_Training5.tflite";
         public double tfodMinConfidence = 0.90;
         public double spikemarkPositionOneMax_X = 160;
         public double propMinWidth = 80;
