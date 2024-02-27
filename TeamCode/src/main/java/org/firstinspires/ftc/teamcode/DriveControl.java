@@ -39,17 +39,14 @@ public class DriveControl extends LinearOpMode {
         DrivetrainV2 drvTrain = new DrivetrainV2(hardwareMap);
         Conveyor conv = new Conveyor(hardwareMap);
         Crane crane = new Crane(hardwareMap);
-        yclaw = new ClawMoves(hardwareMap);
         yclaw.PrepForPixel(false);
         Launcher launch = new Launcher(hardwareMap);
-        launch.startPosition();
 
         waitForStart();
         if (isStopRequested()) return;
 
-        // TODO: Move yClaw and Launch initialization after Start Button Press
-        // No Servo's can move on program launch.
-
+        yclaw = new ClawMoves(hardwareMap);
+        launch.startPosition();
         telemetry.clear();
 
         boolean suplex = false;
