@@ -26,7 +26,7 @@ public class AutoRed extends LinearOpMode {
      *  FTC Dashboard Parameters
      */
     public static class Params {
-        public double propSpikeMark = 2;    //  Which Spike Mark is the Prop Located on
+       // public double propSpikeMark = 2;    //  Which Spike Mark is the Prop Located on
         public boolean partnerDead = true;
         public boolean frontStage = false;
         public int dTime = 500;
@@ -35,7 +35,7 @@ public class AutoRed extends LinearOpMode {
         public double gainValueForward = 0.1;
         public double rangeValue = 2;
         public double gainValueRotation = 0.03;
-        public String versionNum = "3.2";
+        public String versionNum = "3.4";
 
     }
 
@@ -73,29 +73,32 @@ public class AutoRed extends LinearOpMode {
         waitForStart();
         if (isStopRequested()) return;
 
-        spikeMark = tenFl.DetectProp(1500);
+        spikeMark = tenFl.DetectProp(1000);
         telemetry.clear();
+        updateTelemetry();
         tenFl.CleanUp();
 
-        switch((int) spikeMark){
-            case 3:
+        switch(spikeMark){
+            case 3
+                    :
                 //toSpikeMark(20.5,4.0,27, PARAMS.frontStage);
-                toSpikeMark(17.5,3.0,27, PARAMS.frontStage);
+                toSpikeMark(14.5,4.5,27, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(36.5, PARAMS.partnerDead);
                 }
                 else{
-                    toBackPanel(35.0);
+                    toBackPanel(36.5);
                 }
                 break;
             case 1:
                 //toSpikeMark(18.5, -3.0, -30, PARAMS.frontStage);
-                toSpikeMark(15.5, -3.0, -30, PARAMS.frontStage);
+                toSpikeMark(16.5, -0.5, -30, PARAMS.frontStage);
+               // firstsp();
                 if(PARAMS.frontStage){
-                    toFrontPanel(27.0, PARAMS.partnerDead);
+                    toFrontPanel(25.0, PARAMS.partnerDead);
                 }
                 else{
-                    toBackPanel(27.0);
+                    toBackPanel(25.0);
                 }
                 break;
             default:
@@ -110,13 +113,47 @@ public class AutoRed extends LinearOpMode {
         }
         whiteClaw.PrepForPixel(false);
 
-        whiteConveyor.moveViperToPosition(1550);
+        whiteConveyor.moveViperToPosition(700);
         sleep(1000);
         whiteConveyor.moveConvForward();
-        sleep(2000);
+        sleep(1500);
         whiteConveyor.stopConv();
         whiteConveyor.moveViperToPosition(0);
-        sleep(1800);
+        sleep(1000);
+
+        whiteClaw.SuplexPixel();
+
+        toSafety();
+    }
+
+    public void firstsp(){
+        Action movethirdSMPlan = drive.actionBuilder(drive.pose)
+                .splineTo(new Vector2d(19.5, 0),Math.toRadians(0)  )
+                .splineTo(new Vector2d(19.5, -4.5), Math.toRadians(90))
+                .build();
+        Actions.runBlocking(new SequentialAction(movethirdSMPlan, whiteClaw.PlacePixel()));
+
+        Action moveBack = drive.actionBuilder(drive.pose)
+                .setReversed(true)
+                .splineTo(new Vector2d(6, 0), Math.toRadians(-30))
+                .build();
+        Actions.runBlocking(new ParallelAction(moveBack, whiteClaw.RetractArm()));
+    }
+
+    public void toSafety(){
+        Action moveToSafety = drive.actionBuilder(drive.pose)
+                .lineToY(-35.0)
+                .strafeTo(new Vector2d(6, -36.0))
+                .build();
+        Actions.runBlocking(new ParallelAction(moveToSafety, whiteClaw.RetractArm()));
+    }
+
+    public void toSafetyf(){
+        Action moveToSafety = drive.actionBuilder(drive.pose)
+                .lineToY(-86.0)
+                .strafeTo(new Vector2d(6, -86.0))
+                .build();
+        Actions.runBlocking(new ParallelAction(moveToSafety, whiteClaw.RetractArm()));
     }
 
     //to the spike mark
@@ -141,7 +178,6 @@ public class AutoRed extends LinearOpMode {
         }
 
         Action moveBack = drive.actionBuilder(drive.pose)
-
                 .setReversed(true)
                 .splineTo(new Vector2d(6, 0), Math.toRadians(an))
                 .build();

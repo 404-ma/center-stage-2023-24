@@ -82,7 +82,7 @@ public class AutoBlue extends LinearOpMode {
 
         switch(propSpikeMark){
             case 3:
-                PARAMS.propAng = 37.5;
+                PARAMS.propAng = 36.5;
                 toSpikeMark(3, PARAMS.frontStage);
                 if(PARAMS.frontStage){
                     toFrontPanel(PARAMS.propAng, PARAMS.partnerDead);
@@ -218,11 +218,11 @@ public class AutoBlue extends LinearOpMode {
 
         else {
             Action movethirdSMPlan = drive.actionBuilder(drive.pose)
-                    .splineTo(new Vector2d(X, Y),Math.toRadians(ang)  )
-                    .waitSeconds(1)
-                    .splineTo(new Vector2d(27, 6.5), Math.toRadians(-90))
+                    .splineTo(new Vector2d(X, Y),Math.toRadians(ang))
+                    .turn(Math.toRadians(-90))
                     .build();
             Actions.runBlocking(new SequentialAction(movethirdSMPlan, whiteClaw.PlacePixel()));
+            drive.updatePoseEstimate();
         }
 
         //steps back from the spike mark
