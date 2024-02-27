@@ -203,7 +203,7 @@ public class AutoBlue extends LinearOpMode {
             ang = 0.0;
         }
         else{
-            X = 27;
+            X = 28;
             Y = 5;
             ang = 0;
         }
@@ -214,7 +214,15 @@ public class AutoBlue extends LinearOpMode {
             Action moveRb = drive.actionBuilder(drive.pose)
                     .splineTo(new Vector2d(X, Y), Math.toRadians(ang))
                     .build();
-            Actions.runBlocking(new SequentialAction(moveRb, whiteClaw.PlacePixel()));}
+            Actions.runBlocking(new SequentialAction(moveRb, whiteClaw.PlacePixel()));
+
+            //steps back from the spike mark
+
+            Action moveBack = drive.actionBuilder(drive.pose)
+                    .setReversed(true)
+                    .splineTo(new Vector2d(11, 6), Math.toRadians(an))
+                    .build();
+            Actions.runBlocking(new ParallelAction(moveBack, whiteClaw.RetractArm()));}
 
         else {
             Action movethirdSMPlan = drive.actionBuilder(drive.pose)
@@ -225,12 +233,6 @@ public class AutoBlue extends LinearOpMode {
             drive.updatePoseEstimate();
         }
 
-        //steps back from the spike mark
-        Action moveBack = drive.actionBuilder(drive.pose)
-                .setReversed(true)
-                .splineTo(new Vector2d(11, 6), Math.toRadians(an))
-                .build();
-        Actions.runBlocking(new ParallelAction(moveBack, whiteClaw.RetractArm()));
     }
 
     //to the panel in the front
