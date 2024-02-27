@@ -21,6 +21,8 @@ import java.util.Locale;
 
 @TeleOp(name = "Driver Control", group = "Competition!!")
 public class DriveControl extends LinearOpMode {
+    private static final String version = "4.0";
+
     private boolean setReversed = false;
     private ClawMoves yclaw;
 
@@ -29,7 +31,7 @@ public class DriveControl extends LinearOpMode {
         // Load Introduction and Wait for Start
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
         telemetry.addLine("Driver Control");
-        telemetry.addData("Version Number", "3.2");
+        telemetry.addData("Version Number", version);
         telemetry.addLine();
         telemetry.addData(">", "Press Start to Launch");
         telemetry.update();
@@ -39,14 +41,14 @@ public class DriveControl extends LinearOpMode {
         DrivetrainV2 drvTrain = new DrivetrainV2(hardwareMap);
         Conveyor conv = new Conveyor(hardwareMap);
         Crane crane = new Crane(hardwareMap);
-        yclaw.PrepForPixel(false);
+        yclaw = new ClawMoves(hardwareMap);
         Launcher launch = new Launcher(hardwareMap);
 
         waitForStart();
         if (isStopRequested()) return;
 
-        yclaw = new ClawMoves(hardwareMap);
         launch.startPosition();
+        yclaw.PrepForPixel(false);
         telemetry.clear();
 
         boolean suplex = false;
