@@ -22,10 +22,10 @@ public class TensorFlow {
 
         public int cameraStreamingWait = 1000;
         public String tfodModelFile = "/sdcard/FIRST/tflitemodels/model_TF_Training20240225.tflite";
-        public double tfodMinConfidence = 0.80;
+        public double tfodMinConfidence = 0.90;
         public double spikemarkPositionOneMax_X = 160;
-        public double propMinWidth = 95;
-        public double propMaxWidth = 180;
+        public double propMinWidth = 80;
+        public double propMaxWidth = 200;
     }
 
     public static  Params PARAMS = new Params();

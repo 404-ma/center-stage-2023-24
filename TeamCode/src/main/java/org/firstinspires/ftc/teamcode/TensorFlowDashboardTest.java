@@ -43,12 +43,9 @@ public class TensorFlowDashboardTest extends LinearOpMode {
         // TFOD_MODEL_FILE points to a model file stored onboard the Robot Controller's storage,
         // this is used when uploading models directly to the RC using the model upload interface.
         public String tfodModelFile = "/sdcard/FIRST/tflitemodels/model_TF_Training20240225.tflite";
-        public double tfodMinConfidence = 0.80;
+        public double tfodMinConfidence = 0.90;
 
         public double spikeOne_Max_X_Position = 160;
-
-        public double propMinWidth = 95;
-        public double propMaxWidth = 180;
     }
 
     public static Params PARAMS = new Params();
@@ -222,14 +219,13 @@ public class TensorFlowDashboardTest extends LinearOpMode {
             double ratio = height / width;
 
             // Check for Shape Parameters
-            if ((width >= PARAMS.propMinWidth) && (width <= PARAMS.propMaxWidth)) {
-                ++propCnt;
-                if ((height * width) > largestObjectArea) {
-                    largestObjectArea = height * width;
-                    largestObjectX = x;
-                    largestObjectY = y;
-                }
+            ++propCnt;
+            if ((height * width) > largestObjectArea) {
+                largestObjectArea = height * width;
+                largestObjectX = x;
+                largestObjectY = y;
             }
+
 
             telemetry.addLine("");
             telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
