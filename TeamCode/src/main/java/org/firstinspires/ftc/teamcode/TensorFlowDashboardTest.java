@@ -42,10 +42,10 @@ public class TensorFlowDashboardTest extends LinearOpMode {
 
         // TFOD_MODEL_FILE points to a model file stored onboard the Robot Controller's storage,
         // this is used when uploading models directly to the RC using the model upload interface.
-        public String tfodModelFile = "/sdcard/FIRST/tflitemodels/model_Training2.tflite";
+        public String tfodModelFile = "/sdcard/FIRST/tflitemodels/model_TF_Training20240225.tflite";
         public double tfodMinConfidence = 0.80;
 
-        public double spikeOne_Max_X_Position = 170;
+        public double spikeOne_Max_X_Position = 160;
 
         public double propMinWidth = 95;
         public double propMaxWidth = 180;

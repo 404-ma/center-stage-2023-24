@@ -15,7 +15,7 @@ public class Conveyor {
     public static class Params {
         public double conveyorSpeed = 0.90;
         public double viperSpeed = 0.5;
-        public int viperMotorMaxPositionRelative = 3000;
+        public int viperMotorMaxPositionRelative = 3000;  // 30 inches - 3,000 tpi
 
     }
 
@@ -48,16 +48,13 @@ public class Conveyor {
     }
 
     public void moveViperToPosition(int position) {
-
-        int absolutePosition = Range.clip(position, 0, PARAMS.viperMotorMaxPositionRelative);
-        viperMotor.setTargetPosition(absolutePosition);
+        int checkedPosition = Range.clip(position, 0, PARAMS.viperMotorMaxPositionRelative);
+        viperMotor.setTargetPosition(checkedPosition);
         viperMotor.setPower(PARAMS.viperSpeed);
         viperMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void moveViperWithPower(double power, boolean override) {
-
-
         viperMotor.getMode();
         viperMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         if (!override) {
@@ -76,7 +73,7 @@ public class Conveyor {
                     power = Math.max(power, -0.4);
             }
 
-            //30 inches - 3,000 tpi
+
             viperMotor.setPower(Range.clip(power, -1, 1));
         }
     }
