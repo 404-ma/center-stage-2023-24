@@ -76,7 +76,7 @@ public class AutoBlue extends LinearOpMode {
         telemetry.clear();
         if (isStopRequested()) return;
 
-        propSpikeMark = tenFl.DetectProp(2000);
+        propSpikeMark = tenFl.DetectProp(3000);
         updateTelemetry();
         tenFl.CleanUp();
 
@@ -121,7 +121,7 @@ public class AutoBlue extends LinearOpMode {
         sleep(1500);
         whiteConveyor.stopConv();
         whiteConveyor.moveViperToPosition(0);
-        sleep(1400);
+        sleep(1000);
 
         whiteClaw.SuplexPixel();
 
