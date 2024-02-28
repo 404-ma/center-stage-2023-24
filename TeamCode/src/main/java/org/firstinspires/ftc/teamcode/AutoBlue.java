@@ -80,37 +80,12 @@ public class AutoBlue extends LinearOpMode {
         updateTelemetry();
         tenFl.CleanUp();
 
-        switch(propSpikeMark){
-            case 3:
-                PARAMS.propAng = 36.5;
-                toSpikeMark(3, PARAMS.frontStage);
-                if(PARAMS.frontStage){
-                    toFrontPanel(PARAMS.propAng, PARAMS.partnerDead);
-                }
-                else{
-                    toBackPanel(PARAMS.propAng);
-                }
-                break;
-            case 1:
-                PARAMS.propAng = 25.0;
-                toSpikeMark(   1, PARAMS.frontStage);
-                if(PARAMS.frontStage){
-                    toFrontPanel(PARAMS.propAng, PARAMS.partnerDead);
-                }
-                else{
-                    toBackPanel(PARAMS.propAng);
-                }
-                break;
-            default:
-                PARAMS.propAng = 29.0;
-                toSpikeMark(2, PARAMS.frontStage);
-                if(PARAMS.frontStage){
-                    toFrontPanel(PARAMS.propAng, PARAMS.partnerDead);
-                }
-                else{
-                    toBackPanel(PARAMS.propAng);
-                }
-                break;
+        toSpikeMark(propSpikeMark, PARAMS.frontStage);
+        if(PARAMS.frontStage){
+            toFrontPanel(propSpikeMark, PARAMS.partnerDead);
+        }
+        else{
+            toBackPanel(propSpikeMark);
         }
 
         whiteClaw.PrepForPixel(false);
@@ -235,7 +210,12 @@ public class AutoBlue extends LinearOpMode {
     }
 
     //to the panel in the front
-    public void toFrontPanel( double targetX, boolean partDead) {
+    public void toFrontPanel( int spikeMark, boolean partDead) {
+        double targetX = 29;
+        if (spikeMark == 3)
+            targetX = 36.5;
+        else if (spikeMark == 1)
+            targetX = 25.0;
         whiteClaw.RetractArm();
 
         Action moveBar = drive.actionBuilder(drive.pose)
@@ -265,7 +245,12 @@ public class AutoBlue extends LinearOpMode {
     }
 
     //to the panel in the back
-    public void toBackPanel(double targetX){
+    public void toBackPanel(int spikeMark){
+        double targetX = 29;
+        if (spikeMark == 3)
+            targetX = 36.5;
+        else if (spikeMark == 1)
+            targetX = 25.0;
 
         Action moveRb3 = drive.actionBuilder(drive.pose)
                 .setReversed(true)
