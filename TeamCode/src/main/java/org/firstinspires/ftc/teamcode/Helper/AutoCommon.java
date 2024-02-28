@@ -17,7 +17,7 @@ public class AutoCommon {
                                   ClawMoves claw, Conveyor conveyor) {
 
         // Shorter Conveyor Runtime if Only Depositing the Preloaded Pixel
-        long runTimeMS = (onlyOnePixel ? 1000 : 2500);
+        long runTimeMS = (onlyOnePixel ? 1200 : 2500);
 
         // Place Pixel on Backdrop
         claw.PrepForPixel(false);
