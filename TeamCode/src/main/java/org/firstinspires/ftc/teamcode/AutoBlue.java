@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -14,6 +15,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Helper.AutoCommon;
 import org.firstinspires.ftc.teamcode.Helper.ClawMoves;
 import org.firstinspires.ftc.teamcode.Helper.Conveyor;
 import org.firstinspires.ftc.teamcode.Helper.DistanceSystem;
@@ -28,18 +30,15 @@ public class AutoBlue extends LinearOpMode {
      *  FTC Dashboard Parameters
      */
     public static class Params {
-        public boolean partnerDead = true;
+        public String versionNum = "4.1.20";
         public boolean frontStage = false;
-        public int dTime = 500;
-        public double rangeNum = 2.0;
-        public int rangeTime = 500;
-        public double gainValueForward = 0.1;
-        public double rangeValue = 2;
-        public double gainValueRotation = 0.03;
-        public double angleAtEnd = -90;
-        public String versionNum = "3.2";
-        public double propAng;
-        public boolean ifSafe = false;
+        public boolean ifSafe = true;
+        public int tfodWaitMS = 3000;
+        public int PartnerWaitTime = 500;
+        public int sensorRangeTime = 500;
+        public double sensorRangeValue = 2;
+        public double sensorGainValueForward = 0.1;
+        public double sensorGainValueRotation = 0.03;
     }
 
     public static Params PARAMS = new Params();
@@ -59,196 +58,222 @@ public class AutoBlue extends LinearOpMode {
         telemetry.addLine();
         telemetry.addLine().addData("Version", PARAMS.versionNum);
         telemetry.addLine();
-        telemetry.addData(">", "Press Start to Launch");
         telemetry.update();
 
-        dashboard = FtcDashboard.getInstance();
-        dashboard.clearTelemetry();
+        // Initialize Helpers
+        boolean initialized;
+        try {
+            dashboard = FtcDashboard.getInstance();
+            dashboard.clearTelemetry();
 
-        drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
-        whiteClaw = new ClawMoves(hardwareMap);
-        whiteConveyor = new Conveyor(hardwareMap);
-        tenFl = new TensorFlow(hardwareMap);
-        distSys = new DistanceSystem(hardwareMap);
-        whiteClaw.AutonomousStart();
+            drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
+            whiteClaw = new ClawMoves(hardwareMap);
+            whiteConveyor = new Conveyor(hardwareMap);
+            distSys = new DistanceSystem(hardwareMap);
+            whiteClaw.AutonomousStart();
+            tenFl = new TensorFlow(hardwareMap);
+
+            boolean cameraStreaming = false;
+            long startCameraWait = System.currentTimeMillis();
+            boolean timedOut = false;
+
+            while (!cameraStreaming && !timedOut)  {
+                cameraStreaming = tenFl.isCameraStreaming();
+                timedOut = (System.currentTimeMillis() - (startCameraWait + 1500)) > 0;
+                sleep(20);
+            }
+            initialized = cameraStreaming;
+            if (initialized)
+                telemetry.addData(">", "Press Start to Launch");
+            else
+                telemetry.addLine("*** TFOD CAMERA OFFLINE ***");
+        } catch (Exception e) {
+            initialized = false;
+            telemetry.addLine("");
+            telemetry.addLine("*** INITIALIZATION FAILED ***");
+            telemetry.addData("Exeption", e.toString());
+        }
+
+        telemetry.update();
+        if (!initialized) return;
 
         waitForStart();
         telemetry.clear();
         if (isStopRequested()) return;
 
-        propSpikeMark = tenFl.DetectProp(3000);
+        // Detect Object with Tensor Flow
+        propSpikeMark = tfodSelectSpikeMark();
         updateTelemetry();
-        tenFl.CleanUp();
 
-        toSpikeMark(propSpikeMark, PARAMS.frontStage);
-        if(PARAMS.frontStage){
-            toFrontPanel(propSpikeMark, PARAMS.partnerDead);
-        }
-        else{
+        toSpikeMark(propSpikeMark);
+        if (PARAMS.frontStage) {
+            toPixelStack();
+            toFrontPanel(propSpikeMark);
+            AutoCommon.PlacePixel(false, drive, whiteClaw, whiteConveyor);
+        } else {
             toBackPanel(propSpikeMark);
+            AutoCommon.PlacePixel(true, drive, whiteClaw, whiteConveyor);
         }
 
-        whiteClaw.PrepForPixel(false);
-
-        whiteConveyor.moveViperToPosition(700);
-        sleep(600);
-        whiteConveyor.moveConvForward();
-        sleep(2500);
-        whiteConveyor.stopConv();
-        whiteConveyor.moveViperToPosition(0);
-        sleep(1000);
-
-        toSafety();
-
-        if(!PARAMS.frontStage){
-            secondHalfBack();
+        if (!PARAMS.frontStage) {
+            if (PARAMS.ifSafe) {
+                toSafety();
+            } else {
+                secondHalfBack(propSpikeMark);
+            }
         }
-        else{
-            BackMid();
-        }
-
-        //pick up
-        whiteClaw.PrepForPixel(false);
-        whiteClaw.moveLevel(4);
-        whiteClaw.closeGrip();
-        whiteClaw.SuplexPixel();
-
-        if(!PARAMS.frontStage){
-            backSecondHalfBack(PARAMS.propAng);
-        }
-        else{
-            BackMidSec(PARAMS.propAng);
-        }
-
-        whiteClaw.PrepForPixel(false);
-        whiteConveyor.moveViperToPosition(1400);
-        sleep(1000);
-        whiteConveyor.moveConvForward();
-        sleep(1000);
-        whiteConveyor.stopConv();
-        whiteConveyor.moveViperToPosition(0);
-        sleep(1800);
-
     }
 
-    //use sensor to square up to the panel
-    private void SensorApproach() {
-        long timeout = System.currentTimeMillis()+PARAMS.rangeTime;
-        TargetPose pose = distSys.getTargetPose(true);  //Get Initial Values
+    private int tfodSelectSpikeMark() {
+        long endDetectMS  = System.currentTimeMillis() + PARAMS.tfodWaitMS;
+        boolean timeExpired = false;
+        int spikeMark = 3;
 
-        while (pose.range > (pose.range-PARAMS.rangeValue) && System.currentTimeMillis() < timeout){
-            pose = distSys.getTargetPose(false);
-            double rangeError = (pose.range-PARAMS.rangeValue);
+        while (opModeIsActive() && (spikeMark == 3)  && (!timeExpired)) {
+            spikeMark = tenFl.DetectProp();
 
-            // Use the speed and turn "gains" to calculate how we want the robot to move.
-            double forward = Range.clip(-rangeError * PARAMS.gainValueForward, -0.3, 0.3);
-            double rotate = Range.clip(-pose.yaw * PARAMS.gainValueRotation, -0.25, 0.25);
-
-            drive.setDrivePowers(new PoseVelocity2d(new Vector2d(forward, 0), rotate));
-            drive.updatePoseEstimate();
-            sleep(30);
+            timeExpired = (System.currentTimeMillis() > endDetectMS);
+            if ((spikeMark == 3) && !timeExpired)
+                sleep( 50);
         }
+        tenFl.CleanUp();
+
+        return spikeMark;
     }
 
     //to the spike mark
-    public void toSpikeMark(int spike, boolean position){
-        double an;
-        double X;
-        double Y;
-        double ang;
+    private void toSpikeMark(int spike) {
+        double X, Y, ang;
 
-        if (position) {
-            an = -180;
+        if (PARAMS.frontStage) {
+            // FRONT STAGE  - Go to specified spikeMark and Line Up White Pixel Stack
+            if (spike == 1) {
+                X = 25; Y = -6; ang = 0;
+            } else if(spike == 2) {
+                X = 23.0; Y = -5.3; ang = 0;
+            } else {
+                X = 14; Y = -3.0; ang = -28.0;
+            }
+
+            if (spike == 2 || spike == 3) {
+                Action moveDropPixel = drive.actionBuilder(drive.pose)
+                        .splineTo(new Vector2d(X, Y), Math.toRadians(ang))
+                        .build();
+
+                Action moveBack = drive.actionBuilder(drive.pose)
+                        .setReversed(true)
+                        .lineToX(20)
+                        .turnTo(Math.toRadians(-90))
+                        .build();
+                if (spike == 3) {
+                    moveBack = drive.actionBuilder(drive.pose)
+                            .setReversed(true)
+                            .splineTo(new Vector2d(14, 0), Math.toRadians(0))
+                            .turnTo(Math.toRadians(-90))
+                            .build();
+                }
+
+                Actions.runBlocking(new SequentialAction(moveDropPixel,
+                        whiteClaw.PlacePixelAction(),
+                        new ParallelAction(moveBack, whiteClaw.RetractArmAction())));
+            } else {
+                // Spike 1 - Avoid Gates on Left
+                Action moveOneSMPlan = drive.actionBuilder(drive.pose)
+                        .splineTo(new Vector2d(X, Y),Math.toRadians(ang))
+                        .turn(Math.toRadians(90))
+                        .build();
+
+                Action moveBack = drive.actionBuilder(drive.pose)
+                        .setReversed(true)
+                        .lineToX(17)
+                        .turnTo(Math.toRadians(-90))
+                        .build();
+
+                Actions.runBlocking(new SequentialAction(moveOneSMPlan,
+                        whiteClaw.PlacePixelAction(),
+                        new ParallelAction(moveBack, whiteClaw.RetractArmAction())));
+            }
+        } else {
+            // BACK STAGE - Go to specified spikeMark and Line Up to Backdrop
+            if (spike == 1) {
+                X = 13.5; Y = 3.0; ang = 32.0;
+            } else if(spike == 2) {
+                X = 23.0; Y = 6; ang = 0;
+            } else {
+                X = 28; Y = 4; ang = 0;
+            }
+
+            if (spike == 1 || spike == 2) {
+                Action moveRb = drive.actionBuilder(drive.pose)
+                        .splineTo(new Vector2d(X, Y), Math.toRadians(ang))
+                        .build();
+                Actions.runBlocking(new SequentialAction(moveRb, whiteClaw.PlacePixelAction()));
+
+                //steps back from the spike mark
+                Action moveBack = drive.actionBuilder(drive.pose)
+                        .setReversed(true)
+                        .splineTo(new Vector2d(11, 6), Math.toRadians(90))
+                        .build();
+                Actions.runBlocking(new ParallelAction(moveBack, whiteClaw.RetractArmAction()));
+            } else {
+                // Spike 3 - Avoid Gates on Right
+                Action moveThirdSMPlan = drive.actionBuilder(drive.pose)
+                        .splineTo(new Vector2d(X, Y),Math.toRadians(ang))
+                        .turn(Math.toRadians(-90))
+                        .build();
+                Actions.runBlocking(new SequentialAction(moveThirdSMPlan, whiteClaw.PlacePixelAction()));
+            }
         }
-        else{
-            an = 90;
-        }
-
-        if(spike == 1){
-            X = 13.5;
-            Y = 3.0;
-            ang = 32.0;
-        }
-        else if(spike == 2){
-            X = 22.0;
-            Y = 6.2;
-            ang = 0.0;
-        }
-        else{
-            X = 28;
-            Y = 4;
-            ang = 0;
-        }
-
-        //goes to specified spikeMark
-
-        if (spike == 1 || spike == 2) {
-            Action moveRb = drive.actionBuilder(drive.pose)
-                    .splineTo(new Vector2d(X, Y), Math.toRadians(ang))
-                    .build();
-            Actions.runBlocking(new SequentialAction(moveRb, whiteClaw.PlacePixel()));
-
-            //steps back from the spike mark
-
-            Action moveBack = drive.actionBuilder(drive.pose)
-                    .setReversed(true)
-                    .splineTo(new Vector2d(11, 6), Math.toRadians(an))
-                    .build();
-            Actions.runBlocking(new ParallelAction(moveBack, whiteClaw.RetractArm()));
-
-        }
-
-        else {
-            Action movethirdSMPlan = drive.actionBuilder(drive.pose)
-                    .splineTo(new Vector2d(X, Y),Math.toRadians(ang))
-                    .turn(Math.toRadians(-90))
-                    .build();
-            Actions.runBlocking(new SequentialAction(movethirdSMPlan, whiteClaw.PlacePixel()));
-            drive.updatePoseEstimate();
-        }
-
+        drive.updatePoseEstimate();
     }
 
-    //to the panel in the front
-    public void toFrontPanel( int spikeMark, boolean partDead) {
-        double targetX = 29;
+    //goes front to the pixel (when it started from the frontStage)
+    private void toPixelStack() {
+        Action moveToStack = drive.actionBuilder(drive.pose)
+                .setReversed(false)
+                .splineTo(new Vector2d(28, -18), Math.toRadians(-91))
+                .strafeTo(new Vector2d(41, -18.75))
+                .build();
+        Actions.runBlocking(new SequentialAction( new ParallelAction(moveToStack, whiteClaw.RetractArmAction()),
+                whiteClaw.TopOfStackPickupAction(4) ));
+
+        whiteClaw.closeGrip();
+        drive.updatePoseEstimate();
+    }
+
+
+    // Move to the Backdrop from Frontstage
+    private void toFrontPanel( int spikeMark) {
+        double targetX = 36;
         if (spikeMark == 3)
-            targetX = 36.5;
+            targetX = 38;
         else if (spikeMark == 1)
             targetX = 25.0;
-        whiteClaw.RetractArm();
+        whiteClaw.RetractArmAction();
 
         Action moveBar = drive.actionBuilder(drive.pose)
-                .turnTo(Math.toRadians(-90))
-                .lineToY(40)
+                .strafeTo(new Vector2d(51, -15))
+                .setReversed(true)
+                .splineTo(new Vector2d(56, 46), Math.toRadians(90))
                 .build();
-        Actions.runBlocking(moveBar);
+        Actions.runBlocking(new ParallelAction(moveBar, whiteClaw.SuplexPixelAction()));
 
-        if(partDead){
-            Action backdrop = drive.actionBuilder(drive.pose)
-                    .setReversed(true)
-                    .splineTo(new Vector2d(targetX, 60), Math.toRadians(90))
-                    .splineTo(new Vector2d(targetX, 86), Math.toRadians(90))
-                    .build();
-            Actions.runBlocking(backdrop);
-        }
+        sleep(PARAMS.PartnerWaitTime);
 
-        else {
-            sleep(PARAMS.dTime);
-
-            Action backdrop = drive.actionBuilder(drive.pose)
-                    .setReversed(true)
-                    .splineTo(new Vector2d(targetX, 86), Math.toRadians(90))
-                    .build();
-            Actions.runBlocking(backdrop);
-        }
+        Action backdrop = drive.actionBuilder(drive.pose)
+                .setReversed(true)
+                .splineTo(new Vector2d(targetX, 87), Math.toRadians(90))
+                .build();
+        Actions.runBlocking(backdrop);
+        drive.updatePoseEstimate();
     }
 
+
     //to the panel in the back
-    public void toBackPanel(int spikeMark){
-        double targetX = 29;
+    private void toBackPanel(int spikeMark){
+        double targetX = 30;
         if (spikeMark == 3)
-            targetX = 36.5;
+            targetX = 38;
         else if (spikeMark == 1)
             targetX = 25.0;
 
@@ -259,78 +284,66 @@ public class AutoBlue extends LinearOpMode {
         Actions.runBlocking(moveRb3);
     }
 
-    public void toSafety(){
-        Action moveToSafety = drive.actionBuilder(drive.pose)
-                .lineToY(35.0)
-                .build();
-        Actions.runBlocking(new ParallelAction(moveToSafety,whiteConveyor.RetractViperAction()));
 
-        if(PARAMS.ifSafe){
+    private void toSafety() {
         Action secMoveToSafety = drive.actionBuilder(drive.pose)
                 .strafeTo(new Vector2d(6, 36.0))
                 .build();
-        Actions.runBlocking(secMoveToSafety);}
+        Actions.runBlocking(secMoveToSafety);
     }
 
     //goes front to the pixels (when it started from backStage)
-    public void secondHalfBack(){
-        Action moveSecHalf = drive.actionBuilder(drive.pose)
-                //ending position y: -60
-                //start off at 28, 38.5
-                .splineTo(new Vector2d(34, 20), Math.toRadians(-90))
-                .splineTo(new Vector2d(34, -76), Math.toRadians(-90))
-                //.splineTo(new Vector2d(28, -60), Math.toRadians(-90))
+    private void secondHalfBack(int spikeMark){
+        Action moveToPixels = drive.actionBuilder(drive.pose)
+                .splineTo(new Vector2d(50, -10), Math.toRadians(-90))
+                .splineTo(new Vector2d(48, -50), Math.toRadians(-90))
                 .build();
-        Actions.runBlocking(new ParallelAction(moveSecHalf, whiteClaw.RetractArm()));
-        }
-    //goes back to the panel (when it started from backStage)
-    public void backSecondHalfBack(double ang){
-        Action moveBackSecHalf = drive.actionBuilder(drive.pose)
+        Actions.runBlocking(new ParallelAction(moveToPixels, whiteClaw.RetractArmAction()));
+
+        // TODO:  Add Code to Navigate to Pixel Stack and Pickup
+        /*
+        Action moveToStack = drive.actionBuilder(drive.pose)
+                .setReversed(false)
+                .splineTo(new Vector2d(28, -18), Math.toRadians(-91))
+                .strafeTo(new Vector2d(41, -18.75))
+                .build();
+        Actions.runBlocking(new SequentialAction( new ParallelAction(moveToStack, whiteClaw.RetractArmAction()),
+                whiteClaw.TopOfStackPickupAction(4) ));
+
+        whiteClaw.closeGrip();
+        drive.updatePoseEstimate();
+         */
+
+        // TODO:  Add Code to Navigate Back to Board
+        /*
+        double targetX = 36;
+        if (spikeMark == 3)
+            targetX = 38;
+        else if (spikeMark == 1)
+            targetX = 25.0;
+        whiteClaw.RetractArmAction();
+
+        Action moveBar = drive.actionBuilder(drive.pose)
+                .strafeTo(new Vector2d(51, -15))
                 .setReversed(true)
-                .splineTo(new Vector2d(34,-76), Math.toRadians(90))
-                .splineTo(new Vector2d(ang,40.0), Math.toRadians(90)) //changes depending on the april tag & where the robot stars(front/back stage)
+                .splineTo(new Vector2d(56, 46), Math.toRadians(90))
                 .build();
-        Actions.runBlocking(new ParallelAction(moveBackSecHalf, whiteClaw.RetractArm()));
-    }
+        Actions.runBlocking(new ParallelAction(moveBar, whiteClaw.SuplexPixelAction()));
 
-    //goes front to the pixel (when it started from the frontStage)
-    public void secondHalfFront(){
-        Action moveSecHalf = drive.actionBuilder(drive.pose)
-                .splineTo(new Vector2d(9, 0), Math.toRadians(-90))
-                .splineTo(new Vector2d(28, -28), Math.toRadians(-90))
-                .build();
-        Actions.runBlocking(new ParallelAction(moveSecHalf, whiteClaw.RetractArm()));
-    }
+        sleep(PARAMS.PartnerWaitTime);
 
-    //goes back to the panel (when it started from frontStage)
-    public void backSecondHalfFront(double ang){
-        Action moveBackSecHalf = drive.actionBuilder(drive.pose)
-                .splineTo(new Vector2d(9,60), Math.toRadians(90))
-                .splineTo(new Vector2d(ang,86), Math.toRadians(90))
-                .build();
-        Actions.runBlocking(new ParallelAction(moveBackSecHalf, whiteClaw.RetractArm()));
-
-    }
-
-    //going through the middle gate (backStage)
-    public void BackMid(){
-//y = 38.5
-        Action moveBackM = drive.actionBuilder(drive.pose)
+        Action backdrop = drive.actionBuilder(drive.pose)
                 .setReversed(true)
-                .splineTo(new Vector2d(40,12), Math.toRadians(90))
-                .splineTo(new Vector2d(40,-80), Math.toRadians(90))
+                .splineTo(new Vector2d(targetX, 87), Math.toRadians(90))
                 .build();
-        Actions.runBlocking(new ParallelAction(moveBackM, whiteClaw.RetractArm()));
-
+        Actions.runBlocking(backdrop);
+        drive.updatePoseEstimate();
+         */
     }
 
-    public void BackMidSec(double ang){
-        Action moveBackMidSec = drive.actionBuilder(drive.pose)
-                .splineTo(new Vector2d(40, 12),Math.toRadians(90))
-                .splineTo(new Vector2d(ang, 86), Math.toRadians(90))
-                .build();
-        Actions.runBlocking(new ParallelAction(moveBackMidSec, whiteClaw.RetractArm()));
-    }
+
+
+
 
     //going through the middle gate (frontStage)
     private void updateTelemetry() {
@@ -352,13 +365,23 @@ public class AutoBlue extends LinearOpMode {
         dashboard.sendTelemetryPacket(packet);
     }
 
-    /*public void FrontSecHalf(){
-        Action moveBack = drive.actionBuilder(drive.pose)
-                .splineTo(new Vector2d(11,6),Math.toRadians(90) )
-                .build();
-        Actions.runBlocking(moveBack);
 
+    //Use sensor to square up to the panel
+    private void SensorApproach() {
+        long timeout = System.currentTimeMillis()+PARAMS.sensorRangeTime;
+        TargetPose pose = distSys.getTargetPose(true);  //Get Initial Values
 
+        while (pose.range > (pose.range-PARAMS.sensorRangeValue) && System.currentTimeMillis() < timeout){
+            pose = distSys.getTargetPose(false);
+            double rangeError = (pose.range-PARAMS.sensorRangeValue);
+
+            // Use the speed and turn "gains" to calculate how we want the robot to move.
+            double forward = Range.clip(-rangeError * PARAMS.sensorGainValueForward, -0.3, 0.3);
+            double rotate = Range.clip(-pose.yaw * PARAMS.sensorGainValueRotation, -0.25, 0.25);
+
+            drive.setDrivePowers(new PoseVelocity2d(new Vector2d(forward, 0), rotate));
+            drive.updatePoseEstimate();
+            sleep(30);
+        }
     }
-*/
 }
