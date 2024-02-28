@@ -17,10 +17,11 @@ public class ClawMoves {
     public static class Params {
         public double armUpPos = 0.312;
         public double armDownPos = 0.237;
-        public double armLevel1 = 0.244;
-        public double armLevel2 = 0.247;
-        public double armLevel3 = 0.250;
-        public double armLevel4 = 0.253;
+        public double armPickPos = 0.275; // Lift Pixel From Stack
+        public double armLevel1 = 0.244;  // Pixels 2 & 3
+        public double armLevel2 = 0.247;  // Pixels 3 & 4
+        public double armLevel3 = 0.250;  // Pixels 4 & 5
+        public double armLevel4 = 0.253;  // Top Pixel  5 Only
 
         public double flipSuplexPos = 0.332;
         public double flipDownPos = 0.454;
@@ -80,7 +81,7 @@ public class ClawMoves {
     }
 
 
-    public Action PlacePixel() {
+    public Action PlacePixelAction() {
         return packet -> {
             // Autonomous Place Preloaded Pixel on Mat
             MoveArm(PARAMS.armDownPos);
@@ -94,7 +95,7 @@ public class ClawMoves {
         };
     }
 
-    public Action RetractArm() {
+    public Action RetractArmAction() {
         return packet -> {
             MoveGrip(PARAMS.gripOpenPos);
             MoveArm(PARAMS.armUpPos);
@@ -105,6 +106,43 @@ public class ClawMoves {
             return false;
         };
     }
+
+    public Action TopOfStackPickupAction(int level) {
+        return packet -> {
+            // Prep for Pickup off Stack
+            PrepForPixel(false);
+            SystemClock.sleep(550);
+            // Allow Time for Arm to Move
+            moveLevel(level);
+            SystemClock.sleep(350);
+            // Close if needed
+            if (tlmGripPosition != PARAMS.gripClosedPos) {
+                MoveGrip(PARAMS.gripClosedPos);
+                SystemClock.sleep(150);
+            }
+            // Lift to Safe Position, Suplex later while driving
+            MoveArm(PARAMS.armPickPos);
+            return false;
+        };
+    }
+
+    public Action SuplexPixelAction() {
+        return packet -> {
+            // Pickup and Suplex Pixel
+            if (tlmGripPosition != PARAMS.gripClosedPos) {
+                MoveGrip(PARAMS.gripClosedPos);
+                SystemClock.sleep(150);
+            }
+            MoveArm(PARAMS.armUpPos);
+            SystemClock.sleep(150);
+            MoveFlip(PARAMS.flipSuplexPos);
+            // Wait for Pixel over Bin
+            SystemClock.sleep(675);
+            MoveGrip(PARAMS.gripOpenPosTop);
+            return false;
+        };
+    }
+
 
     /*
      * Driver Claw Movements
