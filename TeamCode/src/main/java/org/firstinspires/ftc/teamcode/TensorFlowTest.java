@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.os.SystemClock;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -7,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helper.TensorFlow;
+import org.firstinspires.ftc.vision.VisionPortal;
 
 /*
  * This code was derived from FIRST External Sample ConceptTensorFlowObjectDetection.java
@@ -31,16 +34,16 @@ public class TensorFlowTest extends LinearOpMode {
         telemetry.clear();
 
         while (opModeIsActive()) {
-            propSpikeMark = tenFl.DetectProp(1500);
+            propSpikeMark = tenFl.DetectProp();
             updateTelemetry();
-            sleep(100);
+            sleep(200);
         }
         tenFl.CleanUp();
     }
 
 
     private boolean initialize() {
-        boolean success = true;
+        boolean success;
 
         // Load Introduction and Wait for Start
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
@@ -52,7 +55,17 @@ public class TensorFlowTest extends LinearOpMode {
             dashboard = FtcDashboard.getInstance();
             dashboard.clearTelemetry();
             tenFl = new TensorFlow(hardwareMap);
-            success = tenFl.isCameraStreaming();
+
+            boolean cameraStreaming = false;
+            long startCameraWait = System.currentTimeMillis();
+            boolean timedOut = false;
+
+            while (!cameraStreaming && !timedOut)  {
+                cameraStreaming = tenFl.isCameraStreaming();
+                timedOut = (System.currentTimeMillis() - (startCameraWait + 1500)) > 0;
+                SystemClock.sleep(20);
+            }
+            success = cameraStreaming;
         } catch (Exception e) {
             success = false;
         }

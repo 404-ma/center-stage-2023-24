@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.Helper;
 
-import static android.os.SystemClock.sleep;
-
 import android.os.SystemClock;
 
 import androidx.annotation.NonNull;
@@ -37,6 +35,7 @@ public class TensorFlow {
 
     public int tlmObjectCnt = 0;
     public int tlmPropCnt  = 0;
+    public double tlmBestPropArea = 0;
     public double tlmBestPropXPos = 0;
     public double tlmBestPropYPos = 0;
     public double tlmConfidence = 0;
@@ -60,68 +59,50 @@ public class TensorFlow {
         visionPortal.setProcessorEnabled(tfod, true);
     }
 
+
     public boolean isCameraStreaming() {
-        boolean cameraStreaming = false;
-        long startCameraWait = System.currentTimeMillis();
-        boolean timedOut = false;
-
-        while (!cameraStreaming && !timedOut) {
-            cameraStreaming = (visionPortal.getCameraState() == VisionPortal.CameraState.STREAMING);
-            timedOut = (System.currentTimeMillis() - (startCameraWait + PARAMS.cameraStreamingWait)) > 0;
-            SystemClock.sleep(50);
-        }
-
+        boolean cameraStreaming = (visionPortal.getCameraState() == VisionPortal.CameraState.STREAMING);
         return cameraStreaming;
     }
 
-    public int DetectProp(long waitMs) {
-        double largestPropArea = 0;
-        double largestX = 0;
-        double largestY = 0;
 
+    public int DetectProp() {
         // Check for Tfod Override and Exit if true
         if (PARAMS.OVERRIDE_TFOD_DETECTION)
             return PARAMS.OVERRIDE_SPIKEMARK_POS;
 
         // while no object and not timed out
-        long waitEndTime = (System.currentTimeMillis() + waitMs);
-        boolean timeExpired = false;
         tlmObjectCnt = 0;
         tlmPropCnt = 0;
+        tlmBestPropArea = 0;
+        tlmBestPropXPos = 0;
+        tlmBestPropYPos = 0;
 
         // Step through the list of recognitions and display info for each one.
-        while (!timeExpired && (largestPropArea == 0)) {
-            List<Recognition> currentRecognitions = tfod.getRecognitions();
+        List<Recognition> currentRecognitions = tfod.getRecognitions();
 
-            for (Recognition recognition : currentRecognitions) {
-                ++tlmObjectCnt;
-                double x = (recognition.getLeft() + recognition.getRight()) / 2; //getting the coordinates for the box --> finding the middle of the box
-                double y = (recognition.getTop() + recognition.getBottom()) / 2;
-                double height = recognition.getHeight();
-                double width = recognition.getWidth();
+        for (Recognition recognition : currentRecognitions) {
+            ++tlmObjectCnt;
+            double x = (recognition.getLeft() + recognition.getRight()) / 2; //getting the coordinates for the box --> finding the middle of the box
+            double y = (recognition.getTop() + recognition.getBottom()) / 2;
+            double height = recognition.getHeight();
+            double width = recognition.getWidth();
 
-                // Check for Shape Parameters
-                if ((width >= PARAMS.propMinWidth) && (width <= PARAMS.propMaxWidth)) {
-                    ++tlmPropCnt;
-                    if ((height * width) > largestPropArea) {
-                        largestPropArea = height * width;
-                        largestX = x;
-                        largestY = y;
-                        tlmBestPropXPos = x;
-                        tlmBestPropYPos = y;
-                        tlmConfidence = recognition.getConfidence();
-                    }
+            // Check for Shape Parameters
+            if ((width >= PARAMS.propMinWidth) && (width <= PARAMS.propMaxWidth)) {
+                ++tlmPropCnt;
+                if ((height * width) > tlmBestPropArea) {
+                    tlmBestPropArea = height * width;
+                    tlmBestPropXPos = x;
+                    tlmBestPropYPos = y;
+                    tlmConfidence = recognition.getConfidence();
                 }
             }
-
-            timeExpired = (System.currentTimeMillis() > waitEndTime);
-            if (!timeExpired && (largestPropArea == 0))
-                sleep( 100);
         }
 
         int propNum = 3;
         if (tlmPropCnt > 0) {
-            if (largestX <= PARAMS.spikemarkPositionOneMax_X)
+            if (tlmBestPropXPos <= PARAMS.spikemarkPositionOneMax_X)
                 propNum = 1;
             else
                 propNum = 2;
