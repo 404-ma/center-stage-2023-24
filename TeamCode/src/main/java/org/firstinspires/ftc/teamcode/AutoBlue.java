@@ -51,7 +51,6 @@ public class AutoBlue extends LinearOpMode {
     private TensorFlow tenFl;
     private int propSpikeMark = 0;
 
-
     @Override
     public void runOpMode() {
         // Load Introduction and Wait for Start
@@ -150,7 +149,7 @@ public class AutoBlue extends LinearOpMode {
         whiteConveyor.moveViperToPosition(1400);
         sleep(1000);
         whiteConveyor.moveConvForward();
-        sleep(2000);
+        sleep(1000);
         whiteConveyor.stopConv();
         whiteConveyor.moveViperToPosition(0);
         sleep(1800);
@@ -293,8 +292,9 @@ public class AutoBlue extends LinearOpMode {
         Action moveSecHalf = drive.actionBuilder(drive.pose)
                 //ending position y: -60
                 //start off at 28, 38.5
-                .splineTo(new Vector2d(9, -36), Math.toRadians(-90))
-                .splineTo(new Vector2d(28, -60), Math.toRadians(-90))
+                .splineTo(new Vector2d(34, 20), Math.toRadians(-90))
+                .splineTo(new Vector2d(34, -76), Math.toRadians(-90))
+                //.splineTo(new Vector2d(28, -60), Math.toRadians(-90))
                 .build();
         Actions.runBlocking(new ParallelAction(moveSecHalf, whiteClaw.RetractArm()));
         }
@@ -302,8 +302,8 @@ public class AutoBlue extends LinearOpMode {
     public void backSecondHalfBack(double ang){
         Action moveBackSecHalf = drive.actionBuilder(drive.pose)
                 .setReversed(true)
-                .splineTo(new Vector2d(9,12), Math.toRadians(90))
-                .splineTo(new Vector2d(ang,38.5), Math.toRadians(90)) //changes depending on the april tag & where the robot stars(front/back stage)
+                .splineTo(new Vector2d(34,-76), Math.toRadians(90))
+                .splineTo(new Vector2d(ang,40.0), Math.toRadians(90)) //changes depending on the april tag & where the robot stars(front/back stage)
                 .build();
         Actions.runBlocking(new ParallelAction(moveBackSecHalf, whiteClaw.RetractArm()));
     }
