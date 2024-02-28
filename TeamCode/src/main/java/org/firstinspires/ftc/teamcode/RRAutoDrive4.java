@@ -48,7 +48,7 @@ public class RRAutoDrive4 extends LinearOpMode {
         Action moveTwo = drive.actionBuilder(drive.pose)
                 .splineTo( new Vector2d(18, 3), Math.toRadians(30))
                 .build();
-        Actions.runBlocking(new SequentialAction(moveTwo, whiteClaw.PlacePixel()));
+        Actions.runBlocking(new SequentialAction(moveTwo, whiteClaw.PlacePixelAction()));
 
         Action moveBack = drive.actionBuilder(drive.pose)
                 .setReversed(true)
@@ -60,7 +60,7 @@ public class RRAutoDrive4 extends LinearOpMode {
                 .turnTo(Math.toRadians(-90))
                 .lineToY(34)
                 .build();
-        Actions.runBlocking(new ParallelAction(moveBar, whiteClaw.RetractArm()));
+        Actions.runBlocking(new ParallelAction(moveBar, whiteClaw.RetractArmAction()));
 
         Action moveOne = drive.actionBuilder(drive.pose)
                 .setReversed(true)

@@ -73,7 +73,7 @@ public class AutoRed extends LinearOpMode {
         waitForStart();
         if (isStopRequested()) return;
 
-        spikeMark = tenFl.DetectProp(1000);
+        spikeMark = tenFl.DetectProp();
         telemetry.clear();
         updateTelemetry();
         tenFl.CleanUp();
@@ -131,13 +131,13 @@ public class AutoRed extends LinearOpMode {
                 .splineTo(new Vector2d(19.5, 0),Math.toRadians(0)  )
                 .splineTo(new Vector2d(19.5, -4.5), Math.toRadians(90))
                 .build();
-        Actions.runBlocking(new SequentialAction(movethirdSMPlan, whiteClaw.PlacePixel()));
+        Actions.runBlocking(new SequentialAction(movethirdSMPlan, whiteClaw.PlacePixelAction()));
 
         Action moveBack = drive.actionBuilder(drive.pose)
                 .setReversed(true)
                 .splineTo(new Vector2d(6, 0), Math.toRadians(-30))
                 .build();
-        Actions.runBlocking(new ParallelAction(moveBack, whiteClaw.RetractArm()));
+        Actions.runBlocking(new ParallelAction(moveBack, whiteClaw.RetractArmAction()));
     }
 
     public void toSafety(){
@@ -145,7 +145,7 @@ public class AutoRed extends LinearOpMode {
                 .lineToY(-35.0)
                 .strafeTo(new Vector2d(6, -36.0))
                 .build();
-        Actions.runBlocking(new ParallelAction(moveToSafety, whiteClaw.RetractArm()));
+        Actions.runBlocking(new ParallelAction(moveToSafety, whiteClaw.RetractArmAction()));
     }
 
     public void toSafetyf(){
@@ -153,7 +153,7 @@ public class AutoRed extends LinearOpMode {
                 .lineToY(-86.0)
                 .strafeTo(new Vector2d(6, -86.0))
                 .build();
-        Actions.runBlocking(new ParallelAction(moveToSafety, whiteClaw.RetractArm()));
+        Actions.runBlocking(new ParallelAction(moveToSafety, whiteClaw.RetractArmAction()));
     }
 
     //to the spike mark
@@ -170,24 +170,24 @@ public class AutoRed extends LinearOpMode {
         Action moveRb = drive.actionBuilder(drive.pose)
                 .splineTo(new Vector2d(X, Y), Math.toRadians(ang))
                 .build();
-        Actions.runBlocking(new SequentialAction(moveRb, whiteClaw.PlacePixel()));
+        Actions.runBlocking(new SequentialAction(moveRb, whiteClaw.PlacePixelAction()));
 
         if(!PARAMS.frontStage){
             sleep(850);
-            whiteClaw.RetractArm();
+            whiteClaw.RetractArmAction();
         }
 
         Action moveBack = drive.actionBuilder(drive.pose)
                 .setReversed(true)
                 .splineTo(new Vector2d(6, 0), Math.toRadians(an))
                 .build();
-        Actions.runBlocking(new ParallelAction(moveBack, whiteClaw.RetractArm()));
+        Actions.runBlocking(new ParallelAction(moveBack, whiteClaw.RetractArmAction()));
     }
 
     //to the panel in the front
     public void toFrontPanel( double targetX, boolean partDead) {
 
-        whiteClaw.RetractArm();
+        whiteClaw.RetractArmAction();
 
         Action moveBar = drive.actionBuilder(drive.pose)
                 .turnTo(Math.toRadians(90))

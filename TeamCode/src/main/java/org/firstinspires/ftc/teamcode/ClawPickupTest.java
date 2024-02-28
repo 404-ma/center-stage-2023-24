@@ -70,11 +70,11 @@ public class ClawPickupTest extends LinearOpMode {
 
                 case BUTTON_L_BUMPER:
                     whiteClaw.AutonomousStart();
-                    whiteClaw.PlacePixel();
+                    whiteClaw.PlacePixelAction();
                     break;
 
                 case BUTTON_R_BUMPER:
-                    whiteClaw.RetractArm();
+                    whiteClaw.RetractArmAction();
                     break;
             }
         }
