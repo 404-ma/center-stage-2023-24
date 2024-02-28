@@ -39,6 +39,7 @@ public class AutoBlue extends LinearOpMode {
         public double angleAtEnd = -90;
         public String versionNum = "3.2";
         public double propAng;
+        public boolean ifSafe = false;
     }
 
     public static Params PARAMS = new Params();
@@ -116,17 +117,15 @@ public class AutoBlue extends LinearOpMode {
         whiteClaw.PrepForPixel(false);
 
         whiteConveyor.moveViperToPosition(700);
-        sleep(1000);
+        sleep(600);
         whiteConveyor.moveConvForward();
-        sleep(1500);
+        sleep(2500);
         whiteConveyor.stopConv();
         whiteConveyor.moveViperToPosition(0);
         sleep(1000);
 
-        whiteClaw.SuplexPixel();
-
         toSafety();
-/*
+
         if(!PARAMS.frontStage){
             secondHalfBack();
         }
@@ -136,11 +135,10 @@ public class AutoBlue extends LinearOpMode {
 
         //pick up
         whiteClaw.PrepForPixel(false);
-        whiteClaw.moveLevel(5);
+        whiteClaw.moveLevel(4);
         whiteClaw.closeGrip();
         whiteClaw.SuplexPixel();
 
-        /*
         if(!PARAMS.frontStage){
             backSecondHalfBack(PARAMS.propAng);
         }
@@ -156,7 +154,7 @@ public class AutoBlue extends LinearOpMode {
         whiteConveyor.stopConv();
         whiteConveyor.moveViperToPosition(0);
         sleep(1800);
-*/
+
     }
 
     //use sensor to square up to the panel
@@ -222,7 +220,9 @@ public class AutoBlue extends LinearOpMode {
                     .setReversed(true)
                     .splineTo(new Vector2d(11, 6), Math.toRadians(an))
                     .build();
-            Actions.runBlocking(new ParallelAction(moveBack, whiteClaw.RetractArm()));}
+            Actions.runBlocking(new ParallelAction(moveBack, whiteClaw.RetractArm()));
+
+        }
 
         else {
             Action movethirdSMPlan = drive.actionBuilder(drive.pose)
@@ -278,9 +278,14 @@ public class AutoBlue extends LinearOpMode {
     public void toSafety(){
         Action moveToSafety = drive.actionBuilder(drive.pose)
                 .lineToY(35.0)
+                .build();
+        Actions.runBlocking(new ParallelAction(moveToSafety,whiteConveyor.RetractViperAction()));
+
+        if(PARAMS.ifSafe){
+        Action secMoveToSafety = drive.actionBuilder(drive.pose)
                 .strafeTo(new Vector2d(6, 36.0))
                 .build();
-        Actions.runBlocking(new ParallelAction(moveToSafety, whiteClaw.RetractArm()));
+        Actions.runBlocking(secMoveToSafety);}
     }
 
     //goes front to the pixels (when it started from backStage)
@@ -362,4 +367,13 @@ public class AutoBlue extends LinearOpMode {
         dashboard.sendTelemetryPacket(packet);
     }
 
+    /*public void FrontSecHalf(){
+        Action moveBack = drive.actionBuilder(drive.pose)
+                .splineTo(new Vector2d(11,6),Math.toRadians(90) )
+                .build();
+        Actions.runBlocking(moveBack);
+
+
+    }
+*/
 }

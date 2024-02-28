@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Helper;
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -76,6 +77,14 @@ public class Conveyor {
 
             viperMotor.setPower(Range.clip(power, -1, 1));
         }
+
+    }
+    public Action RetractViperAction(){
+        return packet -> {
+            moveViperToPosition(0);
+            return false;
+        };
+
     }
 
 }
