@@ -156,6 +156,10 @@ public class DriveControl extends LinearOpMode {
                     launch.startPosition();
                     break;
 
+                case BUTTON_R_BUMPER:
+                    crane.moveCraneToPosition(1600);
+                    break;
+
 
                 case BUTTON_X:
                     launch.fly();
