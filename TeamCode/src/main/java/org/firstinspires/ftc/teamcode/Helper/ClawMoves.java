@@ -21,7 +21,7 @@ public class ClawMoves {
         public double armLevel1 = 0.244;  // Pixels 2 & 3
         public double armLevel2 = 0.247;  // Pixels 3 & 4
         public double armLevel3 = 0.250;  // Pixels 4 & 5
-        public double armLevel4 = 0.253;  // Top Pixel  5 Only
+        public double armLevel4 = 0.254;  // Top Pixel  5 Only
 
         public double flipSuplexPos = 0.332;
         public double flipDownPos = 0.454;
