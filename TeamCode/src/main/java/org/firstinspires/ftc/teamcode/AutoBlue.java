@@ -49,7 +49,7 @@ public class AutoBlue extends LinearOpMode {
     private Conveyor whiteConveyor;
     private DistanceSystem distSys;
     private TensorFlow tenFl;
-    private int propSpikeMark = 0;
+    private int propSpikeMark = 3;
 
     @Override
     public void runOpMode() {
@@ -97,14 +97,15 @@ public class AutoBlue extends LinearOpMode {
 
         telemetry.update();
         if (!initialized) return;
+        while (!isStopRequested() && !opModeIsActive() && propSpikeMark == 3) {
+            // Detect Object with Tensor Flow
+            propSpikeMark = tfodSelectSpikeMark();
+            updateTelemetry();
+        }
 
         waitForStart();
         telemetry.clear();
         if (isStopRequested()) return;
-
-        // Detect Object with Tensor Flow
-        propSpikeMark = tfodSelectSpikeMark();
-        updateTelemetry();
 
         toSpikeMark(propSpikeMark);
         if (PARAMS.frontStage) {
