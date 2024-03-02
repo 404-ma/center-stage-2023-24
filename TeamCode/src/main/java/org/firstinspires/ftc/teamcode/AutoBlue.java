@@ -130,7 +130,7 @@ public class AutoBlue extends LinearOpMode {
         boolean timeExpired = false;
         int spikeMark = 3;
 
-        while (opModeIsActive() && (spikeMark == 3)  && (!timeExpired)) {
+        while (!isStopRequested() && (spikeMark == 3)  && (!timeExpired)) {
             spikeMark = tenFl.DetectProp();
 
             timeExpired = (System.currentTimeMillis() > endDetectMS);
