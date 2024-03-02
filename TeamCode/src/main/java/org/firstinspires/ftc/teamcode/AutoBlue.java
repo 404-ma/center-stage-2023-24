@@ -30,7 +30,7 @@ public class AutoBlue extends LinearOpMode {
      *  FTC Dashboard Parameters
      */
     public static class Params {
-        public String versionNum = "4.1.60";
+        public String versionNum = "4.1.90";
         public boolean frontStage = true;
         public boolean ifSafe = true;
         public int tfodWaitMS = 3000;
@@ -60,7 +60,6 @@ public class AutoBlue extends LinearOpMode {
         telemetry.addLine().addData("Version", PARAMS.versionNum);
         telemetry.addLine();
         telemetry.update();
-
         // Initialize Helpers
         boolean initialized;
         try {
@@ -166,7 +165,6 @@ public class AutoBlue extends LinearOpMode {
                         .lineToX(17)
                         .turnTo(Math.toRadians(-90))
                         .build();
-
                 Actions.runBlocking(new SequentialAction(moveOneSMPlan,
                         whiteClaw.PlacePixelAction(),
                         new ParallelAction(moveBack, whiteClaw.RetractArmAction())));
@@ -174,7 +172,7 @@ public class AutoBlue extends LinearOpMode {
                 Action moveDropPixel = drive.actionBuilder(drive.pose)
                         .splineTo(new Vector2d(X, Y), Math.toRadians(ang))
                         .build();
-                Actions.runBlocking(new SequentialAction(moveDropPixel, whiteClaw.PlacePixelAction()));
+                Actions.runBlocking(new SequentialAction(moveDropPixel, whiteClaw.PlacePixelAction(), whiteClaw.RetractArmAction()));
 
 
                 if(spike == 2){
