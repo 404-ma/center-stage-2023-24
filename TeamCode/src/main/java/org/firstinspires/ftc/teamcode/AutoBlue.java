@@ -155,28 +155,8 @@ public class AutoBlue extends LinearOpMode {
                 X = 14; Y = -3.0; ang = -28.0;
             }
 
-            if (spike == 2 || spike == 3) {
-                Action moveDropPixel = drive.actionBuilder(drive.pose)
-                        .splineTo(new Vector2d(X, Y), Math.toRadians(ang))
-                        .build();
 
-                Action moveBack = drive.actionBuilder(drive.pose)
-                        .setReversed(true)
-                        .lineToX(20)
-                        .turnTo(Math.toRadians(-90))
-                        .build();
-                if (spike == 3) {
-                    moveBack = drive.actionBuilder(drive.pose)
-                            .setReversed(true)
-                            .splineTo(new Vector2d(14, 0), Math.toRadians(0))
-                            .turnTo(Math.toRadians(-90))
-                            .build();
-                }
-
-                Actions.runBlocking(new SequentialAction(moveDropPixel,
-                        whiteClaw.PlacePixelAction(),
-                        new ParallelAction(moveBack, whiteClaw.RetractArmAction())));
-            } else {
+            if (spike == 1) {
                 // Spike 1 - Avoid Gates on Left
                 Action moveOneSMPlan = drive.actionBuilder(drive.pose)
                         .splineTo(new Vector2d(X, Y),Math.toRadians(ang))
@@ -190,6 +170,35 @@ public class AutoBlue extends LinearOpMode {
                         .build();
 
                 Actions.runBlocking(new SequentialAction(moveOneSMPlan,
+                        whiteClaw.PlacePixelAction(),
+                        new ParallelAction(moveBack, whiteClaw.RetractArmAction())));
+            } else if (spike == 2) {
+                Action moveDropPixel = drive.actionBuilder(drive.pose)
+                        .splineTo(new Vector2d(X, Y), Math.toRadians(ang))
+                        .build();
+
+                Action moveBack = drive.actionBuilder(drive.pose)
+                        .setReversed(true)
+                        .lineToX(20)
+                        .turnTo(Math.toRadians(-90))
+                        .build();
+
+                Actions.runBlocking(new SequentialAction(moveDropPixel,
+                        whiteClaw.PlacePixelAction(),
+                        new ParallelAction(moveBack, whiteClaw.RetractArmAction())));
+            } else {
+                //  Pixel 3
+                Action moveDropPixel = drive.actionBuilder(drive.pose)
+                        .splineTo(new Vector2d(X, Y), Math.toRadians(ang))
+                        .build();
+
+                Action moveBack = drive.actionBuilder(drive.pose)
+                        .setReversed(true)
+                        .splineTo(new Vector2d(14, 0), Math.toRadians(0))
+                        .turnTo(Math.toRadians(-90))
+                        .build();
+
+                Actions.runBlocking(new SequentialAction(moveDropPixel,
                         whiteClaw.PlacePixelAction(),
                         new ParallelAction(moveBack, whiteClaw.RetractArmAction())));
             }
