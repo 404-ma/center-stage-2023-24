@@ -19,16 +19,16 @@ public class AutoCommon {
         // Shorter Conveyor Runtime if Only Depositing the Preloaded Pixel
         long runTimeMS = (onlyOnePixel ? 1200 : 2500);
 
-        // Place Pixel on Backdrop
+        // Drop Pixel in Backdrop
         claw.PrepForPixel(false);
 
-        conveyor.moveViperToPosition(700);
+        conveyor.moveViperToPosition(600);
         SystemClock.sleep(600);
         conveyor.moveConvForward();
         SystemClock.sleep(runTimeMS);
         conveyor.stopConv();
         conveyor.moveViperToPosition(0);
-        SystemClock.sleep(1000);
+        SystemClock.sleep(600);
 
         // Separate From Backdrop
         double forwardSeparation = drive.pose.position.y - 2;

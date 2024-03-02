@@ -48,7 +48,6 @@ public class DriveControl extends LinearOpMode {
         if (isStopRequested()) return;
 
         launch.startPosition();
-        yclaw.PrepForPixel(false);
         telemetry.clear();
 
         boolean suplex = false;

@@ -31,8 +31,8 @@ public class AutoBlue extends LinearOpMode {
      */
     public static class Params {
         public String versionNum = "4.1.20";
-        public boolean frontStage = false;
-        public boolean ifSafe = true;
+        public boolean frontStage = true;
+        public boolean ifSafe = false;
         public int tfodWaitMS = 3000;
         public int PartnerWaitTime = 500;
         public int sensorRangeTime = 500;
@@ -150,7 +150,7 @@ public class AutoBlue extends LinearOpMode {
             if (spike == 1) {
                 X = 25; Y = -6; ang = 0;
             } else if(spike == 2) {
-                X = 23.0; Y = -5.3; ang = 0;
+                X = 22.0; Y = -5.3; ang = 0;
             } else {
                 X = 14; Y = -3.0; ang = -28.0;
             }
@@ -232,7 +232,7 @@ public class AutoBlue extends LinearOpMode {
         Action moveToStack = drive.actionBuilder(drive.pose)
                 .setReversed(false)
                 .splineTo(new Vector2d(28, -18), Math.toRadians(-91))
-                .strafeTo(new Vector2d(41, -18.75))
+                .strafeTo(new Vector2d(39.0, -18))
                 .build();
         Actions.runBlocking(new SequentialAction( new ParallelAction(moveToStack, whiteClaw.RetractArmAction()),
                 whiteClaw.TopOfStackPickupAction(4) ));
@@ -296,7 +296,7 @@ public class AutoBlue extends LinearOpMode {
     private void secondHalfBack(int spikeMark){
         Action moveToPixels = drive.actionBuilder(drive.pose)
                 .splineTo(new Vector2d(50, -10), Math.toRadians(-90))
-                .splineTo(new Vector2d(48, -50), Math.toRadians(-90))
+                .splineTo(new Vector2d(48, -50), Math.toRadians(-91))
                 .build();
         Actions.runBlocking(new ParallelAction(moveToPixels, whiteClaw.RetractArmAction()));
 
