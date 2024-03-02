@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -22,7 +21,6 @@ import org.firstinspires.ftc.teamcode.Helper.DistanceSystem;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.helper.TargetPose;
 import org.firstinspires.ftc.teamcode.Helper.TensorFlow;
-
 @Config
 @Autonomous (name = "Auto Blue", group = "RoadRunner")
 public class AutoBlue extends LinearOpMode {
@@ -30,7 +28,7 @@ public class AutoBlue extends LinearOpMode {
      *  FTC Dashboard Parameters
      */
     public static class Params {
-        public String versionNum = "4.1.90";
+        public String versionNum = "4.1.16";
         public boolean frontStage = true;
         public boolean ifSafe = true;
         public int tfodWaitMS = 3000;
@@ -98,7 +96,7 @@ public class AutoBlue extends LinearOpMode {
         if (!initialized) return;
         while (!isStopRequested() && !opModeIsActive() && propSpikeMark == 3) {
             // Detect Object with Tensor Flow
-            propSpikeMark = tfodSelectSpikeMark();
+            propSpikeMark = tenFl.DetectProp();
             updateTelemetry();
         }
 
@@ -187,11 +185,11 @@ public class AutoBlue extends LinearOpMode {
                 else if(spike == 3){
                 Action moveBackThree = drive.actionBuilder(drive.pose)
                         .setReversed(true)
-                        .splineTo(new Vector2d(14, 0), Math.toRadians(0))
+                        //.splineTo(new Vector2d(14, 0), Math.toRadians(0))
                         .turnTo(Math.toRadians(-90))
+                        .lineToY(-18.75)
                         .build();
                 Actions.runBlocking(new SequentialAction(moveBackThree, whiteClaw.RetractArmAction()));}
-
 
                /* Actions.runBlocking(new SequentialAction(moveDropPixel,
                         whiteClaw.PlacePixelAction()));
@@ -233,23 +231,29 @@ public class AutoBlue extends LinearOpMode {
 
     //goes front to the pixel (when it started from the frontStage)
     private void toPixelStack() {
-        Action moveToStack = drive.actionBuilder(drive.pose)
+        if(propSpikeMark == 3){
+          Action moveToStackThree = drive.actionBuilder(drive.pose)
+            .strafeTo(new Vector2d(40.5, PARAMS.toPixY))
+            .build();
+          Actions.runBlocking(new SequentialAction(new ParallelAction(moveToStackThree, whiteClaw.RetractArmAction()),
+                  whiteClaw.TopOfStackPickupAction(4)));
+        }
+        else{
+            Action moveToStack = drive.actionBuilder(drive.pose)
                 .setReversed(false)
                 .splineTo(new Vector2d(28, -18), Math.toRadians(-91))
                 .strafeTo(new Vector2d(40.5, PARAMS.toPixY))
                 .build();
-        Actions.runBlocking(new SequentialAction( new ParallelAction(moveToStack, whiteClaw.RetractArmAction()),
-                whiteClaw.TopOfStackPickupAction(4) ));
-
+            Actions.runBlocking(new SequentialAction( new ParallelAction(moveToStack, whiteClaw.RetractArmAction()),
+                whiteClaw.TopOfStackPickupAction(4) ));}
         whiteClaw.closeGrip();
         drive.updatePoseEstimate();
     }
-
     // Move to the Backdrop from Frontstage
     private void toFrontPanel( int spikeMark) {
         double targetX = 36;
         if (spikeMark == 3)
-            targetX = 38;
+            targetX = 42;
         else if (spikeMark == 1)
             targetX = 32.5;
         whiteClaw.RetractArmAction();
@@ -334,7 +338,6 @@ public class AutoBlue extends LinearOpMode {
         Actions.runBlocking(new ParallelAction(moveBar, whiteClaw.SuplexPixelAction()));
 
         sleep(PARAMS.PartnerWaitTime);
-
         Action backdrop = drive.actionBuilder(drive.pose)
                 .setReversed(true)
                 .splineTo(new Vector2d(targetX, 87), Math.toRadians(90))
