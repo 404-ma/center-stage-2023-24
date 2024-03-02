@@ -95,6 +95,9 @@ public class TensorFlowDashboardTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         boolean good_init = initialize();
+        while (!isStopRequested() && !opModeIsActive()) {
+            telemetryTfod();
+        }
         waitForStart();
         if (isStopRequested() || !good_init)
             return;
