@@ -28,6 +28,13 @@ public class TensorFlowTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         boolean good_init = initialize();
+
+        while (good_init && !isStopRequested() && !opModeIsActive()) {
+            propSpikeMark = tenFl.DetectProp();
+            updateTelemetry();
+            sleep(100);  // Share the Processor
+        }
+
         waitForStart();
         if (isStopRequested() || !good_init)
             return;
@@ -36,7 +43,7 @@ public class TensorFlowTest extends LinearOpMode {
         while (opModeIsActive()) {
             propSpikeMark = tenFl.DetectProp();
             updateTelemetry();
-            sleep(200);
+            sleep(200); // Share the Processor
         }
         tenFl.CleanUp();
     }
