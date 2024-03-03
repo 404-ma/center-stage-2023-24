@@ -97,6 +97,7 @@ public class TensorFlowDashboardTest extends LinearOpMode {
         boolean good_init = initialize();
         while (!isStopRequested() && !opModeIsActive()) {
             telemetryTfod();
+            sleep(100);  // Share the Processor
         }
         waitForStart();
         if (isStopRequested() || !good_init)
@@ -113,7 +114,7 @@ public class TensorFlowDashboardTest extends LinearOpMode {
                 visionPortal.resumeStreaming();
             }
 
-            // Share the CPU.
+            // Share the Processor
             sleep(200);
         }
         // Save more CPU resources when camera is no longer needed.
@@ -195,6 +196,7 @@ public class TensorFlowDashboardTest extends LinearOpMode {
 
     //  Add telemetry about TensorFlow Object Detection (TFOD) recognitions.
     private void telemetryTfod() {
+        telemetry.addLine("TensorFlow FTC Dashboard Test");
         if (visionPortal.getProcessorEnabled(tfod)) {
             telemetry.addLine("Dpad Down to disable TFOD");
             telemetry.addLine();
@@ -229,13 +231,11 @@ public class TensorFlowDashboardTest extends LinearOpMode {
                 largestObjectY = y;
             }
 
-
             telemetry.addLine("");
             telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
             telemetry.addData("- Position", "%.0f / %.0f", x, y);
             telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
             telemetry.addData("- Ratio", "%.0f", ((height / width) * 100));
-
         }
 
         int spike = 3;
