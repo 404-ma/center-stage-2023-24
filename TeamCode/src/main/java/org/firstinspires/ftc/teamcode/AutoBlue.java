@@ -31,7 +31,6 @@ public class AutoBlue extends LinearOpMode {
         public String versionNum = "4.1.16";
         public boolean frontStage = true;
         public boolean ifSafe = true;
-        public int tfodWaitMS = 3000;
         public int PartnerWaitTime = 500;
         public int sensorRangeTime = 500;
         public double sensorRangeValue = 2;
@@ -98,7 +97,10 @@ public class AutoBlue extends LinearOpMode {
             // Detect Object with Tensor Flow
             propSpikeMark = tenFl.DetectProp();
             updateTelemetry();
+            if (propSpikeMark == 3)
+                sleep( 100);  // Free up Processor
         }
+
 
         waitForStart();
         telemetry.clear();
@@ -122,22 +124,8 @@ public class AutoBlue extends LinearOpMode {
             }
         }
     }
-    private int tfodSelectSpikeMark() {
-        long endDetectMS  = System.currentTimeMillis() + PARAMS.tfodWaitMS;
-        boolean timeExpired = false;
-        int spikeMark = 3;
 
-        while (!isStopRequested() && (spikeMark == 3)  && (!timeExpired)) {
-            spikeMark = tenFl.DetectProp();
 
-            timeExpired = (System.currentTimeMillis() > endDetectMS);
-            if ((spikeMark == 3) && !timeExpired)
-                sleep( 50);
-        }
-        tenFl.CleanUp();
-
-        return spikeMark;
-    }
     //to the spike mark
     private void toSpikeMark(int spike) {
         double X, Y, ang;
@@ -349,12 +337,12 @@ public class AutoBlue extends LinearOpMode {
 
     //going through the middle gate (frontStage)
     private void updateTelemetry() {
-        telemetry.addLine("TensorFlow");
+        telemetry.addLine("RoadRunner Auto Drive BLUE");
+        telemetry.addLine();
+        telemetry.addLine().addData("Version", PARAMS.versionNum);
+        telemetry.addLine();
+        telemetry.addLine().addData("Position", (PARAMS.frontStage ? "FRONT Stage" : "BACK Stage"));
         telemetry.addLine().addData("Prop Mark", propSpikeMark );
-        telemetry.addLine().addData("Objects", tenFl.tlmObjectCnt);
-        telemetry.addLine().addData("Confidence", tenFl.tlmConfidence);
-        telemetry.addLine().addData("Obj X", tenFl.tlmBestPropXPos);
-        telemetry.addLine().addData("Obj Y", tenFl.tlmBestPropYPos);
         telemetry.update();
 
         // FTC Dashboard Telemetry
