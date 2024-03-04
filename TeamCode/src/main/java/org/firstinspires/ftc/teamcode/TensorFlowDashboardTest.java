@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.os.Environment;
 import android.os.SystemClock;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -26,7 +27,6 @@ import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Config
@@ -42,7 +42,8 @@ public class TensorFlowDashboardTest extends LinearOpMode {
 
         // TFOD_MODEL_FILE points to a model file stored onboard the Robot Controller's storage,
         // this is used when uploading models directly to the RC using the model upload interface.
-        public String tfodModelFile = "/sdcard/FIRST/tflitemodels/model_Training5.tflite";
+        public String tfodModelFile = Environment.getExternalStorageDirectory().getPath() +
+                                        "FIRST/tflitemodels/model_Training5.tflite";
         public double tfodMinConfidence = 0.90;
 
         public double spikeOne_Max_X_Position = 160;
@@ -95,8 +96,9 @@ public class TensorFlowDashboardTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         boolean good_init = initialize();
-        while (!isStopRequested() && !opModeIsActive()) {
+        while (good_init && !isStopRequested() && !opModeIsActive()) {
             telemetryTfod();
+            sleep(100);  // Share the Processor
         }
         waitForStart();
         if (isStopRequested() || !good_init)
@@ -113,7 +115,7 @@ public class TensorFlowDashboardTest extends LinearOpMode {
                 visionPortal.resumeStreaming();
             }
 
-            // Share the CPU.
+            // Share the Processor
             sleep(200);
         }
         // Save more CPU resources when camera is no longer needed.
@@ -195,6 +197,7 @@ public class TensorFlowDashboardTest extends LinearOpMode {
 
     //  Add telemetry about TensorFlow Object Detection (TFOD) recognitions.
     private void telemetryTfod() {
+        telemetry.addLine("TensorFlow FTC Dashboard Test");
         if (visionPortal.getProcessorEnabled(tfod)) {
             telemetry.addLine("Dpad Down to disable TFOD");
             telemetry.addLine();
@@ -219,7 +222,6 @@ public class TensorFlowDashboardTest extends LinearOpMode {
             double y = (recognition.getTop()  + recognition.getBottom()) / 2 ;
             double height = recognition.getHeight();
             double width = recognition.getWidth();
-            double ratio = height / width;
 
             // Check for Shape Parameters
             ++propCnt;
@@ -229,13 +231,11 @@ public class TensorFlowDashboardTest extends LinearOpMode {
                 largestObjectY = y;
             }
 
-
             telemetry.addLine("");
             telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
             telemetry.addData("- Position", "%.0f / %.0f", x, y);
             telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
             telemetry.addData("- Ratio", "%.0f", ((height / width) * 100));
-
         }
 
         int spike = 3;
