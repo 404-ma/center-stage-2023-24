@@ -415,17 +415,17 @@ public class AutoRed extends LinearOpMode {
         Actions.runBlocking(moveRb3);
     }
     private void updateTelemetry() {
-        telemetry.addLine("TensorFlow");
+        telemetry.addLine("RoadRunner Auto Drive BLUE");
+        telemetry.addLine();
+        telemetry.addLine().addData("Version", PARAMS.versionNum);
+        telemetry.addLine();
+        telemetry.addLine().addData("Position", (PARAMS.frontStage ? "FRONT Stage" : "BACK Stage"));
         telemetry.addLine().addData("Prop Mark", propSpikeMark );
-        telemetry.addLine().addData("Objects", tenFl.tlmObjectCnt);
-        telemetry.addLine().addData("Confidence", tenFl.tlmConfidence);
-        telemetry.addLine().addData("Obj X", tenFl.tlmBestPropXPos);
-        telemetry.addLine().addData("Obj Y", tenFl.tlmBestPropYPos);
         telemetry.update();
 
         // FTC Dashboard Telemetry
         TelemetryPacket packet = new TelemetryPacket();
-        packet.put("Prop Mark", propSpikeMark);
+        packet.put("Prop Mark",  propSpikeMark);
         packet.put("Objects", tenFl.tlmObjectCnt);
         packet.put("Confidence", tenFl.tlmConfidence);
         packet.put("Obj X", tenFl.tlmBestPropXPos);
