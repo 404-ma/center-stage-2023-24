@@ -39,6 +39,7 @@ public class AutoRed extends LinearOpMode {
         public double toPixY = 18.75;
         public int PartnerWaitTime = 500;
 
+
     }
 
     public static Params PARAMS = new Params();

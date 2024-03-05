@@ -37,6 +37,18 @@ public class AutoBlue extends LinearOpMode {
         public double sensorGainValueForward = 0.1;
         public double sensorGainValueRotation = 0.03;
         public double toPixY = -18.75;
+
+        public double X1FS = 25.5;
+        public double X2FS = 23.0;
+        public double X3FS = 14.0;
+
+        public double Y1FS = -6.5;
+        public double Y2FS = -5.3;
+        public double Y3FS = -3.0;
+
+        public double ang1S = 0;
+        public double ang2S = 0;
+        public double ang3S = -28.0;
     }
 
     public static Params PARAMS = new Params();
@@ -110,10 +122,10 @@ public class AutoBlue extends LinearOpMode {
         if (PARAMS.frontStage) {
             toPixelStack();
             toFrontPanel(propSpikeMark);
-            AutoCommon.PlacePixel(false, drive, whiteClaw, whiteConveyor);
+            AutoCommon.PlacePixel(true, false, drive, whiteClaw, whiteConveyor);
         } else {
             toBackPanel(propSpikeMark);
-            AutoCommon.PlacePixel(true, drive, whiteClaw, whiteConveyor);
+            AutoCommon.PlacePixel(true, true, drive, whiteClaw, whiteConveyor);
         }
 
         if (!PARAMS.frontStage) {
@@ -168,7 +180,7 @@ public class AutoBlue extends LinearOpMode {
                             .lineToX(20)
                             .turnTo(Math.toRadians(-90))
                             .build();
-                    Actions.runBlocking(new SequentialAction(moveBackTwo, whiteClaw.RetractArmAction()));}
+                    Actions.runBlocking((moveBackTwo));}
 
                 else if(spike == 3){
                 Action moveBackThree = drive.actionBuilder(drive.pose)
@@ -177,7 +189,7 @@ public class AutoBlue extends LinearOpMode {
                         .turnTo(Math.toRadians(-90))
                         .lineToY(-18.75)
                         .build();
-                Actions.runBlocking(new SequentialAction(moveBackThree, whiteClaw.RetractArmAction()));}
+                Actions.runBlocking((moveBackThree));}
 
                /* Actions.runBlocking(new SequentialAction(moveDropPixel,
                         whiteClaw.PlacePixelAction()));
@@ -221,7 +233,7 @@ public class AutoBlue extends LinearOpMode {
     private void toPixelStack() {
         if(propSpikeMark == 3){
           Action moveToStackThree = drive.actionBuilder(drive.pose)
-            .strafeTo(new Vector2d(40.5, PARAMS.toPixY))
+            .strafeTo(new Vector2d(39.75, PARAMS.toPixY))
             .build();
           Actions.runBlocking(new SequentialAction(new ParallelAction(moveToStackThree, whiteClaw.RetractArmAction()),
                   whiteClaw.TopOfStackPickupAction(4)));
@@ -230,7 +242,7 @@ public class AutoBlue extends LinearOpMode {
             Action moveToStack = drive.actionBuilder(drive.pose)
                 .setReversed(false)
                 .splineTo(new Vector2d(28, -18), Math.toRadians(-91))
-                .strafeTo(new Vector2d(40.5, PARAMS.toPixY))
+                .strafeTo(new Vector2d(39.75, PARAMS.toPixY))
                 .build();
             Actions.runBlocking(new SequentialAction( new ParallelAction(moveToStack, whiteClaw.RetractArmAction()),
                 whiteClaw.TopOfStackPickupAction(4) ));}
