@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 public class AutoCommon {
 
 
-    public static void PlacePixel(boolean onlyOnePixel, MecanumDrive drive,
+    public static void PlacePixel( boolean blueAlliance, boolean onlyOnePixel, MecanumDrive drive,
                                   ClawMoves claw, Conveyor conveyor) {
 
         // Shorter Conveyor Runtime if Only Depositing the Preloaded Pixel
@@ -31,7 +31,7 @@ public class AutoCommon {
         SystemClock.sleep(600);
 
         // Separate From Backdrop
-        double forwardSeparation = drive.pose.position.y - 2;
+        double forwardSeparation = drive.pose.position.y + (blueAlliance ? -2 : 2)  ;
         Action moveSeparateFromBackDrop = drive.actionBuilder(drive.pose)
                 .setReversed(false)
                 .lineToY(forwardSeparation)
