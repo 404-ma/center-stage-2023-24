@@ -187,6 +187,14 @@ public class AutoRed extends LinearOpMode {
         Actions.runBlocking(new ParallelAction(moveBack, whiteClaw.RetractArmAction()));
     }
 
+    public void toPixelStack(){
+        Action moveAcrossField = drive.actionBuilder(drive.pose)
+                    .splineTo(new Vector2d(51, -5),Math.toRadians(90))
+                    .splineTo(new Vector2d(48.5, 62),Math.toRadians(90))
+                    .build();
+        Actions.runBlocking(new SequentialAction(whiteClaw.RetractArmAction(), moveAcrossField, whiteClaw.TopOfStackPickupAction()));
+
+    }
 
     //to the spike mark
     public void toSpikeMark(double X, double Y, int ang, boolean position){
@@ -355,25 +363,6 @@ public class AutoRed extends LinearOpMode {
         drive.updatePoseEstimate();
     }
 
-    private void toPixelStack() {
-        if(propSpikeMark == 3){
-            Action moveToStackThree = drive.actionBuilder(drive.pose)
-                    .strafeTo(new Vector2d(40.5, PARAMS.toPixY))
-                    .build();
-            Actions.runBlocking(new SequentialAction(new ParallelAction(moveToStackThree, whiteClaw.RetractArmAction()),
-                    whiteClaw.TopOfStackPickupAction(4)));
-        }
-        else{
-            Action moveToStack = drive.actionBuilder(drive.pose)
-                    .setReversed(false)
-                    .splineTo(new Vector2d(28, 18), Math.toRadians(91))
-                    .strafeTo(new Vector2d(40.5, PARAMS.toPixY))
-                    .build();
-            Actions.runBlocking(new SequentialAction( new ParallelAction(moveToStack, whiteClaw.RetractArmAction()),
-                    whiteClaw.TopOfStackPickupAction(4) ));}
-        whiteClaw.closeGrip();
-        drive.updatePoseEstimate();
-    }
 
     // Move to the Backdrop from Frontstage
     private void toFrontPanel( int spikeMark) {
