@@ -235,7 +235,8 @@ public class AutoBlue extends LinearOpMode {
            // .strafeTo(new Vector2d(39.75, PARAMS.toPixY))
             .build();
           Actions.runBlocking(new SequentialAction(new ParallelAction(moveToStackThree, whiteClaw.RetractArmAction()),
-                  whiteClaw.TopOfStackPickupAction(4)));
+                  whiteClaw.PrepForTopOfStackPickupAction(4),
+                  whiteClaw.TopOfStackPickupAction()));
         }
         else{
             Action moveToStack = drive.actionBuilder(drive.pose)
@@ -244,7 +245,8 @@ public class AutoBlue extends LinearOpMode {
                 .strafeTo(new Vector2d(39.75, PARAMS.toPixY))
                 .build();
             Actions.runBlocking(new SequentialAction( new ParallelAction(moveToStack, whiteClaw.RetractArmAction()),
-                whiteClaw.TopOfStackPickupAction(4) ));}
+                whiteClaw.PrepForTopOfStackPickupAction(4),
+                whiteClaw.TopOfStackPickupAction() ));}
         whiteClaw.closeGrip();
         drive.updatePoseEstimate();
     }

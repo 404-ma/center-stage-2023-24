@@ -108,15 +108,22 @@ public class ClawMoves {
         };
     }
 
-    public Action TopOfStackPickupAction(int level) {
+    public Action PrepForTopOfStackPickupAction(int topLevel) {
         return packet -> {
             // Prep for Pickup off Stack
             PrepForPixel(false);
             SystemClock.sleep(550);
             // Allow Time for Arm to Move
-            moveLevel(level);
+            moveLevel(topLevel);
             SystemClock.sleep(350);
-            // Close if needed
+            return false;
+        };
+    }
+
+
+    public Action TopOfStackPickupAction() {
+        return packet -> {
+            // Pickup off Top of Stack
             if (tlmGripPosition != PARAMS.gripClosedPos) {
                 MoveGrip(PARAMS.gripClosedPos);
                 SystemClock.sleep(150);
