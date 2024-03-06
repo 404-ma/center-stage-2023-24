@@ -112,8 +112,6 @@ public class AutoBlue extends LinearOpMode {
             if (propSpikeMark == 3)
                 sleep( 100);  // Free up Processor
         }
-
-
         waitForStart();
         telemetry.clear();
         if (isStopRequested()) return;
@@ -127,7 +125,6 @@ public class AutoBlue extends LinearOpMode {
             toBackPanel(propSpikeMark);
             AutoCommon.PlacePixel(true, true, drive, whiteClaw, whiteConveyor);
         }
-
         if (!PARAMS.frontStage) {
             if (PARAMS.ifSafe) {
                 toSafety();
@@ -136,8 +133,6 @@ public class AutoBlue extends LinearOpMode {
             }
         }
     }
-
-
     //to the spike mark
     private void toSpikeMark(int spike) {
         double X, Y, ang;
@@ -200,7 +195,7 @@ public class AutoBlue extends LinearOpMode {
             if (spike == 1) {
                 X = 12.5; Y = 3.0; ang = 32.0;
             } else if(spike == 2) {
-                X = 21.5; Y = 6; ang = 0;
+                X = 21.75; Y = 7; ang = 0;
             } else {
                 X = 28; Y = 3; ang = 0;
             }
@@ -221,7 +216,7 @@ public class AutoBlue extends LinearOpMode {
                 // Spike 3 - Avoid Gates on Right
                 Action moveThirdSMPlan = drive.actionBuilder(drive.pose)
                         .splineTo(new Vector2d(X, Y),Math.toRadians(ang))
-                        .turn(Math.toRadians(-90))
+                        .turn(Math.toRadians(0))
                         .build();
                 Actions.runBlocking(new SequentialAction(moveThirdSMPlan, whiteClaw.PlacePixelAction()));
             }
@@ -233,7 +228,8 @@ public class AutoBlue extends LinearOpMode {
     private void toPixelStack() {
         if(propSpikeMark == 3){
           Action moveToStackThree = drive.actionBuilder(drive.pose)
-            .strafeTo(new Vector2d(39.75, PARAMS.toPixY))
+                  .splineTo(new Vector2d(51.75, PARAMS.toPixY), Math.toRadians(-90))
+           // .strafeTo(new Vector2d(39.75, PARAMS.toPixY))
             .build();
           Actions.runBlocking(new SequentialAction(new ParallelAction(moveToStackThree, whiteClaw.RetractArmAction()),
                   whiteClaw.TopOfStackPickupAction(4)));
@@ -249,6 +245,7 @@ public class AutoBlue extends LinearOpMode {
         whiteClaw.closeGrip();
         drive.updatePoseEstimate();
     }
+
     // Move to the Backdrop from Frontstage
     private void toFrontPanel( int spikeMark) {
         double targetX = 36;
@@ -275,8 +272,7 @@ public class AutoBlue extends LinearOpMode {
         drive.updatePoseEstimate();
     }
 
-
-    //to the panel in the back
+    //to the panel from the the backstage
     private void toBackPanel(int spikeMark){
         double targetX = 30;
         if (spikeMark == 3)
@@ -286,11 +282,10 @@ public class AutoBlue extends LinearOpMode {
 
         Action moveRb3 = drive.actionBuilder(drive.pose)
                 .setReversed(true)
-                .splineTo(new Vector2d(targetX,39.0), Math.toRadians(89))
+                .splineTo(new Vector2d(targetX,40.0), Math.toRadians(89))
                 .build();
         Actions.runBlocking(moveRb3);
     }
-
 
     private void toSafety() {
         Action secMoveToSafety = drive.actionBuilder(drive.pose)
