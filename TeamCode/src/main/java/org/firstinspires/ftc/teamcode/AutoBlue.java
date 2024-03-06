@@ -102,7 +102,6 @@ public class AutoBlue extends LinearOpMode {
             telemetry.addLine("*** INITIALIZATION FAILED ***");
             telemetry.addData("Exeption", e.toString());
         }
-
         telemetry.update();
         if (!initialized) return;
         while (!isStopRequested() && !opModeIsActive() && propSpikeMark == 3) {
