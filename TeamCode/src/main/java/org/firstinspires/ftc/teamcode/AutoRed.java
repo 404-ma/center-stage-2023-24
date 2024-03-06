@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Helper.AutoCommon;
 import org.firstinspires.ftc.teamcode.Helper.ClawMoves;
 import org.firstinspires.ftc.teamcode.Helper.Conveyor;
 import org.firstinspires.ftc.teamcode.Helper.DistanceSystem;
@@ -29,13 +30,14 @@ public class AutoRed extends LinearOpMode {
        // public double propSpikeMark = 2;    //  Which Spike Mark is the Prop Located on
         public boolean partnerDead = true;
         public boolean frontStage = false;
+        public boolean ifSafe = true;
         public int dTime = 500;
         public double rangeNum = 2.0;
         public int rangeTime = 500;
         public double gainValueForward = 0.1;
         public double rangeValue = 2;
         public double gainValueRotation = 0.03;
-        public String versionNum = "3.4";
+        public String versionNum = "4.0";
         public double toPixY = 18.75;
         public int PartnerWaitTime = 500;
 
@@ -51,6 +53,7 @@ public class AutoRed extends LinearOpMode {
     private DrivetrainV2 drv;
     private TensorFlow tenFl;
     public int propSpikeMark = 3;
+
 
 
     @Override
@@ -81,7 +84,7 @@ public class AutoRed extends LinearOpMode {
             long startCameraWait = System.currentTimeMillis();
             boolean timedOut = false;
 
-            while (!cameraStreaming && !timedOut)  {
+            while (!cameraStreaming && !timedOut) {
                 cameraStreaming = tenFl.isCameraStreaming();
                 timedOut = (System.currentTimeMillis() - (startCameraWait + 1500)) > 0;
                 sleep(20);
@@ -105,19 +108,35 @@ public class AutoRed extends LinearOpMode {
             propSpikeMark = tenFl.DetectProp();
             updateTelemetry();
             if (propSpikeMark == 3)
-                sleep( 100);  // Free up Processor
+                sleep(100);  // Free up Processor
         }
-
-
         waitForStart();
         telemetry.clear();
         if (isStopRequested()) return;
-
-        propSpikeMark = tenFl.DetectProp();
-        telemetry.clear();
         updateTelemetry();
         tenFl.CleanUp();
 
+        if (!PARAMS.frontStage) {
+            toSpikeMark(propSpikeMark);
+            double[] dropPosX = {0.0, 32, 28, 25};
+            toBackPanel(dropPosX[propSpikeMark]);
+            AutoCommon.PlacePixel(false, true, drive, whiteClaw, whiteConveyor);
+            drive.updatePoseEstimate();
+            updateTelemetry();
+            if (PARAMS.ifSafe) toSafety();
+        }
+    }
+
+     private void toSafety() {
+         Action secMoveToSafety = drive.actionBuilder(drive.pose)
+                 .strafeTo(new Vector2d(6, 35.25))
+                 .build();
+         Actions.runBlocking(secMoveToSafety);
+     }
+
+
+
+        /*
         switch(propSpikeMark){
             case 3:
                 //toSpikeMark(20.5,4.0,27, PARAMS.frontStage);
@@ -150,20 +169,9 @@ public class AutoRed extends LinearOpMode {
                 }
                 break;
         }
-        whiteClaw.PrepForPixel(false);
 
-        whiteConveyor.moveViperToPosition(700);
-        sleep(1000);
-        whiteConveyor.moveConvForward();
-        sleep(1500);
-        whiteConveyor.stopConv();
-        whiteConveyor.moveViperToPosition(0);
-        sleep(1000);
+         */
 
-        whiteClaw.SuplexPixel();
-
-        toSafety();
-    }
 
     public void firstsp(){
         Action movethirdSMPlan = drive.actionBuilder(drive.pose)
@@ -179,20 +187,13 @@ public class AutoRed extends LinearOpMode {
         Actions.runBlocking(new ParallelAction(moveBack, whiteClaw.RetractArmAction()));
     }
 
-    public void toSafety(){
-        Action moveToSafety = drive.actionBuilder(drive.pose)
-                .lineToY(-35.0)
-                .strafeTo(new Vector2d(6, -36.0))
-                .build();
-        Actions.runBlocking(new ParallelAction(moveToSafety, whiteClaw.RetractArmAction()));
-    }
+    public void toPixelStack(){
+        Action moveAcrossField = drive.actionBuilder(drive.pose)
+                    .splineTo(new Vector2d(51, -5),Math.toRadians(90))
+                    .splineTo(new Vector2d(48.5, 62),Math.toRadians(90))
+                    .build();
+        Actions.runBlocking(new SequentialAction(whiteClaw.RetractArmAction(), moveAcrossField, whiteClaw.TopOfStackPickupAction()));
 
-    public void toSafetyf(){
-        Action moveToSafety = drive.actionBuilder(drive.pose)
-                .lineToY(-86.0)
-                .strafeTo(new Vector2d(6, -86.0))
-                .build();
-        Actions.runBlocking(new ParallelAction(moveToSafety, whiteClaw.RetractArmAction()));
     }
 
     //to the spike mark
@@ -259,7 +260,7 @@ public class AutoRed extends LinearOpMode {
 
         Action moveRb3 = drive.actionBuilder(drive.pose)
                 .setReversed(true)
-                .splineTo(new Vector2d(targetX,-38.5), Math.toRadians(-90))
+                .splineTo(new Vector2d(targetX,-40.5), Math.toRadians(-90))
                 .build();
         Actions.runBlocking(moveRb3);
     }
@@ -323,57 +324,45 @@ public class AutoRed extends LinearOpMode {
             }
         } else {
             // BACK STAGE - Go to specified spikeMark and Line Up to Backdrop
+            Action moveToSpike;
             if (spike == 1) {
-                X = 12.5; Y = -3.0; ang = -32.0;
+                moveToSpike = drive.actionBuilder(drive.pose)
+                        .splineTo(new Vector2d(26, -5.5), Math.toRadians(0))
+                        .turnTo(Math.toRadians(90))
+                        .build();
             } else if(spike == 2) {
-                X = 21.5; Y = -6; ang = 0;
-            } else {
-                X = 28; Y = -3; ang = 0;
-            }
-
-            if (spike == 1 || spike == 2) {
-                Action moveRb = drive.actionBuilder(drive.pose)
-                        .splineTo(new Vector2d(X, Y), Math.toRadians(ang))
+                moveToSpike = drive.actionBuilder(drive.pose)
+                        .splineTo(new Vector2d(23, -5), Math.toRadians(0))
                         .build();
-                Actions.runBlocking(new SequentialAction(moveRb, whiteClaw.PlacePixelAction()));
+            } else {
+                moveToSpike = drive.actionBuilder(drive.pose)
+                        .splineTo(new Vector2d(14.5, -4), Math.toRadians(-25))
+                        .build();
 
-                //steps back from the spike mark
-                Action moveBack = drive.actionBuilder(drive.pose)
+            }
+            Actions.runBlocking(new SequentialAction(moveToSpike, whiteClaw.PlacePixelAction()));
+
+            Action moveBack;
+            if (spike == 1) {
+                moveBack = drive.actionBuilder(drive.pose)
+                        .turnTo(Math.toRadians(90))
+                        .build();
+            } else if(spike == 2) {
+                moveBack = drive.actionBuilder(drive.pose)
                         .setReversed(true)
-                        .splineTo(new Vector2d(11, -6), Math.toRadians(-90))
+                        .splineTo(new Vector2d(15, -5), Math.toRadians(-90))
                         .build();
-                Actions.runBlocking(new ParallelAction(moveBack, whiteClaw.RetractArmAction()));
             } else {
-                // Spike 3 - Avoid Gates on Right
-                Action moveThirdSMPlan = drive.actionBuilder(drive.pose)
-                        .splineTo(new Vector2d(X, Y),Math.toRadians(ang))
-                        .turn(Math.toRadians(90))
+                moveBack = drive.actionBuilder(drive.pose)
+                        .setReversed(true)
+                        .splineTo(new Vector2d(10, -10), Math.toRadians(-90))
                         .build();
-                Actions.runBlocking(new SequentialAction(moveThirdSMPlan, whiteClaw.PlacePixelAction()));
             }
+            Actions.runBlocking(new SequentialAction(whiteClaw.RetractArmAction(), moveBack));
         }
         drive.updatePoseEstimate();
     }
 
-    private void toPixelStack() {
-        if(propSpikeMark == 3){
-            Action moveToStackThree = drive.actionBuilder(drive.pose)
-                    .strafeTo(new Vector2d(40.5, PARAMS.toPixY))
-                    .build();
-            Actions.runBlocking(new SequentialAction(new ParallelAction(moveToStackThree, whiteClaw.RetractArmAction()),
-                    whiteClaw.TopOfStackPickupAction(4)));
-        }
-        else{
-            Action moveToStack = drive.actionBuilder(drive.pose)
-                    .setReversed(false)
-                    .splineTo(new Vector2d(28, 18), Math.toRadians(91))
-                    .strafeTo(new Vector2d(40.5, PARAMS.toPixY))
-                    .build();
-            Actions.runBlocking(new SequentialAction( new ParallelAction(moveToStack, whiteClaw.RetractArmAction()),
-                    whiteClaw.TopOfStackPickupAction(4) ));}
-        whiteClaw.closeGrip();
-        drive.updatePoseEstimate();
-    }
 
     // Move to the Backdrop from Frontstage
     private void toFrontPanel( int spikeMark) {

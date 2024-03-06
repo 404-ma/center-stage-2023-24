@@ -63,6 +63,7 @@ public class ClawMoves {
     public void MoveFlip(double position) {
         flip.setPosition(position);
         tlmFlipPosition = position;
+
     }
 
     public void MoveGrip(double position) {
@@ -158,7 +159,7 @@ public class ClawMoves {
             MoveGrip(PARAMS.gripOpenPos);
     }
 
-    // TODO:  Test Height Levels
+
 
     public void moveLevel(int level) {
         double armPos;
@@ -204,6 +205,7 @@ public class ClawMoves {
             // Allow Time for Arm to Move to Mat
             SystemClock.sleep(100);
             MoveGrip(PARAMS.gripOpenPos);
+
         }
     }
  }
