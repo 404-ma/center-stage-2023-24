@@ -37,7 +37,7 @@ public class AutoRed extends LinearOpMode {
         public double gainValueForward = 0.1;
         public double rangeValue = 2;
         public double gainValueRotation = 0.03;
-        public String versionNum = "3.4";
+        public String versionNum = "4.0";
         public double toPixY = 18.75;
         public int PartnerWaitTime = 500;
 
