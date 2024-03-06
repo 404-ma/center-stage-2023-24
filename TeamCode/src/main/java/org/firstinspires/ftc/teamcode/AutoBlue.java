@@ -28,7 +28,7 @@ public class AutoBlue extends LinearOpMode {
      *  FTC Dashboard Parameters
      */
     public static class Params {
-        public String versionNum = "4.1.16";
+        public String versionNum = "4.1.23";
         public boolean frontStage = true;
         public boolean ifSafe = true;
         public int PartnerWaitTime = 500;
@@ -125,13 +125,13 @@ public class AutoBlue extends LinearOpMode {
             toBackPanel(propSpikeMark);
             AutoCommon.PlacePixel(true, true, drive, whiteClaw, whiteConveyor);
         }
-        if (!PARAMS.frontStage) {
+      /*if (!PARAMS.frontStage) {
             if (PARAMS.ifSafe) {
                 toSafety();
             } else {
-                secondHalfBack(propSpikeMark);
+                secondHalfBackStage(propSpikeMark);
             }
-        }
+        }*/
     }
     //to the spike mark
     private void toSpikeMark(int spike) {
@@ -180,9 +180,13 @@ public class AutoBlue extends LinearOpMode {
                 else if(spike == 3){
                 Action moveBackThree = drive.actionBuilder(drive.pose)
                         .setReversed(true)
+                        //.splineTo(new Vector2d(7,0), Math.toRadians(-90))
+                        .turnTo(Math.toRadians(0))
+                        .lineToX(6)
+                        .lineToY(0)
                         //.splineTo(new Vector2d(14, 0), Math.toRadians(0))
-                        .turnTo(Math.toRadians(-90))
-                        .lineToY(-18.75)
+                       // .turnTo(Math.toRadians(-90))
+                       // .lineToY(-18.75)
                         .build();
                 Actions.runBlocking((moveBackThree));}
 
@@ -195,7 +199,7 @@ public class AutoBlue extends LinearOpMode {
             if (spike == 1) {
                 X = 12.5; Y = 3.0; ang = 32.0;
             } else if(spike == 2) {
-                X = 21.75; Y = 7; ang = 0;
+                X = 21.25; Y = 7; ang = 0;
             } else {
                 X = 28; Y = 3; ang = 0;
             }
@@ -295,52 +299,40 @@ public class AutoBlue extends LinearOpMode {
     }
 
     //goes front to the pixels (when it started from backStage)
-    private void secondHalfBack(int spikeMark){
-        Action moveToPixels = drive.actionBuilder(drive.pose)
-                .splineTo(new Vector2d(50, -10), Math.toRadians(-90))
-                .splineTo(new Vector2d(48, -50), Math.toRadians(-91))
-                .build();
-        Actions.runBlocking(new ParallelAction(moveToPixels, whiteClaw.RetractArmAction()));
+     /*   private void secondHalfBackStage(int spikeMark) {
+            Action moveToPixels = drive.actionBuilder(drive.pose)
+                    .setReversed(true)
+                    .strafeTo(new Vector2d(39.75, 40.0))
+                    .lineToY()
+                    .build();
+            Actions.runBlocking(new ParallelAction(moveToPixels, whiteClaw.RetractArmAction()));
+            whiteClaw.closeGrip();
+            drive.updatePoseEstimate();
 
-        // TODO:  Add Code to Navigate to Pixel Stack and Pickup
-        /*
-        Action moveToStack = drive.actionBuilder(drive.pose)
-                .setReversed(false)
-                .splineTo(new Vector2d(28, -18), Math.toRadians(-91))
-                .strafeTo(new Vector2d(41, -18.75))
-                .build();
-        Actions.runBlocking(new SequentialAction( new ParallelAction(moveToStack, whiteClaw.RetractArmAction()),
-                whiteClaw.TopOfStackPickupAction(4) ));
+            double targetX = 36;
+            if (spikeMark == 3)
+                targetX = 38;
+            else if (spikeMark == 1)
+                targetX = 25.0;
+            whiteClaw.RetractArmAction();
 
-        whiteClaw.closeGrip();
-        drive.updatePoseEstimate();
-         */
+            Action moveBar = drive.actionBuilder(drive.pose)
+                    .strafeTo(new Vector2d(51, -15))
+                    .setReversed(true)
+                    .splineTo(new Vector2d(56, 46), Math.toRadians(90))
+                    .build();
+            Actions.runBlocking(new ParallelAction(moveBar, whiteClaw.SuplexPixelAction()));
 
-        // TODO:  Add Code to Navigate Back to Board
-        /*
-        double targetX = 36;
-        if (spikeMark == 3)
-            targetX = 38;
-        else if (spikeMark == 1)
-            targetX = 25.0;
-        whiteClaw.RetractArmAction();
+            sleep(PARAMS.PartnerWaitTime);
+            Action backdrop = drive.actionBuilder(drive.pose)
+                    .setReversed(true)
+                    .splineTo(new Vector2d(targetX, 87), Math.toRadians(90))
+                    .build();
+            Actions.runBlocking(backdrop);
+            drive.updatePoseEstimate();
 
-        Action moveBar = drive.actionBuilder(drive.pose)
-                .strafeTo(new Vector2d(51, -15))
-                .setReversed(true)
-                .splineTo(new Vector2d(56, 46), Math.toRadians(90))
-                .build();
-        Actions.runBlocking(new ParallelAction(moveBar, whiteClaw.SuplexPixelAction()));
-
-        sleep(PARAMS.PartnerWaitTime);
-        Action backdrop = drive.actionBuilder(drive.pose)
-                .setReversed(true)
-                .splineTo(new Vector2d(targetX, 87), Math.toRadians(90))
-                .build();
-        Actions.runBlocking(backdrop);
-        drive.updatePoseEstimate();
-         */
-    }
+        }
+    */
 
     //going through the middle gate (frontStage)
     private void updateTelemetry() {
