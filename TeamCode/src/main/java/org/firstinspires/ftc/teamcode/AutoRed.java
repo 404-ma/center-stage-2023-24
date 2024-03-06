@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -37,11 +38,9 @@ public class AutoRed extends LinearOpMode {
         public double gainValueForward = 0.1;
         public double rangeValue = 2;
         public double gainValueRotation = 0.03;
-        public String versionNum = "4.0";
+        public String versionNum = "4.1.2";
         public double toPixY = 18.75;
         public int PartnerWaitTime = 500;
-
-
     }
 
     public static Params PARAMS = new Params();
@@ -118,21 +117,20 @@ public class AutoRed extends LinearOpMode {
 
         if (!PARAMS.frontStage) {
             toSpikeMark(propSpikeMark);
-            double[] dropPosX = {0.0, 32, 28, 25};
-            toBackPanel(dropPosX[propSpikeMark]);
+            toBackPanel(propSpikeMark);
             AutoCommon.PlacePixel(false, true, drive, whiteClaw, whiteConveyor);
             drive.updatePoseEstimate();
             updateTelemetry();
-            if (PARAMS.ifSafe) toSafety();
+            if (PARAMS.ifSafe)
+                toSafety();
+            else {
+                toPixelStack();
+                sleep(1000);
+            }
+
         }
     }
 
-     private void toSafety() {
-         Action secMoveToSafety = drive.actionBuilder(drive.pose)
-                 .strafeTo(new Vector2d(6, 35.25))
-                 .build();
-         Actions.runBlocking(secMoveToSafety);
-     }
 
 
 
@@ -187,16 +185,28 @@ public class AutoRed extends LinearOpMode {
         Actions.runBlocking(new ParallelAction(moveBack, whiteClaw.RetractArmAction()));
     }
 
-    public void toPixelStack(){
+    public void toPixelStack() {
+        // cross field and prep claw
         Action moveAcrossField = drive.actionBuilder(drive.pose)
                     .splineTo(new Vector2d(51, -5),Math.toRadians(90))
-                    .splineTo(new Vector2d(48.5, 62),Math.toRadians(90))
+                    .splineTo(new Vector2d(47.5, 62),Math.toRadians(90))
                     .build();
-        Actions.runBlocking(new SequentialAction(whiteClaw.RetractArmAction(), moveAcrossField, whiteClaw.TopOfStackPickupAction()));
+        Actions.runBlocking(new SequentialAction(whiteClaw.RetractArmAction(), moveAcrossField,
+                    whiteClaw.PrepForTopOfStackPickupAction(3)));
+        drive.updatePoseEstimate();
 
+        // slow approach pixel stack
+        Action moveCloseToStack = drive.actionBuilder(drive.pose)
+                .splineTo( new Vector2d(47.5, 64.5), Math.toRadians(90), new TranslationalVelConstraint(20))
+                .build();
+        Actions.runBlocking(new SequentialAction(moveCloseToStack, whiteClaw.TopOfStackPickupAction()));
+
+        drive.updatePoseEstimate();
+        updateTelemetry();
     }
 
     //to the spike mark
+    /*
     public void toSpikeMark(double X, double Y, int ang, boolean position){
         double an;
 
@@ -223,6 +233,7 @@ public class AutoRed extends LinearOpMode {
                 .build();
         Actions.runBlocking(new ParallelAction(moveBack, whiteClaw.RetractArmAction()));
     }
+    */
 
     //to the panel in the front
     public void toFrontPanel( double targetX, boolean partDead) {
@@ -255,15 +266,7 @@ public class AutoRed extends LinearOpMode {
         }
     }
 
-    //to the panel in the back
-    public void toBackPanel(double targetX){
 
-        Action moveRb3 = drive.actionBuilder(drive.pose)
-                .setReversed(true)
-                .splineTo(new Vector2d(targetX,-40.5), Math.toRadians(-90))
-                .build();
-        Actions.runBlocking(moveRb3);
-    }
 
 
     private void toSpikeMark(int spike) {
@@ -332,7 +335,7 @@ public class AutoRed extends LinearOpMode {
                         .build();
             } else if(spike == 2) {
                 moveToSpike = drive.actionBuilder(drive.pose)
-                        .splineTo(new Vector2d(23, -5), Math.toRadians(0))
+                        .splineTo(new Vector2d(23, -4), Math.toRadians(0))
                         .build();
             } else {
                 moveToSpike = drive.actionBuilder(drive.pose)
@@ -390,20 +393,26 @@ public class AutoRed extends LinearOpMode {
         drive.updatePoseEstimate();
     }
 
-    //to the panel in the back
-    private void toBackPanel(int spikeMark){
-        double targetX = 30;
-        if (spikeMark == 3)
-            targetX = 38;
-        else if (spikeMark == 1)
-            targetX = 25.0;
 
+    //to the panel in the back
+    private void toBackPanel(int spikeMark) {
+        double[] dropPosX = {0.0, 32, 25, 22};
         Action moveRb3 = drive.actionBuilder(drive.pose)
                 .setReversed(true)
-                .splineTo(new Vector2d(targetX,-39.0), Math.toRadians(-89))
+                .splineTo(new Vector2d(dropPosX[spikeMark],-40.0), Math.toRadians(-89))
                 .build();
         Actions.runBlocking(moveRb3);
     }
+
+
+    private void toSafety() {
+        Action secMoveToSafety = drive.actionBuilder(drive.pose)
+                .strafeTo(new Vector2d(6, -35.25))
+                .build();
+        Actions.runBlocking(secMoveToSafety);
+    }
+
+
     private void updateTelemetry() {
         telemetry.addLine("RoadRunner Auto Drive BLUE");
         telemetry.addLine();
