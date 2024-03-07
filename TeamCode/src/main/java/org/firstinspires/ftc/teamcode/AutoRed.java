@@ -38,7 +38,7 @@ public class AutoRed extends LinearOpMode {
         public double gainValueForward = 0.1;
         public double rangeValue = 2;
         public double gainValueRotation = 0.03;
-        public String versionNum = "4.1.4";
+        public String versionNum = "4.1.5";
         public double toPixY = 18.75;
         public int PartnerWaitTime = 500;
     }
@@ -125,6 +125,7 @@ public class AutoRed extends LinearOpMode {
                 toSafety();
             else {
                 toPixelStack();
+                BackToBackdrop();
                 sleep(1000);
             }
 
@@ -292,6 +293,25 @@ public class AutoRed extends LinearOpMode {
         drive.updatePoseEstimate();
     }
 
+     private void  BackToBackdrop () {
+     //drops white pixels in the backdrop
+         double backDropPosition = ((propSpikeMark==1) ? 22:34);
+        Action moveToBackdrop = drive.actionBuilder(drive.pose)
+               .setReversed(true)
+               .splineTo(new Vector2d(51, -6), Math.toRadians(-90),null)
+               .splineTo(new Vector2d(backDropPosition, -40.5), Math.toRadians(-90),new TranslationalVelConstraint(20))
+               .build();
+        Actions.runBlocking(new ParallelAction(whiteClaw.SuplexPixelAction(),moveToBackdrop ));
+
+
+        drive.updatePoseEstimate();
+        updateTelemetry();
+        AutoCommon.PlacePixel(false, true, drive, whiteClaw, whiteConveyor);
+     }
+
+
+
+
 
     // Move to the Backdrop from Frontstage
     private void toFrontPanel( int spikeMark) {
@@ -346,6 +366,11 @@ public class AutoRed extends LinearOpMode {
         telemetry.addLine();
         telemetry.addLine().addData("Position", (PARAMS.frontStage ? "FRONT Stage" : "BACK Stage"));
         telemetry.addLine().addData("Prop Mark", propSpikeMark );
+        telemetry.addLine().addData("Safe Mode", (PARAMS.ifSafe ?"ON" : "OFF"));
+
+
+
+
         telemetry.update();
 
         // FTC Dashboard Telemetry
