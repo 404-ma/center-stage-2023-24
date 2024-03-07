@@ -290,7 +290,6 @@ public class AutoBlue extends LinearOpMode {
                 .build();
         Actions.runBlocking(moveRb3);
     }
-
     private void toSafety() {
         Action secMoveToSafety = drive.actionBuilder(drive.pose)
                 .strafeTo(new Vector2d(6, 35.25))
