@@ -38,7 +38,7 @@ public class AutoRed extends LinearOpMode {
         public double gainValueForward = 0.1;
         public double rangeValue = 2;
         public double gainValueRotation = 0.03;
-        public String versionNum = "4.1.5";
+        public String versionNum = "4.1.6";
         public double toPixY = 18.75;
         public int PartnerWaitTime = 500;
     }
@@ -149,25 +149,7 @@ public class AutoRed extends LinearOpMode {
         Actions.runBlocking(new ParallelAction(moveBack, whiteClaw.RetractArmAction()));
     }
 
-    public void toPixelStack() {
-        // cross field and prep claw
-        Action moveAcrossField = drive.actionBuilder(drive.pose)
-                    .splineTo(new Vector2d(51, -5),Math.toRadians(90))
-                    .splineTo(new Vector2d(47.5, 62),Math.toRadians(90))
-                    .build();
-        Actions.runBlocking(new SequentialAction(whiteClaw.RetractArmAction(), moveAcrossField,
-                    whiteClaw.PrepForTopOfStackPickupAction(3)));
-        drive.updatePoseEstimate();
 
-        // slow approach pixel stack
-        Action moveCloseToStack = drive.actionBuilder(drive.pose)
-                .splineTo( new Vector2d(47.5, 64.5), Math.toRadians(90), new TranslationalVelConstraint(20))
-                .build();
-        Actions.runBlocking(new SequentialAction(moveCloseToStack, whiteClaw.TopOfStackPickupAction()));
-
-        drive.updatePoseEstimate();
-        updateTelemetry();
-    }
 
 
 
@@ -293,6 +275,25 @@ public class AutoRed extends LinearOpMode {
         drive.updatePoseEstimate();
     }
 
+    public void toPixelStack() {
+        // cross field and prep claw
+        Action moveAcrossField = drive.actionBuilder(drive.pose)
+                .splineTo(new Vector2d(51, -5),Math.toRadians(90))
+                .splineTo(new Vector2d(48, 61.75),Math.toRadians(90))
+                .build();
+        Actions.runBlocking(new SequentialAction(whiteClaw.RetractArmAction(), moveAcrossField,
+                whiteClaw.PrepForTopOfStackPickupAction(3)));
+        drive.updatePoseEstimate();
+
+        // slow approach pixel stack
+        Action moveCloseToStack = drive.actionBuilder(drive.pose)
+                .splineTo( new Vector2d(47.5, 64.5), Math.toRadians(90), new TranslationalVelConstraint(20))
+                .build();
+        Actions.runBlocking(new SequentialAction(moveCloseToStack, whiteClaw.TopOfStackPickupAction()));
+
+        drive.updatePoseEstimate();
+        updateTelemetry();
+    }
      private void  BackToBackdrop () {
      //drops white pixels in the backdrop
          double backDropPosition = ((propSpikeMark==1) ? 22:34);
@@ -309,6 +310,23 @@ public class AutoRed extends LinearOpMode {
         AutoCommon.PlacePixel(false, true, drive, whiteClaw, whiteConveyor);
      }
 
+    //to the panel in the back
+    private void toBackPanel(int spikeMark) {
+        double[] dropPosX = {0.0, 34, 28, 22};
+        Action moveRb3 = drive.actionBuilder(drive.pose)
+                .setReversed(true)
+                .splineTo(new Vector2d(dropPosX[spikeMark],-41.0), Math.toRadians(-89))
+                .build();
+        Actions.runBlocking(moveRb3);
+    }
+
+
+    private void toSafety() {
+        Action secMoveToSafety = drive.actionBuilder(drive.pose)
+                .strafeTo(new Vector2d(6, -36.5))
+                .build();
+        Actions.runBlocking(secMoveToSafety);
+    }
 
 
 
@@ -340,23 +358,7 @@ public class AutoRed extends LinearOpMode {
     }
 
 
-    //to the panel in the back
-    private void toBackPanel(int spikeMark) {
-        double[] dropPosX = {0.0, 34, 28, 22};
-        Action moveRb3 = drive.actionBuilder(drive.pose)
-                .setReversed(true)
-                .splineTo(new Vector2d(dropPosX[spikeMark],-40.0), Math.toRadians(-89))
-                .build();
-        Actions.runBlocking(moveRb3);
-    }
 
-
-    private void toSafety() {
-        Action secMoveToSafety = drive.actionBuilder(drive.pose)
-                .strafeTo(new Vector2d(6, -36.5))
-                .build();
-        Actions.runBlocking(secMoveToSafety);
-    }
 
 
     private void updateTelemetry() {
