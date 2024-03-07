@@ -26,7 +26,7 @@ public class AutoRed extends LinearOpMode {
      *  FTC Dashboard Parameters
      */
     public static class Params {
-        public String versionNum = "4.1.8";
+        public String versionNum = "4.1.9";
         public boolean frontStage = false;
         public boolean ifSafe = true;
         public int PartnerWaitTime = 500;
@@ -213,7 +213,7 @@ public class AutoRed extends LinearOpMode {
 
     public void toPixelStackFront () {
         Action moveCloseToStack = drive.actionBuilder(drive.pose)
-                .splineTo( new Vector2d(50, 18.5), Math.toRadians(90), new TranslationalVelConstraint(20))
+                .splineTo( new Vector2d(50, 18), Math.toRadians(90), new TranslationalVelConstraint(20))
                 .build();
         Actions.runBlocking(new SequentialAction(whiteClaw.PrepForTopOfStackPickupAction(4),moveCloseToStack, whiteClaw.TopOfStackPickupAction()));
 
