@@ -38,7 +38,7 @@ public class AutoRed extends LinearOpMode {
         public double gainValueForward = 0.1;
         public double rangeValue = 2;
         public double gainValueRotation = 0.03;
-        public String versionNum = "4.1.2";
+        public String versionNum = "4.1.3";
         public double toPixY = 18.75;
         public int PartnerWaitTime = 500;
     }
@@ -134,43 +134,6 @@ public class AutoRed extends LinearOpMode {
 
 
 
-        /*
-        switch(propSpikeMark){
-            case 3:
-                //toSpikeMark(20.5,4.0,27, PARAMS.frontStage);
-                toSpikeMark(14.5,4.5,27, PARAMS.frontStage);
-                if(PARAMS.frontStage){
-                    toFrontPanel(36.5, PARAMS.partnerDead);
-                }
-                else{
-                    toBackPanel(36.5);
-                }
-                break;
-            case 1:
-                //toSpikeMark(18.5, -3.0, -30, PARAMS.frontStage);
-                toSpikeMark(16.5, -0.5, -30, PARAMS.frontStage);
-               // firstsp();
-                if(PARAMS.frontStage){
-                    toFrontPanel(25.0, PARAMS.partnerDead);
-                }
-                else{
-                    toBackPanel(25.0);
-                }
-                break;
-            default:
-                toSpikeMark(22.0, -3.2,0, PARAMS.frontStage);
-                if(PARAMS.frontStage){
-                    toFrontPanel(29.0, PARAMS.partnerDead);
-                }
-                else{
-                    toBackPanel(29.0);
-                }
-                break;
-        }
-
-         */
-
-
     public void firstsp(){
         Action movethirdSMPlan = drive.actionBuilder(drive.pose)
                 .splineTo(new Vector2d(19.5, 0),Math.toRadians(0)  )
@@ -205,35 +168,7 @@ public class AutoRed extends LinearOpMode {
         updateTelemetry();
     }
 
-    //to the spike mark
-    /*
-    public void toSpikeMark(double X, double Y, int ang, boolean position){
-        double an;
 
-        if(position){
-            an = 180;
-        }
-        else{
-            an = -90;
-        }
-
-        Action moveRb = drive.actionBuilder(drive.pose)
-                .splineTo(new Vector2d(X, Y), Math.toRadians(ang))
-                .build();
-        Actions.runBlocking(new SequentialAction(moveRb, whiteClaw.PlacePixelAction()));
-
-        if(!PARAMS.frontStage){
-            sleep(850);
-            whiteClaw.RetractArmAction();
-        }
-
-        Action moveBack = drive.actionBuilder(drive.pose)
-                .setReversed(true)
-                .splineTo(new Vector2d(6, 0), Math.toRadians(an))
-                .build();
-        Actions.runBlocking(new ParallelAction(moveBack, whiteClaw.RetractArmAction()));
-    }
-    */
 
     //to the panel in the front
     public void toFrontPanel( double targetX, boolean partDead) {
@@ -396,7 +331,7 @@ public class AutoRed extends LinearOpMode {
 
     //to the panel in the back
     private void toBackPanel(int spikeMark) {
-        double[] dropPosX = {0.0, 32, 25, 22};
+        double[] dropPosX = {0.0, 34, 28, 22};
         Action moveRb3 = drive.actionBuilder(drive.pose)
                 .setReversed(true)
                 .splineTo(new Vector2d(dropPosX[spikeMark],-40.0), Math.toRadians(-89))
@@ -407,7 +342,7 @@ public class AutoRed extends LinearOpMode {
 
     private void toSafety() {
         Action secMoveToSafety = drive.actionBuilder(drive.pose)
-                .strafeTo(new Vector2d(6, -35.25))
+                .strafeTo(new Vector2d(6, -36.5))
                 .build();
         Actions.runBlocking(secMoveToSafety);
     }
