@@ -49,6 +49,7 @@ public class AutoBlue extends LinearOpMode {
         public double ang1S = 0;
         public double ang2S = 0;
         public double ang3S = -28.0;
+        public double toPixYBack = -78.0;
     }
 
     public static Params PARAMS = new Params();
@@ -124,13 +125,13 @@ public class AutoBlue extends LinearOpMode {
             toBackPanel(propSpikeMark);
             AutoCommon.PlacePixel(true, true, drive, whiteClaw, whiteConveyor);
         }
-      /*if (!PARAMS.frontStage) {
+      if (!PARAMS.frontStage) {
             if (PARAMS.ifSafe) {
                 toSafety();
             } else {
                 secondHalfBackStage(propSpikeMark);
             }
-        }*/
+        }
     }
     //to the spike mark
     private void toSpikeMark(int spike) {
@@ -178,11 +179,10 @@ public class AutoBlue extends LinearOpMode {
 
                 else if(spike == 3){
                 Action moveBackThree = drive.actionBuilder(drive.pose)
-                        .setReversed(true)
-                        //.splineTo(new Vector2d(7,0), Math.toRadians(-90))
-                        .turnTo(Math.toRadians(0))
-                        .lineToX(6)
-                        .lineToY(0)
+                        .turn(Math.toRadians(0))
+                        //.turnTo(Math.toRadians(0))
+                        //.lineToX(6)
+                        //.lineToY(0)
                         //.splineTo(new Vector2d(14, 0), Math.toRadians(0))
                        // .turnTo(Math.toRadians(-90))
                        // .lineToY(-18.75)
@@ -291,7 +291,6 @@ public class AutoBlue extends LinearOpMode {
                 .build();
         Actions.runBlocking(moveRb3);
     }
-
     private void toSafety() {
         Action secMoveToSafety = drive.actionBuilder(drive.pose)
                 .strafeTo(new Vector2d(6, 35.25))
@@ -300,15 +299,20 @@ public class AutoBlue extends LinearOpMode {
     }
 
     //goes front to the pixels (when it started from backStage)
-     /*   private void secondHalfBackStage(int spikeMark) {
+       private void secondHalfBackStage(int spikeMark) {
             Action moveToPixels = drive.actionBuilder(drive.pose)
-                    .setReversed(true)
-                    .strafeTo(new Vector2d(39.75, 40.0))
-                    .lineToY()
+                   // .setReversed(true)
+                    .strafeTo(new Vector2d(51.75, 35.25))
+                    .lineToY(-78)
                     .build();
-            Actions.runBlocking(new ParallelAction(moveToPixels, whiteClaw.RetractArmAction()));
-            whiteClaw.closeGrip();
-            drive.updatePoseEstimate();
+            Actions.runBlocking(moveToPixels);
+
+           Action moveToStack = drive.actionBuilder(drive.pose)
+                   .splineTo(new Vector2d(51.75, PARAMS.toPixYBack), Math.toRadians(-90))
+                   .build();
+           Actions.runBlocking(new SequentialAction(new ParallelAction(moveToStack, whiteClaw.RetractArmAction()),
+                   whiteClaw.PrepForTopOfStackPickupAction(4),
+                   whiteClaw.TopOfStackPickupAction()));
 
             double targetX = 36;
             if (spikeMark == 3)
@@ -318,22 +322,21 @@ public class AutoBlue extends LinearOpMode {
             whiteClaw.RetractArmAction();
 
             Action moveBar = drive.actionBuilder(drive.pose)
-                    .strafeTo(new Vector2d(51, -15))
                     .setReversed(true)
-                    .splineTo(new Vector2d(56, 46), Math.toRadians(90))
+                    .lineToY(35.25)
                     .build();
             Actions.runBlocking(new ParallelAction(moveBar, whiteClaw.SuplexPixelAction()));
 
             sleep(PARAMS.PartnerWaitTime);
             Action backdrop = drive.actionBuilder(drive.pose)
                     .setReversed(true)
-                    .splineTo(new Vector2d(targetX, 87), Math.toRadians(90))
+                    .splineTo(new Vector2d(targetX, 40), Math.toRadians(90))
                     .build();
             Actions.runBlocking(backdrop);
             drive.updatePoseEstimate();
 
         }
-    */
+
 
     //going through the middle gate (frontStage)
     private void updateTelemetry() {
