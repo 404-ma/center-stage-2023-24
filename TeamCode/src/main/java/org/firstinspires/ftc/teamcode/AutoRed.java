@@ -16,8 +16,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Helper.AutoCommon;
 import org.firstinspires.ftc.teamcode.Helper.ClawMoves;
 import org.firstinspires.ftc.teamcode.Helper.Conveyor;
-import org.firstinspires.ftc.teamcode.Helper.DistanceSystem;
-import org.firstinspires.ftc.teamcode.Helper.DrivetrainV2;
 import org.firstinspires.ftc.teamcode.Helper.TensorFlow;
 import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 
@@ -40,8 +38,6 @@ public class AutoRed extends LinearOpMode {
     private MecanumDrive drive;
     private ClawMoves whiteClaw;
     private Conveyor whiteConveyor;
-    private DistanceSystem distSys;
-    private DrivetrainV2 drv;
     private TensorFlow tenFl;
     public int propSpikeMark = 3;
 
@@ -67,7 +63,6 @@ public class AutoRed extends LinearOpMode {
             drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
             whiteClaw = new ClawMoves(hardwareMap);
             whiteConveyor = new Conveyor(hardwareMap);
-            distSys = new DistanceSystem(hardwareMap);
             whiteClaw.AutonomousStart();
             tenFl = new TensorFlow(hardwareMap);
 
@@ -89,7 +84,7 @@ public class AutoRed extends LinearOpMode {
             initialized = false;
             telemetry.addLine("");
             telemetry.addLine("*** INITIALIZATION FAILED ***");
-            telemetry.addData("Exeption", e.toString());
+            telemetry.addData("Exception", e.toString());
         }
 
         telemetry.update();
@@ -123,25 +118,12 @@ public class AutoRed extends LinearOpMode {
             }
         }else{
             toPixelStackFront();
-
-
+            toFrontPanel(propSpikeMark);
         }
     }
 
-    public void toPixelStackFront () {
-        Action moveCloseToStack = drive.actionBuilder(drive.pose)
-                .splineTo( new Vector2d(50, 21), Math.toRadians(90), new TranslationalVelConstraint(20))
-                .build();
-        Actions.runBlocking(new SequentialAction(whiteClaw.PrepForTopOfStackPickupAction(4),moveCloseToStack, whiteClaw.TopOfStackPickupAction()));
-
-        drive.updatePoseEstimate();
-        updateTelemetry();
-
-    }
 
     private void toSpikeMark(int spike) {
-        double X, Y, ang;
-
         if (PARAMS.frontStage) {
             // FRONT STAGE  - Go to specified spikeMark and Line Up White Pixel Stack
             Action moveToSpike;
@@ -183,8 +165,6 @@ public class AutoRed extends LinearOpMode {
                         .build();
             }
             Actions.runBlocking(new SequentialAction(whiteClaw.RetractArmAction(), moveAway));
-
-
         } else {
             // BACK STAGE - Go to specified spikeMark and Line Up to Backdrop
             Action moveToSpike;
@@ -227,61 +207,19 @@ public class AutoRed extends LinearOpMode {
         drive.updatePoseEstimate();
     }
 
-    public void toPixelStack() {
-        // cross field and prep claw
-        Action moveAcrossField = drive.actionBuilder(drive.pose)
-                .splineTo(new Vector2d(51, -5),Math.toRadians(90))
-                .splineTo(new Vector2d(47.5, 61.75),Math.toRadians(90))
-                .build();
-        Actions.runBlocking(new SequentialAction(whiteClaw.RetractArmAction(), moveAcrossField,
-                whiteClaw.PrepForTopOfStackPickupAction(3)));
-        drive.updatePoseEstimate();
+    /*
+     *  FRONT Stage Methods
+     */
 
-        // slow approach pixel stack
+    public void toPixelStackFront () {
         Action moveCloseToStack = drive.actionBuilder(drive.pose)
-                .splineTo( new Vector2d(47.5, 64.5), Math.toRadians(90), new TranslationalVelConstraint(20))
+                .splineTo( new Vector2d(50, 19.5), Math.toRadians(90), new TranslationalVelConstraint(20))
                 .build();
-        Actions.runBlocking(new SequentialAction(moveCloseToStack, whiteClaw.TopOfStackPickupAction()));
+        Actions.runBlocking(new SequentialAction(whiteClaw.PrepForTopOfStackPickupAction(4),moveCloseToStack, whiteClaw.TopOfStackPickupAction()));
 
         drive.updatePoseEstimate();
         updateTelemetry();
     }
-     private void  BackToBackdrop () {
-     //drops white pixels in the backdrop
-         double backDropPosition = ((propSpikeMark==1) ? 22:34);
-        Action moveToBackdrop = drive.actionBuilder(drive.pose)
-               .setReversed(true)
-               .splineTo(new Vector2d(51, -6), Math.toRadians(-90),null)
-               .splineTo(new Vector2d(backDropPosition, -40.5), Math.toRadians(-90),new TranslationalVelConstraint(20))
-               .build();
-        Actions.runBlocking(new ParallelAction(whiteClaw.SuplexPixelAction(),moveToBackdrop ));
-
-
-        drive.updatePoseEstimate();
-        updateTelemetry();
-        AutoCommon.PlacePixel(false, true, drive, whiteClaw, whiteConveyor);
-     }
-
-    //to the panel in the back
-    private void toBackPanel(int spikeMark) {
-        double[] dropPosX = {0.0, 34, 28, 22};
-        Action moveRb3 = drive.actionBuilder(drive.pose)
-                .setReversed(true)
-                .splineTo(new Vector2d(dropPosX[spikeMark],-41.0), Math.toRadians(-89))
-                .build();
-        Actions.runBlocking(moveRb3);
-    }
-
-
-    private void toSafety() {
-        Action secMoveToSafety = drive.actionBuilder(drive.pose)
-                .strafeTo(new Vector2d(6, -36.5))
-                .build();
-        Actions.runBlocking(secMoveToSafety);
-    }
-
-
-
 
     // Move to the Backdrop from Frontstage
     private void toFrontPanel( int spikeMark) {
@@ -309,36 +247,62 @@ public class AutoRed extends LinearOpMode {
         drive.updatePoseEstimate();
     }
 
-    public void toFrontPanel( double targetX, boolean partDead) {
 
-        whiteClaw.RetractArmAction();
-
-        Action moveBar = drive.actionBuilder(drive.pose)
-                .turnTo(Math.toRadians(90))
-                .lineToY(-40)
+    /*
+     *  BACK Stage Methods
+     */
+    public void toPixelStack() {
+        // cross field and prep claw
+        Action moveAcrossField = drive.actionBuilder(drive.pose)
+                .splineTo(new Vector2d(51, -5),Math.toRadians(90))
+                .splineTo(new Vector2d(47.5, 61.75),Math.toRadians(90))
                 .build();
-        Actions.runBlocking(moveBar);
+        Actions.runBlocking(new SequentialAction(whiteClaw.RetractArmAction(), moveAcrossField,
+                whiteClaw.PrepForTopOfStackPickupAction(3)));
+        drive.updatePoseEstimate();
 
-        if(partDead){
-            Action backdrop = drive.actionBuilder(drive.pose)
-                    .setReversed(true)
-                    .splineTo(new Vector2d(targetX, -60), Math.toRadians(-90))
-                    .splineTo(new Vector2d(targetX, -86), Math.toRadians(-90))
-                    .build();
-            Actions.runBlocking(backdrop);
-        }
+        // slow approach pixel stack
+        Action moveCloseToStack = drive.actionBuilder(drive.pose)
+                .splineTo( new Vector2d(47.5, 64.5), Math.toRadians(90), new TranslationalVelConstraint(20))
+                .build();
+        Actions.runBlocking(new SequentialAction(moveCloseToStack, whiteClaw.TopOfStackPickupAction()));
 
-        else {
-            sleep(PARAMS.PartnerWaitTime);
-
-            Action backdrop = drive.actionBuilder(drive.pose)
-                    .setReversed(true)
-                    .splineTo(new Vector2d(targetX, -86), Math.toRadians(-90))
-                    .build();
-            Actions.runBlocking(backdrop);
-        }
+        drive.updatePoseEstimate();
+        updateTelemetry();
     }
 
+    private void  BackToBackdrop () {
+        //drops white pixels in the backdrop
+        double backDropPosition = ((propSpikeMark==1) ? 22:34);
+
+        Action moveToBackdrop = drive.actionBuilder(drive.pose)
+               .setReversed(true)
+               .splineTo(new Vector2d(51, -6), Math.toRadians(-90),null)
+               .splineTo(new Vector2d(backDropPosition, -40.5), Math.toRadians(-90),new TranslationalVelConstraint(20))
+               .build();
+        Actions.runBlocking(new ParallelAction(whiteClaw.SuplexPixelAction(),moveToBackdrop ));
+
+        drive.updatePoseEstimate();
+        updateTelemetry();
+        AutoCommon.PlacePixel(false, true, drive, whiteClaw, whiteConveyor);
+    }
+
+    //to the panel in the back
+    private void toBackPanel(int spikeMark) {
+        double[] dropPosX = {0.0, 34, 28, 22};
+        Action moveRb3 = drive.actionBuilder(drive.pose)
+                .setReversed(true)
+                .splineTo(new Vector2d(dropPosX[spikeMark],-41.0), Math.toRadians(-89))
+                .build();
+        Actions.runBlocking(moveRb3);
+    }
+
+    private void toSafety() {
+        Action secMoveToSafety = drive.actionBuilder(drive.pose)
+                .strafeTo(new Vector2d(6, -36.5))
+                .build();
+        Actions.runBlocking(secMoveToSafety);
+    }
 
 
     private void updateTelemetry() {
@@ -349,10 +313,6 @@ public class AutoRed extends LinearOpMode {
         telemetry.addLine().addData("Position", (PARAMS.frontStage ? "FRONT Stage" : "BACK Stage"));
         telemetry.addLine().addData("Prop Mark", propSpikeMark );
         telemetry.addLine().addData("Safe Mode", (PARAMS.ifSafe ?"ON" : "OFF"));
-
-
-
-
         telemetry.update();
 
         // FTC Dashboard Telemetry
