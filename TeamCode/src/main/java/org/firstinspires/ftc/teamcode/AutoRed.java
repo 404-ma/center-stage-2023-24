@@ -38,7 +38,7 @@ public class AutoRed extends LinearOpMode {
         public double gainValueForward = 0.1;
         public double rangeValue = 2;
         public double gainValueRotation = 0.03;
-        public String versionNum = "4.1.3";
+        public String versionNum = "4.1.4";
         public double toPixY = 18.75;
         public int PartnerWaitTime = 500;
     }
@@ -209,57 +209,47 @@ public class AutoRed extends LinearOpMode {
 
         if (PARAMS.frontStage) {
             // FRONT STAGE  - Go to specified spikeMark and Line Up White Pixel Stack
-            if (spike == 1) {
-                X = 25.5; Y = 6.5; ang = 0;
-            } else if(spike == 2) {
-                X = 23.0; Y = 5.3; ang = 0;
-            } else {
-                X = 14; Y = 3.0; ang = 28.0;
-            }
-
-            if (spike == 1) {
-                // Spike 1 - Avoid Gates on Left
-                Action moveOneSMPlan = drive.actionBuilder(drive.pose)
-                        .splineTo(new Vector2d(X, Y),Math.toRadians(ang))
-                        .turn(Math.toRadians(-90))
+            Action moveToSpike;
+            if (spike == 3) {
+                moveToSpike = drive.actionBuilder(drive.pose)
+                        .splineTo(new Vector2d(27, 5.5), Math.toRadians(0))
+                        .turnTo(Math.toRadians(-90))
                         .build();
+            } else if(spike == 2) {
+                moveToSpike = drive.actionBuilder(drive.pose)
+                        .splineTo(new Vector2d(23, 5), Math.toRadians(0))
+                        .build();
+            } else {
+                moveToSpike = drive.actionBuilder(drive.pose)
+                        .splineTo(new Vector2d(13.5, 4), Math.toRadians(30))
+                        .build();
+            }
+            Actions.runBlocking(new SequentialAction(moveToSpike, whiteClaw.PlacePixelAction()));
 
-                Action moveBack = drive.actionBuilder(drive.pose)
+            Action moveAway;
+            if (spike == 3) {
+                moveAway = drive.actionBuilder(drive.pose)
+                        .turnTo(Math.toRadians(0))
+                        .splineTo(new Vector2d(50,0), Math.toRadians(90))
+                        .build();
+            } else if(spike == 2) {
+                moveAway = drive.actionBuilder(drive.pose)
+                        .turnTo(Math.toRadians(90))
+                        .splineTo(new Vector2d(28, 18), Math.toRadians(90))
+                        .strafeTo(new Vector2d(50, 18))
+                        .build();
+            } else {
+                moveAway = drive.actionBuilder(drive.pose)
                         .setReversed(true)
-                        .lineToX(17)
+                        .splineTo(new Vector2d(10, 0), Math.toRadians(180))
+                        .setReversed(false)
+                        .lineToX(50)
                         .turnTo(Math.toRadians(90))
                         .build();
-                Actions.runBlocking(new SequentialAction(moveOneSMPlan,
-                        whiteClaw.PlacePixelAction(),
-                        new ParallelAction(moveBack, whiteClaw.RetractArmAction())));
-            } else{
-                Action moveDropPixel = drive.actionBuilder(drive.pose)
-                        .splineTo(new Vector2d(X, Y), Math.toRadians(ang))
-                        .build();
-                Actions.runBlocking(new SequentialAction(moveDropPixel, whiteClaw.PlacePixelAction(), whiteClaw.RetractArmAction()));
-
-
-                if(spike == 2){
-                    Action moveBackTwo = drive.actionBuilder(drive.pose)
-                            .setReversed(true)
-                            .lineToX(20)
-                            .turnTo(Math.toRadians(90))
-                            .build();
-                    Actions.runBlocking(new SequentialAction(moveBackTwo, whiteClaw.RetractArmAction()));}
-
-                else if(spike == 3){
-                    Action moveBackThree = drive.actionBuilder(drive.pose)
-                            .setReversed(true)
-                            //.splineTo(new Vector2d(14, 0), Math.toRadians(0))
-                            .turnTo(Math.toRadians(90))
-                            .lineToY(18.75)
-                            .build();
-                    Actions.runBlocking(new SequentialAction(moveBackThree, whiteClaw.RetractArmAction()));}
-
-               /* Actions.runBlocking(new SequentialAction(moveDropPixel,
-                        whiteClaw.PlacePixelAction()));
-                        //new ParallelAction( whiteClaw.RetractArmAction())));*/
             }
+            Actions.runBlocking(new SequentialAction(whiteClaw.RetractArmAction(), moveAway));
+
+
         } else {
             // BACK STAGE - Go to specified spikeMark and Line Up to Backdrop
             Action moveToSpike;
@@ -279,6 +269,7 @@ public class AutoRed extends LinearOpMode {
 
             }
             Actions.runBlocking(new SequentialAction(moveToSpike, whiteClaw.PlacePixelAction()));
+
 
             Action moveBack;
             if (spike == 1) {
