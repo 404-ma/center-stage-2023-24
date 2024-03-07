@@ -28,18 +28,10 @@ public class AutoRed extends LinearOpMode {
      *  FTC Dashboard Parameters
      */
     public static class Params {
-       // public double propSpikeMark = 2;    //  Which Spike Mark is the Prop Located on
-        public boolean partnerDead = true;
+
+        public String versionNum = "4.1.7";
         public boolean frontStage = false;
         public boolean ifSafe = true;
-        public int dTime = 500;
-        public double rangeNum = 2.0;
-        public int rangeTime = 500;
-        public double gainValueForward = 0.1;
-        public double rangeValue = 2;
-        public double gainValueRotation = 0.03;
-        public String versionNum = "4.1.6";
-        public double toPixY = 18.75;
         public int PartnerWaitTime = 500;
     }
 
@@ -115,8 +107,9 @@ public class AutoRed extends LinearOpMode {
         updateTelemetry();
         tenFl.CleanUp();
 
+        toSpikeMark(propSpikeMark);
+
         if (!PARAMS.frontStage) {
-            toSpikeMark(propSpikeMark);
             toBackPanel(propSpikeMark);
             AutoCommon.PlacePixel(false, true, drive, whiteClaw, whiteConveyor);
             drive.updatePoseEstimate();
@@ -128,64 +121,23 @@ public class AutoRed extends LinearOpMode {
                 BackToBackdrop();
                 sleep(1000);
             }
+        }else{
+            toPixelStackFront();
+
 
         }
     }
 
-
-
-
-    public void firstsp(){
-        Action movethirdSMPlan = drive.actionBuilder(drive.pose)
-                .splineTo(new Vector2d(19.5, 0),Math.toRadians(0)  )
-                .splineTo(new Vector2d(19.5, -4.5), Math.toRadians(90))
+    public void toPixelStackFront () {
+        Action moveCloseToStack = drive.actionBuilder(drive.pose)
+                .splineTo( new Vector2d(50, 21), Math.toRadians(90), new TranslationalVelConstraint(20))
                 .build();
-        Actions.runBlocking(new SequentialAction(movethirdSMPlan, whiteClaw.PlacePixelAction()));
+        Actions.runBlocking(new SequentialAction(whiteClaw.PrepForTopOfStackPickupAction(4),moveCloseToStack, whiteClaw.TopOfStackPickupAction()));
 
-        Action moveBack = drive.actionBuilder(drive.pose)
-                .setReversed(true)
-                .splineTo(new Vector2d(6, 0), Math.toRadians(-30))
-                .build();
-        Actions.runBlocking(new ParallelAction(moveBack, whiteClaw.RetractArmAction()));
+        drive.updatePoseEstimate();
+        updateTelemetry();
+
     }
-
-
-
-
-
-    //to the panel in the front
-    public void toFrontPanel( double targetX, boolean partDead) {
-
-        whiteClaw.RetractArmAction();
-
-        Action moveBar = drive.actionBuilder(drive.pose)
-                .turnTo(Math.toRadians(90))
-                .lineToY(-40)
-                .build();
-        Actions.runBlocking(moveBar);
-
-        if(partDead){
-            Action backdrop = drive.actionBuilder(drive.pose)
-                    .setReversed(true)
-                    .splineTo(new Vector2d(targetX, -60), Math.toRadians(-90))
-                    .splineTo(new Vector2d(targetX, -86), Math.toRadians(-90))
-                    .build();
-            Actions.runBlocking(backdrop);
-        }
-
-        else {
-            sleep(PARAMS.dTime);
-
-            Action backdrop = drive.actionBuilder(drive.pose)
-                    .setReversed(true)
-                    .splineTo(new Vector2d(targetX, -86), Math.toRadians(-90))
-                    .build();
-            Actions.runBlocking(backdrop);
-        }
-    }
-
-
-
 
     private void toSpikeMark(int spike) {
         double X, Y, ang;
@@ -279,7 +231,7 @@ public class AutoRed extends LinearOpMode {
         // cross field and prep claw
         Action moveAcrossField = drive.actionBuilder(drive.pose)
                 .splineTo(new Vector2d(51, -5),Math.toRadians(90))
-                .splineTo(new Vector2d(48, 61.75),Math.toRadians(90))
+                .splineTo(new Vector2d(47.5, 61.75),Math.toRadians(90))
                 .build();
         Actions.runBlocking(new SequentialAction(whiteClaw.RetractArmAction(), moveAcrossField,
                 whiteClaw.PrepForTopOfStackPickupAction(3)));
@@ -357,7 +309,35 @@ public class AutoRed extends LinearOpMode {
         drive.updatePoseEstimate();
     }
 
+    public void toFrontPanel( double targetX, boolean partDead) {
 
+        whiteClaw.RetractArmAction();
+
+        Action moveBar = drive.actionBuilder(drive.pose)
+                .turnTo(Math.toRadians(90))
+                .lineToY(-40)
+                .build();
+        Actions.runBlocking(moveBar);
+
+        if(partDead){
+            Action backdrop = drive.actionBuilder(drive.pose)
+                    .setReversed(true)
+                    .splineTo(new Vector2d(targetX, -60), Math.toRadians(-90))
+                    .splineTo(new Vector2d(targetX, -86), Math.toRadians(-90))
+                    .build();
+            Actions.runBlocking(backdrop);
+        }
+
+        else {
+            sleep(PARAMS.PartnerWaitTime);
+
+            Action backdrop = drive.actionBuilder(drive.pose)
+                    .setReversed(true)
+                    .splineTo(new Vector2d(targetX, -86), Math.toRadians(-90))
+                    .build();
+            Actions.runBlocking(backdrop);
+        }
+    }
 
 
 
