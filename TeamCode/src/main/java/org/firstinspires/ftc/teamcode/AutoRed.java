@@ -119,6 +119,7 @@ public class AutoRed extends LinearOpMode {
         }else{
             toPixelStackFront();
             toFrontPanel(propSpikeMark);
+            AutoCommon.PlacePixel(false, false, drive, whiteClaw, whiteConveyor);
         }
     }
 
@@ -213,7 +214,7 @@ public class AutoRed extends LinearOpMode {
 
     public void toPixelStackFront () {
         Action moveCloseToStack = drive.actionBuilder(drive.pose)
-                .splineTo( new Vector2d(50, 19.5), Math.toRadians(90), new TranslationalVelConstraint(20))
+                .splineTo( new Vector2d(50, 18.5), Math.toRadians(90), new TranslationalVelConstraint(20))
                 .build();
         Actions.runBlocking(new SequentialAction(whiteClaw.PrepForTopOfStackPickupAction(4),moveCloseToStack, whiteClaw.TopOfStackPickupAction()));
 
