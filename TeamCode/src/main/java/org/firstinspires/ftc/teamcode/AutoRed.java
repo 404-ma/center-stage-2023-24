@@ -224,17 +224,14 @@ public class AutoRed extends LinearOpMode {
 
     // Move to the Backdrop from Frontstage
     private void toFrontPanel( int spikeMark) {
-        double targetX = 36;
-        if (spikeMark == 3)
-            targetX = 42;
-        else if (spikeMark == 1)
-            targetX = 32.5;
+        double[] dropPosX = {0.0, 34, 28, 22};
+
         whiteClaw.RetractArmAction();
 
         Action moveBar = drive.actionBuilder(drive.pose)
                 .strafeTo(new Vector2d(51, 15))
                 .setReversed(true)
-                .splineTo(new Vector2d(56, -46), Math.toRadians(-90))
+                .splineTo(new Vector2d(54, -46), Math.toRadians(-90))
                 .build();
         Actions.runBlocking(new ParallelAction(moveBar, whiteClaw.SuplexPixelAction()));
 
@@ -242,7 +239,7 @@ public class AutoRed extends LinearOpMode {
 
         Action backdrop = drive.actionBuilder(drive.pose)
                 .setReversed(true)
-                .splineTo(new Vector2d(targetX, -87), Math.toRadians(-90))
+                .splineTo(new Vector2d(dropPosX[spikeMark], -87.5), Math.toRadians(-90))
                 .build();
         Actions.runBlocking(backdrop);
         drive.updatePoseEstimate();
@@ -285,7 +282,7 @@ public class AutoRed extends LinearOpMode {
 
         drive.updatePoseEstimate();
         updateTelemetry();
-        AutoCommon.PlacePixel(false, true, drive, whiteClaw, whiteConveyor);
+        AutoCommon.PlacePixel(false, false, drive, whiteClaw, whiteConveyor);
     }
 
     //to the panel in the back
