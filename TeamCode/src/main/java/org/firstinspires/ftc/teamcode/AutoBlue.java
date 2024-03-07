@@ -49,6 +49,7 @@ public class AutoBlue extends LinearOpMode {
         public double ang1S = 0;
         public double ang2S = 0;
         public double ang3S = -28.0;
+        public double toPixYBack = -78.0;
     }
 
     public static Params PARAMS = new Params();
@@ -124,13 +125,13 @@ public class AutoBlue extends LinearOpMode {
             toBackPanel(propSpikeMark);
             AutoCommon.PlacePixel(true, true, drive, whiteClaw, whiteConveyor);
         }
-      /*if (!PARAMS.frontStage) {
+      if (!PARAMS.frontStage) {
             if (PARAMS.ifSafe) {
                 toSafety();
             } else {
                 secondHalfBackStage(propSpikeMark);
             }
-        }*/
+        }
     }
     //to the spike mark
     private void toSpikeMark(int spike) {
@@ -301,12 +302,17 @@ public class AutoBlue extends LinearOpMode {
        private void secondHalfBackStage(int spikeMark) {
             Action moveToPixels = drive.actionBuilder(drive.pose)
                    // .setReversed(true)
-                    .strafeTo(new Vector2d(39.75, 35.25))
+                    .strafeTo(new Vector2d(51.75, 35.25))
                     .lineToY(-78)
                     .build();
-            Actions.runBlocking(new ParallelAction(moveToPixels, whiteClaw.RetractArmAction()));
-            whiteClaw.closeGrip();
-            drive.updatePoseEstimate();
+            Actions.runBlocking(moveToPixels);
+
+           Action moveToStack = drive.actionBuilder(drive.pose)
+                   .splineTo(new Vector2d(51.75, PARAMS.toPixYBack), Math.toRadians(-90))
+                   .build();
+           Actions.runBlocking(new SequentialAction(new ParallelAction(moveToStack, whiteClaw.RetractArmAction()),
+                   whiteClaw.PrepForTopOfStackPickupAction(4),
+                   whiteClaw.TopOfStackPickupAction()));
 
             double targetX = 36;
             if (spikeMark == 3)
@@ -324,7 +330,7 @@ public class AutoBlue extends LinearOpMode {
             sleep(PARAMS.PartnerWaitTime);
             Action backdrop = drive.actionBuilder(drive.pose)
                     .setReversed(true)
-                    .splineTo(new Vector2d(targetX, 87), Math.toRadians(90))
+                    .splineTo(new Vector2d(targetX, 40), Math.toRadians(90))
                     .build();
             Actions.runBlocking(backdrop);
             drive.updatePoseEstimate();
