@@ -26,8 +26,7 @@ public class AutoRed extends LinearOpMode {
      *  FTC Dashboard Parameters
      */
     public static class Params {
-
-        public String versionNum = "4.1.7";
+        public String versionNum = "4.1.8";
         public boolean frontStage = false;
         public boolean ifSafe = true;
         public int PartnerWaitTime = 500;
