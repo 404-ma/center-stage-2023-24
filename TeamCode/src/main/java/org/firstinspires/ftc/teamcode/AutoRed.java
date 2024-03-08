@@ -26,7 +26,7 @@ public class AutoRed extends LinearOpMode {
      *  FTC Dashboard Parameters
      */
     public static class Params {
-        public String versionNum = "4.1.20";
+        public String versionNum = "4.1.21";
         public boolean frontStage = false;
         public boolean ifSafe = true;
         public int PartnerWaitTime = 0;
@@ -293,7 +293,7 @@ public class AutoRed extends LinearOpMode {
 
     //to the panel in the back
     private void toBackPanel(int spikeMark) {
-        double[] dropPosX = {0.0, 36, 30, 25};
+        double[] dropPosX = {0.0, 34, 27.5, 22};
         Action moveRb3 = drive.actionBuilder(drive.pose)
                 .setReversed(true)
                 .splineTo(new Vector2d(dropPosX[spikeMark],-41.0), Math.toRadians(-89))
