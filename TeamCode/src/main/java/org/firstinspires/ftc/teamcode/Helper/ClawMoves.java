@@ -26,7 +26,7 @@ public class ClawMoves {
         public double flipSuplexPos = 0.332;
         public double flipDownPos = 0.454;
 
-        public double gripOpenPos = 0.637;
+        public double gripOpenPos = 0.600;
         public double gripClosedPos = 0.355;
         public double gripOpenPosTop = 0.435;
     }
