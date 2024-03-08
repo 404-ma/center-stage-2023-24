@@ -26,10 +26,10 @@ public class AutoRed extends LinearOpMode {
      *  FTC Dashboard Parameters
      */
     public static class Params {
-        public String versionNum = "4.1.12";
+        public String versionNum = "4.1.20";
         public boolean frontStage = false;
         public boolean ifSafe = true;
-        public int PartnerWaitTime = 500;
+        public int PartnerWaitTime = 0;
     }
 
     public static Params PARAMS = new Params();
@@ -137,7 +137,7 @@ public class AutoRed extends LinearOpMode {
                         .build();
             } else if(spike == 2) {
                 moveToSpike = drive.actionBuilder(drive.pose)
-                        .splineTo(new Vector2d(23, 5), Math.toRadians(0))
+                        .splineTo(new Vector2d(23, 5.5), Math.toRadians(0))
                         .build();
             } else {
                 moveToSpike = drive.actionBuilder(drive.pose)
@@ -150,20 +150,21 @@ public class AutoRed extends LinearOpMode {
             if (spike == 3) {
                 moveAway = drive.actionBuilder(drive.pose)
                         .turnTo(Math.toRadians(0))
-                        .splineTo(new Vector2d(50,0), Math.toRadians(90))
+                        .splineTo(new Vector2d(49.5,0), Math.toRadians(90))
                         .build();
             } else if(spike == 2) {
                 moveAway = drive.actionBuilder(drive.pose)
                         .turnTo(Math.toRadians(90))
-                        .splineTo(new Vector2d(28, 18), Math.toRadians(90))
-                        .strafeTo(new Vector2d(50, 18))
+                        .splineTo(new Vector2d(28, 18), Math.toRadians(0))
+                        .splineTo(new Vector2d(33, 18), Math.toRadians(0))
+                        .splineTo(new Vector2d(49.5, 14.5), Math.toRadians(90))
                         .build();
             } else {
                 moveAway = drive.actionBuilder(drive.pose)
                         .setReversed(true)
                         .splineTo(new Vector2d(10, 0), Math.toRadians(180))
                         .setReversed(false)
-                        .lineToX(50)
+                        .lineToX(49.5)
                         .turnTo(Math.toRadians(90))
                         .build();
             }
@@ -228,9 +229,8 @@ public class AutoRed extends LinearOpMode {
 
     // Move to the Backdrop from Frontstage
     private void toFrontPanel(int spikeMark) {
-        double[] dropPosX = {0.0, 34, 28, 22};
+        double[] dropPosX = {0.0, 34, 27.5, 22};
         double posX = dropPosX[spikeMark];
-        if (spikeMark == 2)  posX = 28;
 
         whiteClaw.RetractArmAction();
 
@@ -317,6 +317,7 @@ public class AutoRed extends LinearOpMode {
         telemetry.addLine().addData("Position", (PARAMS.frontStage ? "FRONT Stage" : "BACK Stage"));
         telemetry.addLine().addData("Prop Mark", propSpikeMark );
         telemetry.addLine().addData("Safe Mode", (PARAMS.ifSafe ?"ON" : "OFF"));
+        telemetry.addLine().addData("Partner Wait", PARAMS.PartnerWaitTime);
         telemetry.update();
 
         // FTC Dashboard Telemetry
