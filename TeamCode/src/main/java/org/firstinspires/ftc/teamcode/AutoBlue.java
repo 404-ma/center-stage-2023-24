@@ -28,10 +28,10 @@ public class AutoBlue extends LinearOpMode {
      *  FTC Dashboard Parameters
      */
     public static class Params {
-        public String versionNum = "4.1.24";
-        public boolean frontStage = true;
+        public String versionNum = "4.1.27";
+        public boolean frontStage = false;
         public boolean ifSafe = true;
-        public int PartnerWaitTime = 500;
+        public int PartnerWaitTime = 0;
         public int sensorRangeTime = 500;
         public double sensorRangeValue = 2;
         public double sensorGainValueForward = 0.1;
@@ -93,6 +93,7 @@ public class AutoBlue extends LinearOpMode {
         }
         telemetry.update();
         if (!initialized) return;
+
         while (!isStopRequested() && !opModeIsActive()) {
             // Detect Object with Tensor Flow
             propSpikeMark = tenFl.DetectProp();
@@ -100,6 +101,7 @@ public class AutoBlue extends LinearOpMode {
             if (!isStopRequested() && !opModeIsActive())
                 sleep(100);  // Free up Processor
         }
+
         waitForStart();
         telemetry.clear();
         if (isStopRequested()) return;
@@ -183,37 +185,45 @@ public class AutoBlue extends LinearOpMode {
             }
         } else {
             // BACK STAGE - Go to specified spikeMark and Line Up to Backdrop
+            Action moveToSpike;
             if (spike == 1) {
-                X = 12.5; Y = 3.0; ang = 32.0;
+                moveToSpike = drive.actionBuilder(drive.pose)
+                        .splineTo(new Vector2d(12.5, 3), Math.toRadians(32))
+                        .build();
             } else if(spike == 2) {
-                X = 21.25; Y = 7; ang = 0;
-            } else {
-                X = 28; Y = 3; ang = 0;
-            }
-
-            if (spike == 1 || spike == 2) {
-                Action moveRb = drive.actionBuilder(drive.pose)
-                        .splineTo(new Vector2d(X, Y), Math.toRadians(ang))
+                moveToSpike = drive.actionBuilder(drive.pose)
+                        .splineTo(new Vector2d(21.25, 7), Math.toRadians(0))
                         .build();
-                Actions.runBlocking(new SequentialAction(moveRb, whiteClaw.PlacePixelAction()));
+            } else {
+                moveToSpike = drive.actionBuilder(drive.pose)
+                        .splineTo(new Vector2d(28, 3), Math.toRadians(0))
+                        .turnTo(Math.toRadians(-90))
+                        .build();
 
-                //steps back from the spike mark
-                Action moveBack = drive.actionBuilder(drive.pose)
+            }
+            Actions.runBlocking(new SequentialAction(moveToSpike, whiteClaw.PlacePixelAction()));
+
+            Action moveBack;
+            if (spike == 1) {
+                moveBack = drive.actionBuilder(drive.pose)
+                        .turnTo(Math.toRadians(-90))
+                        .build();
+            } else if(spike == 2) {
+                moveBack = drive.actionBuilder(drive.pose)
                         .setReversed(true)
-                        .splineTo(new Vector2d(11, 6), Math.toRadians(90))
+                        .splineTo(new Vector2d(15, 5), Math.toRadians(-90))
                         .build();
-                Actions.runBlocking(new ParallelAction(moveBack, whiteClaw.RetractArmAction()));
             } else {
-                // Spike 3 - Avoid Gates on Right
-                Action moveThirdSMPlan = drive.actionBuilder(drive.pose)
-                        .splineTo(new Vector2d(X, Y),Math.toRadians(ang))
-                        .turn(Math.toRadians(0))
+                moveBack = drive.actionBuilder(drive.pose)
+                        .setReversed(true)
+                        .splineTo(new Vector2d(11, 10), Math.toRadians(-90))
                         .build();
-                Actions.runBlocking(new SequentialAction(moveThirdSMPlan, whiteClaw.PlacePixelAction()));
             }
+            Actions.runBlocking(new SequentialAction(whiteClaw.RetractArmAction(), moveBack));
         }
         drive.updatePoseEstimate();
     }
+
 
     //goes front to the pixel (when it started from the frontStage)
     private void toPixelStack() {
@@ -279,6 +289,7 @@ public class AutoBlue extends LinearOpMode {
                 .build();
         Actions.runBlocking(moveRb3);
     }
+
     private void toSafety() {
         Action secMoveToSafety = drive.actionBuilder(drive.pose)
                 .strafeTo(new Vector2d(6, 35.25))
@@ -322,7 +333,6 @@ public class AutoBlue extends LinearOpMode {
                     .build();
             Actions.runBlocking(backdrop);
             drive.updatePoseEstimate();
-
         }
 
 
