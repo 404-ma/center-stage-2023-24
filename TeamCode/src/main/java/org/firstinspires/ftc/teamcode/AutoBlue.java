@@ -38,7 +38,7 @@ public class AutoBlue extends LinearOpMode {
         public double sensorGainValueForward = 0.1;
         public double sensorGainValueRotation = 0.03;
         public double toFrontPixelStackX = 51.75;
-        public double toFrontPixelStackY = -18.5;
+        public double toFrontPixelStackY = -18.75;
         public double toPixYBack = -78.0;
     }
 
@@ -131,7 +131,7 @@ public class AutoBlue extends LinearOpMode {
             Action moveToSpike;
             if (spike == 1) {
                 moveToSpike = drive.actionBuilder(drive.pose)
-                        .splineTo(new Vector2d(25.5, -5.5), Math.toRadians(0))
+                        .splineTo(new Vector2d(25.5, -6.5), Math.toRadians(0))
                         .turnTo(Math.toRadians(90))
                         .build();
             } else if(spike == 2) {
@@ -150,17 +150,17 @@ public class AutoBlue extends LinearOpMode {
             if (spike == 1) {
                 moveAway = drive.actionBuilder(drive.pose)
                         .setReversed(true)
-                        .splineTo(new Vector2d(10, 0), Math.toRadians(180))
-                        .setReversed(false)
-                        .lineToX(PARAMS.toFrontPixelStackX)
+                        .lineToX(17)
                         .turnTo(Math.toRadians(-90))
                         .build();
             } else if(spike == 2) {
                 moveAway = drive.actionBuilder(drive.pose)
-                        .turnTo(Math.toRadians(90))
-                        .splineTo(new Vector2d(28, 18), Math.toRadians(0))
-                        .splineTo(new Vector2d(33, 18), Math.toRadians(0))
-                        .splineTo(new Vector2d(PARAMS.toFrontPixelStackX, 14.5), Math.toRadians(-90))
+                        .setReversed(true)
+                        .lineToX(20)
+                        .turnTo(Math.toRadians(-90))
+                        .setReversed(false)
+                        .splineTo(new Vector2d(28, -18),Math.toRadians(-91))
+                        .strafeTo(new Vector2d(39.75, PARAMS.toFrontPixelStackY))
                         .build();
             } else {
                 moveAway = drive.actionBuilder(drive.pose)
@@ -220,7 +220,7 @@ public class AutoBlue extends LinearOpMode {
     //goes front to the pixel (when it started from the frontStage)
     private void toPixelStackFront() {
         Action moveCloseToStack = drive.actionBuilder(drive.pose)
-                .splineTo( new Vector2d(PARAMS.toFrontPixelStackX, PARAMS.toFrontPixelStackY), Math.toRadians(-90), new TranslationalVelConstraint(20))
+                .splineTo( new Vector2d(51.75, PARAMS.toFrontPixelStackY), Math.toRadians(-90), new TranslationalVelConstraint(20))
                 .build();
         Actions.runBlocking(new SequentialAction(whiteClaw.PrepForTopOfStackPickupAction(4),
                 moveCloseToStack,
