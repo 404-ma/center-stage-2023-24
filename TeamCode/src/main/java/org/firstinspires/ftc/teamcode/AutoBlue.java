@@ -334,15 +334,16 @@ public class AutoBlue extends LinearOpMode {
         telemetry.addLine();
         telemetry.addLine().addData("Position", (PARAMS.frontStage ? "FRONT Stage" : "BACK Stage"));
         telemetry.addLine().addData("Prop Mark", propSpikeMark );
+        telemetry.addLine().addData("Safe Mode", (PARAMS.ifSafe ?"ON" : "OFF"));
+        telemetry.addLine().addData("Partner Wait", PARAMS.PartnerWaitTime);
         telemetry.update();
 
         // FTC Dashboard Telemetry
         TelemetryPacket packet = new TelemetryPacket();
         packet.put("Prop Mark",  propSpikeMark);
-        packet.put("Objects", tenFl.tlmObjectCnt);
+        packet.put("Position", (PARAMS.frontStage ? "FRONT Stage" : "BACK Stage"));
+        packet.put("Safe Mode", (PARAMS.ifSafe ?"ON" : "OFF"));
         packet.put("Confidence", tenFl.tlmConfidence);
-        packet.put("Obj X", tenFl.tlmBestPropXPos);
-        packet.put("Obj Y", tenFl.tlmBestPropYPos);
         dashboard.sendTelemetryPacket(packet);
     }
 

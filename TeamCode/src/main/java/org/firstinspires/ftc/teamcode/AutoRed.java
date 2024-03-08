@@ -323,10 +323,9 @@ public class AutoRed extends LinearOpMode {
         // FTC Dashboard Telemetry
         TelemetryPacket packet = new TelemetryPacket();
         packet.put("Prop Mark",  propSpikeMark);
-        packet.put("Objects", tenFl.tlmObjectCnt);
+        packet.put("Position", (PARAMS.frontStage ? "FRONT Stage" : "BACK Stage"));
         packet.put("Confidence", tenFl.tlmConfidence);
-        packet.put("Obj X", tenFl.tlmBestPropXPos);
-        packet.put("Obj Y", tenFl.tlmBestPropYPos);
+        packet.put("Safe Mode", (PARAMS.ifSafe ?"ON" : "OFF"));
         dashboard.sendTelemetryPacket(packet);
     }
 }
