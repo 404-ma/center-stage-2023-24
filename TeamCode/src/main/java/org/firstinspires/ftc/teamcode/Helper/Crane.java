@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.Range;
 @Config
 public class Crane {
     public static class Params{
-        public double craneSpeed = 0.9;
+        public double craneSpeed = 1.0;
         public int craneMaxPositionRelative = 7900;
     }
 
