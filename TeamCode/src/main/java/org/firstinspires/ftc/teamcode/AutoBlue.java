@@ -28,7 +28,7 @@ public class AutoBlue extends LinearOpMode {
      *  FTC Dashboard Parameters
      */
     public static class Params {
-        public String versionNum = "4.1.23";
+        public String versionNum = "4.1.24";
         public boolean frontStage = true;
         public boolean ifSafe = true;
         public int PartnerWaitTime = 500;
@@ -37,18 +37,6 @@ public class AutoBlue extends LinearOpMode {
         public double sensorGainValueForward = 0.1;
         public double sensorGainValueRotation = 0.03;
         public double toPixY = -18.75;
-
-        public double X1FS = 25.5;
-        public double X2FS = 23.0;
-        public double X3FS = 14.0;
-
-        public double Y1FS = -6.5;
-        public double Y2FS = -5.3;
-        public double Y3FS = -3.0;
-
-        public double ang1S = 0;
-        public double ang2S = 0;
-        public double ang3S = -28.0;
         public double toPixYBack = -78.0;
     }
 
@@ -105,12 +93,12 @@ public class AutoBlue extends LinearOpMode {
         }
         telemetry.update();
         if (!initialized) return;
-        while (!isStopRequested() && !opModeIsActive() && propSpikeMark == 3) {
+        while (!isStopRequested() && !opModeIsActive()) {
             // Detect Object with Tensor Flow
             propSpikeMark = tenFl.DetectProp();
             updateTelemetry();
-            if (propSpikeMark == 3)
-                sleep( 100);  // Free up Processor
+            if (!isStopRequested() && !opModeIsActive())
+                sleep(100);  // Free up Processor
         }
         waitForStart();
         telemetry.clear();

@@ -26,7 +26,7 @@ public class AutoRed extends LinearOpMode {
      *  FTC Dashboard Parameters
      */
     public static class Params {
-        public String versionNum = "4.1.9";
+        public String versionNum = "4.1.12";
         public boolean frontStage = false;
         public boolean ifSafe = true;
         public int PartnerWaitTime = 500;
@@ -88,16 +88,19 @@ public class AutoRed extends LinearOpMode {
 
         telemetry.update();
         if (!initialized) return;
-        while (!isStopRequested() && !opModeIsActive() && propSpikeMark == 3) {
+        while (!isStopRequested() && !opModeIsActive()) {
             // Detect Object with Tensor Flow
             propSpikeMark = tenFl.DetectProp();
             updateTelemetry();
-            if (propSpikeMark == 3)
+            if (!isStopRequested() && !opModeIsActive())
                 sleep(100);  // Free up Processor
         }
+
         waitForStart();
         telemetry.clear();
+
         if (isStopRequested()) return;
+
         updateTelemetry();
         tenFl.CleanUp();
 
@@ -213,17 +216,21 @@ public class AutoRed extends LinearOpMode {
 
     public void toPixelStackFront () {
         Action moveCloseToStack = drive.actionBuilder(drive.pose)
-                .splineTo( new Vector2d(50, 18), Math.toRadians(90), new TranslationalVelConstraint(20))
+                .splineTo( new Vector2d(49.5, 17.5), Math.toRadians(90), new TranslationalVelConstraint(20))
                 .build();
-        Actions.runBlocking(new SequentialAction(whiteClaw.PrepForTopOfStackPickupAction(4),moveCloseToStack, whiteClaw.TopOfStackPickupAction()));
+        Actions.runBlocking(new SequentialAction(whiteClaw.PrepForTopOfStackPickupAction(4),
+                moveCloseToStack,
+                whiteClaw.TopOfStackPickupAction()));
 
         drive.updatePoseEstimate();
         updateTelemetry();
     }
 
     // Move to the Backdrop from Frontstage
-    private void toFrontPanel( int spikeMark) {
+    private void toFrontPanel(int spikeMark) {
         double[] dropPosX = {0.0, 34, 28, 22};
+        double posX = dropPosX[spikeMark];
+        if (spikeMark == 2)  posX = 28;
 
         whiteClaw.RetractArmAction();
 
@@ -238,7 +245,7 @@ public class AutoRed extends LinearOpMode {
 
         Action backdrop = drive.actionBuilder(drive.pose)
                 .setReversed(true)
-                .splineTo(new Vector2d(dropPosX[spikeMark], -87.5), Math.toRadians(-90))
+                .splineTo(new Vector2d(posX, -87.5), Math.toRadians(-90))
                 .build();
         Actions.runBlocking(backdrop);
         drive.updatePoseEstimate();
@@ -286,7 +293,7 @@ public class AutoRed extends LinearOpMode {
 
     //to the panel in the back
     private void toBackPanel(int spikeMark) {
-        double[] dropPosX = {0.0, 34, 28, 22};
+        double[] dropPosX = {0.0, 36, 30, 25};
         Action moveRb3 = drive.actionBuilder(drive.pose)
                 .setReversed(true)
                 .splineTo(new Vector2d(dropPosX[spikeMark],-41.0), Math.toRadians(-89))

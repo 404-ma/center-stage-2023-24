@@ -126,7 +126,7 @@ public class ClawMoves {
             // Pickup off Top of Stack
             if (tlmGripPosition != PARAMS.gripClosedPos) {
                 MoveGrip(PARAMS.gripClosedPos);
-                SystemClock.sleep(150);
+                SystemClock.sleep(250);
             }
             // Lift to Safe Position, Suplex later while driving
             MoveArm(PARAMS.armPickPos);
