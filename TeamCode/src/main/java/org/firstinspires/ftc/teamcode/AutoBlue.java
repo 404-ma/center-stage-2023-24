@@ -270,7 +270,7 @@ public class AutoBlue extends LinearOpMode {
 
         Action backdrop = drive.actionBuilder(drive.pose)
                 .setReversed(true)
-                .splineTo(new Vector2d(targetX, 89), Math.toRadians(90))
+                .splineTo(new Vector2d(targetX, 90.5), Math.toRadians(90)) //89
                 .build();
         Actions.runBlocking(backdrop);
         drive.updatePoseEstimate();
@@ -286,7 +286,7 @@ public class AutoBlue extends LinearOpMode {
 
         Action moveRb3 = drive.actionBuilder(drive.pose)
                 .setReversed(true)
-                .splineTo(new Vector2d(targetX,40.0), Math.toRadians(89))
+                .splineTo(new Vector2d(targetX,41.5), Math.toRadians(89)) //40.0
                 .build();
         Actions.runBlocking(moveRb3);
     }
@@ -343,7 +343,7 @@ public class AutoBlue extends LinearOpMode {
         sleep(PARAMS.PartnerWaitTime);
         Action backdrop = drive.actionBuilder(drive.pose)
                 .setReversed(true)
-                .splineTo(new Vector2d(targetX, 40), Math.toRadians(90))
+                .splineTo(new Vector2d(targetX, 41.5), Math.toRadians(90)) //40.0
                 .build();
         Actions.runBlocking(backdrop);
         drive.updatePoseEstimate();
