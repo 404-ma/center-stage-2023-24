@@ -288,8 +288,9 @@ public class AutoBlue extends LinearOpMode {
     //goes front to the pixels (when it started from backStage)
     private void secondHalfBackStage(int spikeMark) {
         Action moveAcrossField = drive.actionBuilder(drive.pose)
-                .splineTo(new Vector2d(48.75, 25),Math.toRadians(90))
-                .splineTo(new Vector2d(47.5, -61.75),Math.toRadians(90))
+                .strafeTo(new Vector2d(45,35))
+                .splineTo(new Vector2d(50, 25),Math.toRadians(90))
+                .splineTo(new Vector2d(48.5, -48.75),Math.toRadians(90))
                 .waitSeconds(1)
                 .build();
 
