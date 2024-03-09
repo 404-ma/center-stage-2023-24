@@ -29,7 +29,7 @@ public class AutoBlue extends LinearOpMode {
      *  FTC Dashboard Parameters
      */
     public static class Params {
-        public String versionNum = "4.1.33";
+        public String versionNum = "4.1.34";
         public boolean frontStage = true;
         public boolean ifSafe = true;
         public int PartnerWaitTime = 0;
@@ -288,8 +288,7 @@ public class AutoBlue extends LinearOpMode {
     //goes front to the pixels (when it started from backStage)
     private void secondHalfBackStage(int spikeMark) {
         Action moveAcrossField = drive.actionBuilder(drive.pose)
-                .strafeTo(new Vector2d(45, 35.25))
-                .waitSeconds(1)
+                .strafeTo(new Vector2d(51, 35.25))
                 .splineTo(new Vector2d(47.5, -61.75),Math.toRadians(90))
                 .waitSeconds(1)
                 .build();
