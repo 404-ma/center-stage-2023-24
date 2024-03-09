@@ -40,6 +40,7 @@ public class AutoBlue extends LinearOpMode {
         public double toFrontPixelStackX = 51.75;
         public double toFrontPixelStackY = -18.75;
         public double toPixYBack = -78.0;
+        public double toPickXBack = 51;
     }
 
     public static Params PARAMS = new Params();
