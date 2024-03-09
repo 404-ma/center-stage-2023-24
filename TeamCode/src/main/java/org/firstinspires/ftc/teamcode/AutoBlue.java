@@ -39,7 +39,7 @@ public class AutoBlue extends LinearOpMode {
         public double sensorGainValueRotation = 0.03;
         public double toFrontPixelStackX = 51.75;
         public double toFrontPixelStackY = -18.75;
-        public double toPixYBack = -78.0;
+        public double toPixYBack = -61.5;
         public double toPickXBack = 51;
     }
 
@@ -288,11 +288,13 @@ public class AutoBlue extends LinearOpMode {
 
     //goes front to the pixels (when it started from backStage)
     private void secondHalfBackStage(int spikeMark) {
+
+        drive.updatePoseEstimate();
+
         Action moveAcrossField = drive.actionBuilder(drive.pose)
                 .strafeTo(new Vector2d(45,35))
-                .splineTo(new Vector2d(50, 25),Math.toRadians(90))
-                .splineTo(new Vector2d(48.5, -48.75),Math.toRadians(90))
-                .waitSeconds(1)
+                .splineTo(new Vector2d(50, 20),Math.toRadians(-90))
+                .splineTo(new Vector2d(48.5, -58),Math.toRadians(-90))
                 .build();
 
         Actions.runBlocking(new SequentialAction(whiteClaw.RetractArmAction(), moveAcrossField,
