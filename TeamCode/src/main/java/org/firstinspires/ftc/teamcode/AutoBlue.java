@@ -293,7 +293,9 @@ public class AutoBlue extends LinearOpMode {
 
         Action moveAcrossField = drive.actionBuilder(drive.pose)
                 .strafeTo(new Vector2d(45,35))
+                .waitSeconds(1)
                 .splineTo(new Vector2d(50, 20),Math.toRadians(-90))
+                .waitSeconds(1)
                 .splineTo(new Vector2d(48.5, -58),Math.toRadians(-90))
                 .build();
 
