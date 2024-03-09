@@ -233,7 +233,6 @@ public class AutoBlue extends LinearOpMode {
         drive.updatePoseEstimate();
         updateTelemetry();
     }
-
     // Move to the Backdrop from Frontstage
     private void toFrontPanel( int spikeMark) {
         double targetX = 36;
