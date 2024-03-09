@@ -29,9 +29,9 @@ public class AutoBlue extends LinearOpMode {
      *  FTC Dashboard Parameters
      */
     public static class Params {
-        public String versionNum = "4.1.31";
-        public boolean frontStage = true;
-        public boolean ifSafe = true;
+        public String versionNum = "4.1.36";
+        public boolean frontStage = false;
+        public boolean ifSafe = false;
         public int PartnerWaitTime = 0;
         public int sensorRangeTime = 500;
         public double sensorRangeValue = 2;
@@ -40,6 +40,7 @@ public class AutoBlue extends LinearOpMode {
         public double toFrontPixelStackX = 51.75;
         public double toFrontPixelStackY = -18.75;
         public double toPixYBack = -78.0;
+        public double toPickXBack = 51;
     }
 
     public static Params PARAMS = new Params();
@@ -140,7 +141,7 @@ public class AutoBlue extends LinearOpMode {
                         .build();
             } else {
                 moveToSpike = drive.actionBuilder(drive.pose)
-                        .splineTo(new Vector2d(14, -3), Math.toRadians(-28))
+                        .splineTo(new Vector2d(14, -1), Math.toRadians(-28))
                         .build();
             }
             Actions.runBlocking(new SequentialAction(moveToSpike, whiteClaw.PlacePixelAction()));
@@ -152,15 +153,19 @@ public class AutoBlue extends LinearOpMode {
                         .setReversed(true)
                         .lineToX(17)
                         .turnTo(Math.toRadians(-90))
+                        .setReversed(false)
+                        .splineTo(new Vector2d(28, -18.75), Math.toRadians(-91))
+                       // .strafeTo(new Vector2d(39.75, PARAMS.toFrontPixelStackY))
                         .build();
+
             } else if(spike == 2) {
                 moveAway = drive.actionBuilder(drive.pose)
                         .setReversed(true)
                         .lineToX(20)
                         .turnTo(Math.toRadians(-90))
                         .setReversed(false)
-                        .splineTo(new Vector2d(28, -18),Math.toRadians(-91))
-                        .strafeTo(new Vector2d(39.75, PARAMS.toFrontPixelStackY))
+                        .splineTo(new Vector2d(28, -18.75),Math.toRadians(-91))
+                       // .strafeTo(new Vector2d(39.75, PARAMS.toFrontPixelStackY))
                         .build();
             } else {
                 moveAway = drive.actionBuilder(drive.pose)
@@ -188,8 +193,8 @@ public class AutoBlue extends LinearOpMode {
                         .splineTo(new Vector2d(28, 5.5), Math.toRadians(0))
                         .turnTo(Math.toRadians(-90))
                         .build();
-
             }
+
             Actions.runBlocking(new SequentialAction(moveToSpike, whiteClaw.PlacePixelAction()));
 
             Action moveBack;
@@ -219,9 +224,12 @@ public class AutoBlue extends LinearOpMode {
 
     //goes front to the pixel (when it started from the frontStage)
     private void toPixelStackFront() {
+        if (PARAMS.ifSafe)
+            return;
         Action moveCloseToStack = drive.actionBuilder(drive.pose)
-                .splineTo( new Vector2d(51.75, PARAMS.toFrontPixelStackY), Math.toRadians(-90), new TranslationalVelConstraint(20))
+                .lineToX(50, new TranslationalVelConstraint(20))
                 .build();
+
         Actions.runBlocking(new SequentialAction(whiteClaw.PrepForTopOfStackPickupAction(4),
                 moveCloseToStack,
                 whiteClaw.TopOfStackPickupAction()));
@@ -229,7 +237,6 @@ public class AutoBlue extends LinearOpMode {
         drive.updatePoseEstimate();
         updateTelemetry();
     }
-
     // Move to the Backdrop from Frontstage
     private void toFrontPanel( int spikeMark) {
         double targetX = 36;
@@ -280,17 +287,20 @@ public class AutoBlue extends LinearOpMode {
 
     //goes front to the pixels (when it started from backStage)
     private void secondHalfBackStage(int spikeMark) {
+        Action moveAcrossField = drive.actionBuilder(drive.pose)
+                .splineTo(new Vector2d(48.75, 25),Math.toRadians(90))
+                .splineTo(new Vector2d(47.5, -61.75),Math.toRadians(90))
+                .waitSeconds(1)
+                .build();
 
-        Action moveToPixels = drive.actionBuilder(drive.pose)
-           // .setReversed(true)
-            .strafeTo(new Vector2d(51.75, 35.25))
-            .lineToY(-78)
-            .build();
-        Actions.runBlocking(moveToPixels);
+        Actions.runBlocking(new SequentialAction(whiteClaw.RetractArmAction(), moveAcrossField,
+                whiteClaw.PrepForTopOfStackPickupAction(3)));
+        drive.updatePoseEstimate();
 
        Action moveToStack = drive.actionBuilder(drive.pose)
-               .splineTo(new Vector2d(51.75, PARAMS.toPixYBack), Math.toRadians(-90))
+               .splineTo(new Vector2d(PARAMS.toPickXBack, PARAMS.toPixYBack), Math.toRadians(90))
                .build();
+
        Actions.runBlocking(new SequentialAction(new ParallelAction(moveToStack, whiteClaw.RetractArmAction()),
                whiteClaw.PrepForTopOfStackPickupAction(4),
                whiteClaw.TopOfStackPickupAction()));
