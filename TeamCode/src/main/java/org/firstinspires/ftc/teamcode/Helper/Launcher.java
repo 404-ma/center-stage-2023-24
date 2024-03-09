@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Launcher {
     public static class Params {
         public double launchPos = 0.25;
-        public double startPos = 0.7;
+        public double startPos = 0.73;
     }
 
     public static Params PARAMS = new Params();
