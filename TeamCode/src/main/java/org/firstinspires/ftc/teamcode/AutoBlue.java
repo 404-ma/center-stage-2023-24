@@ -219,9 +219,12 @@ public class AutoBlue extends LinearOpMode {
 
     //goes front to the pixel (when it started from the frontStage)
     private void toPixelStackFront() {
+        if (PARAMS.ifSafe)
+            return;
         Action moveCloseToStack = drive.actionBuilder(drive.pose)
                 .splineTo( new Vector2d(51.75, PARAMS.toFrontPixelStackY), Math.toRadians(-90), new TranslationalVelConstraint(20))
                 .build();
+
         Actions.runBlocking(new SequentialAction(whiteClaw.PrepForTopOfStackPickupAction(4),
                 moveCloseToStack,
                 whiteClaw.TopOfStackPickupAction()));

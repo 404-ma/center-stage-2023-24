@@ -216,6 +216,8 @@ public class AutoRed extends LinearOpMode {
      */
 
     public void toPixelStackFront () {
+        if (PARAMS.ifSafe)
+            return;
         Action moveCloseToStack = drive.actionBuilder(drive.pose)
                 .splineTo( new Vector2d(49.5, 17.5), Math.toRadians(90), new TranslationalVelConstraint(20))
                 .build();
