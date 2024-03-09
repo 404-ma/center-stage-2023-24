@@ -247,6 +247,7 @@ public class AutoBlue extends LinearOpMode {
         whiteClaw.RetractArmAction();
 
         Action moveBar = drive.actionBuilder(drive.pose)
+                .setReversed(false)
                 .strafeTo(new Vector2d(51, -15))
                 .setReversed(true)
                 .splineTo(new Vector2d(56, 46), Math.toRadians(90))
