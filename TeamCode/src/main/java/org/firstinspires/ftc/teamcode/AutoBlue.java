@@ -29,7 +29,7 @@ public class AutoBlue extends LinearOpMode {
      *  FTC Dashboard Parameters
      */
     public static class Params {
-        public String versionNum = "4.1.36";
+        public String versionNum = "4.1.37";
         public boolean frontStage = false;
         public boolean ifSafe = false;
         public int PartnerWaitTime = 0;
