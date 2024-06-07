@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.teamcode.Helper.ClawMoves.PARAMS;
 
+import android.os.SystemClock;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -67,14 +69,17 @@ public class DanceControl extends LinearOpMode {
                     break;
 
                 case BUTTON_A: //make him clap his claws
-                    yclaw.SuplexPixel();
-                    sleep(200);
+                    yclaw.MoveArm(PARAMS.armUpPos);
+                    sleep(150);
                     yclaw.MoveFlip(0.39);
                     sleep(200);
-                    for(int i =0; i<5; i++){
+                    for(int i=0; i<5; i++){
+                        yclaw.closeGrip();
+                        sleep(100);
                         yclaw.openGrip();
-                        sleep(200);
-                        yclaw.closeGrip();}
+                        sleep(100);
+                    }
+
                     break;
             }
         }
