@@ -82,6 +82,15 @@ public class DanceControl extends LinearOpMode {
 
                     break;
 
+                case BUTTON_L_BUMPER:
+                    suplex = !suplex;
+                    if (!suplex) {
+                        yclaw.PrepForPixel(true);
+                    } else {
+                        yclaw.SuplexPixel();
+                    }
+                    break;
+
             }
         }
     }
