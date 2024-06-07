@@ -1,3 +1,9 @@
+## ADB Adroid Debuggers Configuration
+cd $home
+cd .\AppData\Local\Android\Sdk\platform-tools
+.\adb connect 192.168.43.1
+
+
 ## TeamCode Module
 
 Welcome!
