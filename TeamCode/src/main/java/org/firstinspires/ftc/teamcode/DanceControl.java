@@ -80,7 +80,6 @@ public class DanceControl extends LinearOpMode {
         }
     }
 
-
     private void update_telemetry(gamePadInputV2 gpi1, gamePadInputV2 gpi2) {
         telemetry.addLine("Gamepad #1");
         String inpTime1 = new java.text.SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS", Locale.US).format(gpi1.getTelemetry_InputLastTimestamp());
@@ -98,7 +97,6 @@ public class DanceControl extends LinearOpMode {
         telemetry.addLine().addData("GP2 Input", gpi2.getTelemetry_InputLastType().toString());
         telemetry.addLine().addData("L Joy  X", "%6.3f", gamepad2.left_stick_x).addData("Y", "%6.3f", gamepad2.left_stick_y);
         telemetry.addLine().addData("R Joy  X", "%6.3f", gamepad2.right_stick_x).addData("Y", "%6.3f", gamepad2.right_stick_y);
-
         telemetry.addLine();
         telemetry.addLine("Deferred Actions");
         String actTime = new java.text.SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS", Locale.US).format(DeferredActions.tlmLastActionTimestamp);

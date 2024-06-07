@@ -22,11 +22,11 @@ import org.firstinspires.ftc.teamcode.RoadRunner.MecanumDrive;
 @Config
 @Autonomous (name = "Auto Red", group = "RoadRunner")
 public class AutoRed extends LinearOpMode {
-    /*
+    /*3
      *  FTC Dashboard Parameters
      */
     public static class Params {
-        public String versionNum = "4.1.21";
+        public String versionNum = "4.1.22";
         public boolean frontStage = false;
         public boolean ifSafe = true;
         public int PartnerWaitTime = 0;
@@ -222,7 +222,7 @@ public class AutoRed extends LinearOpMode {
         Action moveCloseToStack = drive.actionBuilder(drive.pose)
                 .splineTo( new Vector2d(49.5, 17.5), Math.toRadians(90), new TranslationalVelConstraint(20))
                 .build();
-        Actions.runBlocking(new SequentialAction(whiteClaw.PrepForTopOfStackPickupAction(4),
+        Actions.runBlocking(new SequentialAction(whiteClaw.PrepForTopOfStackPickupAction(3),
                 moveCloseToStack,
                 whiteClaw.TopOfStackPickupAction()));
 
