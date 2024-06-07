@@ -69,18 +69,19 @@ public class DanceControl extends LinearOpMode {
                     break;
 
                 case BUTTON_A: //make him clap his claws
-                    yclaw.MoveArm(PARAMS.armUpPos);
+                    yclaw.MoveArm(0.30); //our own position
                     sleep(150);
                     yclaw.MoveFlip(0.39);
                     sleep(200);
                     for(int i=0; i<5; i++){
                         yclaw.closeGrip();
                         sleep(100);
-                        yclaw.openGrip();
+                        yclaw.openGrip(); //make our own position
                         sleep(100);
                     }
 
                     break;
+
             }
         }
     }
