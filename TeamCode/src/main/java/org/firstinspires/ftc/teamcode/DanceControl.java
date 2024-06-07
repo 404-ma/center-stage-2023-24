@@ -75,25 +75,65 @@ public class DanceControl extends LinearOpMode {
                     sleep(200);
                     for(int i=0; i<5; i++){
                         yclaw.closeGrip();
-                        sleep(100);
+                        sleep(120);
                         yclaw.openGrip(); //make our own position
-                        sleep(100);
+                        sleep(120);
                     }
-
                     break;
 
                 case BUTTON_L_BUMPER:
                     suplex = !suplex;
                     if (!suplex) {
-                        yclaw.PrepForPixel(true);
+                        yclaw.PrepForPixel(true); //bring code over from that
                     } else {
                         yclaw.SuplexPixel();
                     }
                     break;
 
+
+                case BUTTON_B://say no button
+
+                    break;
+
+
+
+
             }
         }
     }
+
+    public void ProcessDeferredActions(){
+        List<DeferredActionType> action = DeferredActions.GetReadyActions();
+
+        for(DeferredActionType actionType: action){
+            switch(actionType){
+                case CLAW_FLIP_SUPLEX:
+                    yclaw.MoveFlip(PARAMS.flipSuplexPos);
+                    break;
+
+                case CLAW_OPEN_GRIP_UP:
+                    yclaw.MoveGrip(PARAMS.gripOpenPosTop);
+                    break;
+
+                case CLAW_OPEN_GRIP_DOWN:
+                    yclaw.MoveGrip(PARAMS.gripOpenPos);
+                    break;
+
+                case CLAW_ARM_UP:
+                    yclaw.MoveArm(PARAMS.armUpPos);
+                    break;
+
+                case CLAW_ARM_DOWN:
+                    yclaw.MoveArm(PARAMS.armDownPos);
+                    break;
+
+                default:
+                    telemetry.addLine("ERROR - Unsupported Deferred Action");
+                    break;
+            }
+        }
+    }
+
 
     private void update_telemetry(gamePadInputV2 gpi1, gamePadInputV2 gpi2) {
         telemetry.addLine("Gamepad #1");
