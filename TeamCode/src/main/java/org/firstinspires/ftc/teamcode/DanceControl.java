@@ -91,12 +91,14 @@ public class DanceControl extends LinearOpMode {
                     break;
 
 
+                //TODO say no button
                 case BUTTON_B://say no button
 
                     break;
 
+                //TODO throw the pixel
 
-
+                //TODO point at someone
 
             }
         }
