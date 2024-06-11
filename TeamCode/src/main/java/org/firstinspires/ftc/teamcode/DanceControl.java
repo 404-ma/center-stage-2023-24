@@ -97,8 +97,39 @@ public class DanceControl extends LinearOpMode {
                     break;
 
                 //TODO throw the pixel
+                case BUTTON_Y:
+                    if (yclaw.tlmGripPosition != PARAMS.gripClosedPos) {
+                        yclaw.MoveGrip(PARAMS.gripClosedPos);
+                        DeferredActions.CreateDeferredAction(150, DeferredActionType.CLAW_ARM_UP);
+                    } else {
+                        yclaw.MoveArm(PARAMS.armUpPos);
+                    }
+                    DeferredActions.CreateDeferredAction(180, DeferredActionType.CLAW_FLIP_SUPLEX);
+                    // Wait for Pixel over Bin
+                    DeferredActions.CreateDeferredAction(200, DeferredActionType.CLAW_OPEN_GRIP_UP);
+                    break;
 
                 //TODO point at someone
+                case BUTTON_X:
+                        yclaw.MoveArm(PARAMS.armUpPos);
+                        SystemClock.sleep(150);
+                        yclaw.MoveFlip(PARAMS.flipSuplexPos);
+                        // Wait for Pixel over Bin
+                        SystemClock.sleep(675);
+                        yclaw.MoveGrip(PARAMS.gripOpenPosTop);
+                        sleep(200);
+                        yclaw.MoveFlip(PARAMS.flipDownPos);
+                        yclaw.closeGrip();
+
+                        for(int i = 0; i < 3; i++){
+                            yclaw.MoveArm(0.28);
+                            sleep(500);
+                            yclaw.MoveArm(0.29);
+                            sleep(500);}
+
+                        break;
+
+
 
             }
         }
