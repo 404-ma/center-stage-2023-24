@@ -61,7 +61,6 @@ public class DanceControl extends LinearOpMode {
 
             gamePadInputV2.GameplayInputType inpType = gpIn1.WaitForGamepadInput(30);
             switch (inpType) {
-
                 case JOYSTICK:
                     drvTrain.setDriveVectorFromJoystick(gamepad1.left_stick_x * (float) speedMultiplier,
                             gamepad1.right_stick_x * (float) speedMultiplier,
@@ -81,10 +80,11 @@ public class DanceControl extends LinearOpMode {
                     }
                     break;
 
+
                 case BUTTON_L_BUMPER:
                     suplex = !suplex;
                     if (!suplex) {
-                        yclaw.PrepForPixel(true); //bring code over from that
+                        yclaw.PrepForPixel(true);
                     } else {
                         yclaw.SuplexPixel();
                     }
@@ -92,7 +92,10 @@ public class DanceControl extends LinearOpMode {
 
                 //TODO say no button
                 case BUTTON_B://say no button
-
+                    drvTrain.setDriveVector(0,0, .025);
+                    sleep(120);
+                    drvTrain.setDriveVector(0,0, -.025);
+                    sleep(120);
                     break;
 
                 //TODO throw the pixel
@@ -105,32 +108,31 @@ public class DanceControl extends LinearOpMode {
                     }
                     DeferredActions.CreateDeferredAction(180, DeferredActionType.CLAW_FLIP_SUPLEX);
                     // Wait for Pixel over Bin
-                    DeferredActions.CreateDeferredAction(200, DeferredActionType.CLAW_OPEN_GRIP_UP);
+                    DeferredActions.CreateDeferredAction(400, DeferredActionType.CLAW_OPEN_GRIP_UP);
                     break;
 
                 //TODO point at someone
                 case BUTTON_X:
-                        yclaw.MoveArm(PARAMS.armUpPos);
-                        SystemClock.sleep(150);
-                        yclaw.MoveFlip(PARAMS.flipSuplexPos);
-                        // Wait for Pixel over Bin
-                        SystemClock.sleep(675);
-                        yclaw.MoveGrip(PARAMS.gripOpenPosTop);
-                        sleep(200);
-                        yclaw.MoveFlip(PARAMS.flipDownPos);
-                        yclaw.closeGrip();
+                    yclaw.MoveArm(PARAMS.armUpPos);
+                    SystemClock.sleep(150);
+                    yclaw.MoveFlip(PARAMS.flipSuplexPos);
+                    // Wait for Pixel over Bin
+                    SystemClock.sleep(675);
+                    yclaw.MoveGrip(PARAMS.gripOpenPosTop);
+                    sleep(200);
+                    yclaw.MoveFlip(PARAMS.flipDownPos);
+                    yclaw.closeGrip();
 
-                        for(int i = 0; i < 3; i++){
-                            yclaw.MoveArm(0.28);
-                            sleep(500);
-                            yclaw.MoveArm(0.29);
-                            sleep(500);}
-
-                        break;
-
-
-
+                    for(int i = 0; i < 3; i++){
+                        yclaw.MoveArm(0.28);
+                        sleep(500);
+                        yclaw.MoveArm(0.29);
+                        sleep(500);}
+                    break;
             }
+
+            // Deferred Actions
+            ProcessDeferredActions();
         }
     }
 
@@ -165,7 +167,6 @@ public class DanceControl extends LinearOpMode {
             }
         }
     }
-
 
     private void update_telemetry(gamePadInputV2 gpi1, gamePadInputV2 gpi2) {
         telemetry.addLine("Gamepad #1");
