@@ -92,10 +92,10 @@ public class DanceControl extends LinearOpMode {
 
                 //TODO say no button
                 case BUTTON_B://say no button
-                    drvTrain.setDriveVector(0,0, .025);
-                    sleep(120);
-                    drvTrain.setDriveVector(0,0, -.025);
-                    sleep(120);
+                    drvTrain.setDriveVector(0,0, .035);
+                    sleep(140);
+                    drvTrain.setDriveVector(0,0, -.035);
+                    sleep(140);
                     break;
 
                 //TODO throw the pixel
